@@ -432,6 +432,9 @@
     <Resource Include="..\..\Resources\button_close_off.png">
       <Link>Assets\button_close_off.png</Link>
     </Resource>
+    <Resource Include="..\..\Resources\button_close_on.png">
+      <Link>Assets\button_close_on.png</Link>
+    </Resource>
     <Resource Include="..\..\Resources\button_ok_off.png">
       <Link>Assets\button_ok_off.png</Link>
     </Resource>
@@ -441,7 +444,12 @@
     <Resource Include="..\..\Resources\search_result_background.png">
       <Link>Assets\search_result_background.png</Link>
     </Resource>
-    <Resource Include="Assets\button_remove_pin_off.png" />
+    <Resource Include="..\..\Resources\button_remove_pin_off.png">
+      <Link>Assets\button_remove_pin_off.png</Link>
+    </Resource>
+    <Resource Include="..\..\Resources\button_remove_pin_on.png">
+      <Link>Assets\button_remove_pin_on.png</Link>
+    </Resource>
     <Resource Include="..\..\Resources\eegeo_logo.png">
       <Link>Assets\eegeo_logo.png</Link>
     </Resource>
@@ -465,6 +473,9 @@
   <ItemGroup>
     <Resource Include="..\..\Resources\button_add_pin_off.png">
       <Link>Assets\button_add_pin_off.png</Link>
+    </Resource>
+    <Resource Include="..\..\Resources\button_add_pin_on.png">
+      <Link>Assets\button_add_pin_on.png</Link>
     </Resource>
   </ItemGroup>
   <ItemGroup>
