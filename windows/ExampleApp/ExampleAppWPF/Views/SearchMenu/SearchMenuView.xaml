@@ -19,8 +19,7 @@
                 <Trigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle"
-                        From="0" To="360" Duration="0:0:1.5" RepeatBehavior="Forever" />
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle" From="0" To="360" Duration="0:0:1.5" RepeatBehavior="Forever"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </Trigger.EnterActions>
@@ -34,16 +33,10 @@
                 <ControlTemplate TargetType="{x:Type local:SearchMenuView}">
                     <ControlTemplate.Resources>
                         <Storyboard x:Key="FadeInNewItems">
-                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.0" Value="0, -42, 0,0" />
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0, 0,0,0" />
-                            </ThicknessAnimationUsingKeyFrames>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="0" To="1" Duration="0:0:0.2" />
                         </Storyboard>
                         <Storyboard x:Key="FadeOutOldItems">
-                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.0" Value="0, 0, 0,0" />
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0, -42,0,0" />
-                            </ThicknessAnimationUsingKeyFrames>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="0" Duration="0:0:0.2" />
                         </Storyboard>
 
                         <Storyboard x:Key="CloseSearchCount">
@@ -212,6 +205,15 @@
                                                                             </BeginStoryboard>
                                                                         </EventTrigger>
                                                                     </StackPanel.Triggers>
+                                                                    <StackPanel.Resources>
+                                                                        <Style TargetType="{x:Type StackPanel}">
+                                                                            <Setter Property="RenderTransform">
+                                                                                <Setter.Value>
+                                                                                    <ScaleTransform ScaleY="1"/>
+                                                                                </Setter.Value>
+                                                                            </Setter>
+                                                                        </Style>
+                                                                    </StackPanel.Resources>
                                                                     <Image Source="{Binding Path=Icon}" Width="30" Height="30" VerticalAlignment="Center" Margin="6,0,0,0"/>
                                                                     <StackPanel HorizontalAlignment="Stretch" Width="235">
                                                                         <TextBlock Text="{Binding Path=Name}" FontSize="15" Foreground="{StaticResource DarkGrey}" MaxWidth="{Binding RelativeSource={RelativeSource AncestorType={x:Type StackPanel}}, Path=Width}" FontWeight="Bold" Margin="10,4,0,0" TextTrimming="CharacterEllipsis"/>
@@ -384,6 +386,15 @@
                                                                                 </BeginStoryboard>
                                                                             </EventTrigger>
                                                                         </StackPanel.Triggers>
+                                                                        <StackPanel.Resources>
+                                                                            <Style TargetType="{x:Type StackPanel}">
+                                                                                <Setter Property="RenderTransform">
+                                                                                    <Setter.Value>
+                                                                                        <ScaleTransform ScaleY="1"/>
+                                                                                    </Setter.Value>
+                                                                                </Setter>
+                                                                            </Style>
+                                                                        </StackPanel.Resources>
                                                                         <Image Source="{Binding Path=Icon}" Width="26" Height="26" VerticalAlignment="Center" Margin="6,0,0,0"/>
                                                                         <Label Content="{Binding Path=Heading}" FontSize="16" Foreground="{StaticResource DarkGrey}" VerticalAlignment="Center"/>
                                                                     </StackPanel>

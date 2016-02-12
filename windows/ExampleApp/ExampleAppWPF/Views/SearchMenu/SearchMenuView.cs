@@ -135,8 +135,8 @@ namespace ExampleAppWPF
             m_openResultCountAnim = ((Storyboard)Template.Resources["OpenSearchCount"]).Clone();
             m_closeResultCountAnim = ((Storyboard)Template.Resources["CloseSearchCount"]).Clone();
 
-            m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard);
-            m_resultListAdapter= new MenuListAdapter(false, m_resultsList, fadeInItemStoryboard, fadeOutItemStoryboard);
+            m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SubMenuItemPanel");
+            m_resultListAdapter = new MenuListAdapter(false, m_resultsList, fadeInItemStoryboard, fadeOutItemStoryboard, "SearchResultPanel");
         }
 
         private void OnMenuScrollWheel(object sender, MouseWheelEventArgs e)
