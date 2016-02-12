@@ -196,7 +196,7 @@
                                                             <ProgressBar Name="ImageProgress" HorizontalAlignment="Center" Visibility="Hidden"/>
                                                         </StackPanel>
                                                         <Grid Margin="0,0,0,0">
-                                                            <Image Name="PoiImage"/>
+                                                            <Image Name="PoiImage" Source="/Assets/poi_placeholder.png"/>
                                                             <Grid Name="ImageGradient" Height="30" VerticalAlignment="Bottom"/>
                                                         </Grid>
                                                         <Grid HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,5">
