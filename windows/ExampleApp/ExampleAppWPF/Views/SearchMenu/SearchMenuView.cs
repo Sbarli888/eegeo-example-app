@@ -21,7 +21,6 @@ namespace ExampleAppWPF
         private bool m_isFirstLayout = true;
         private Grid m_mainContainer;
         private Grid m_dragTabContainer;
-        private static readonly ResourceDictionary genericResourceDictionary;
         private CustomAppAnimation m_mainContainerAnim;
 
         private ListBox m_resultsList;
@@ -43,9 +42,6 @@ namespace ExampleAppWPF
         static SearchMenuView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchMenuView), new FrameworkPropertyMetadata(typeof(SearchMenuView)));
-
-            var uri = new Uri("/ExampleAppWPF;component/Colours.xaml", UriKind.Relative);
-            genericResourceDictionary = (ResourceDictionary)Application.LoadComponent(uri);
         }
 
         public SearchMenuView(IntPtr nativeCallerPointer) : base(nativeCallerPointer)

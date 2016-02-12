@@ -111,12 +111,18 @@ namespace ExampleAppWPF
             m_children.Clear();
             int overAllItemIndex = 0;
             int totalCount = m_animatedSizesMap.Values.Sum();
+            int lastMenuGroupIndex = 0;
 
             for (int i = 0; i < m_groups.Count; i++)
             {
                 int groupIndex = i;
                 string groupName = m_groups[groupIndex];
                 int currentSize = m_animatedSizesMap[groupName];
+
+                if(i == (m_groups.Count - 1))
+                {
+                    lastMenuGroupIndex = overAllItemIndex;
+                }
 
                 for (int itemIndex = 0; itemIndex < currentSize; ++itemIndex)
                 {
@@ -125,6 +131,8 @@ namespace ExampleAppWPF
                     ++overAllItemIndex;
                 }
             }
+
+            m_children[lastMenuGroupIndex].JustAdded = true;
         }
 
         public void OnAnimationCompleted(object sender, EventArgs e)
