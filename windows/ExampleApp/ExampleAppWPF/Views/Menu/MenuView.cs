@@ -15,7 +15,7 @@ namespace ExampleAppWPF
         protected ControlClickHandler m_dragTabClickHandler = null;
 
         protected ListBox m_list = null;
-        protected Button m_dragTabView;
+        protected Button m_searchIcon;
         protected bool m_loggingEnabled = false;
 
         protected IntPtr m_nativeCallerPointer;
@@ -85,7 +85,7 @@ namespace ExampleAppWPF
             m_mainWindow.MainGrid.Children.Remove(this);
         }
 
-        public bool IsAnimating()
+        public virtual bool IsAnimating()
         {
             foreach (var anim in m_menuAnimations)
             {
@@ -98,7 +98,7 @@ namespace ExampleAppWPF
             return false;
         }
 
-        public void UpdateAnimation(float deltaSeconds)
+        public virtual void UpdateAnimation(float deltaSeconds)
         {
             var isClosed = false;
             var isOpen = false;
@@ -180,7 +180,7 @@ namespace ExampleAppWPF
             m_list.IsHitTestVisible = animationCompleteAndOpen;
         }
 
-        public float NormalisedAnimationProgress()
+        public virtual float NormalisedAnimationProgress()
         {
             float totalDistance = (float)(m_menuAnimations[0].m_animationEndPos - m_menuAnimations[0].m_animationStartPos).Length;
             float currentDistance = (float)(m_menuAnimations[0].m_animationEndPos - m_menuAnimations[0].m_animationCurrentPos).Length;
@@ -248,7 +248,7 @@ namespace ExampleAppWPF
             }
         }
 
-        public void AnimateOffScreen()
+        public virtual void AnimateOffScreen()
         {
             Dispatcher.Invoke(() =>
             {

@@ -54,10 +54,10 @@ namespace ExampleAppWPF
             m_list = (ListBox)GetTemplateChild("SecondaryMenuItemList");
             m_menutItemHandler = new ControlClickHandler(OnSelectionChanged, m_list);
 
-            m_dragTabView = (Button)GetTemplateChild("SecondaryMenuDragTabView");
+            m_searchIcon = (Button)GetTemplateChild("SecondaryMenuDragTabView");
             m_dragTabContainer = (Grid)GetTemplateChild("DragTabParentGrid");
 
-            m_dragTabView.Click += OnIconClick;
+            m_searchIcon.Click += OnIconClick;
 
             m_mainContainer = (Grid)GetTemplateChild("SecondaryMenuViewListContainer");
             m_mainContainerAnim = new CustomAppAnimation(m_mainContainer as FrameworkElement);
@@ -121,9 +121,9 @@ namespace ExampleAppWPF
             m_screenWidthPx = mainWindow.MainGrid.ActualWidth;
             var screenWidthPy = mainWindow.MainGrid.ActualHeight;
 
-            double dragTabWidthPx = m_dragTabView.ActualWidth;
+            double dragTabWidthPx = m_searchIcon.ActualWidth;
 
-            m_mainContainerOffscreenOffsetXPx = -m_dragTabView.Margin.Right;
+            m_mainContainerOffscreenOffsetXPx = -m_searchIcon.Margin.Right;
             double mainContainerWidthPx = m_mainContainer.ActualWidth;
             m_mainContainerOnScreenWidthPx = mainContainerWidthPx - m_mainContainerOffscreenOffsetXPx;
 

@@ -47,22 +47,48 @@
                             </DoubleAnimation>
                         </Storyboard>
 
-                        <Storyboard x:Key="CloseSearchCount">
+                        <Storyboard x:Key="OpenSearchViewIcon">
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.0" Value="-635,0,0,0" />
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0,0,0,0"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="714,0,0,0" KeySpline="0.0,1.0 0.6,1.0"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
 
-                        <Storyboard x:Key="OpenSearchCount">
+                        <Storyboard x:Key="CloseSearchViewIcon">
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.0" Value="0,0,0,0" />
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-635,0,0,0" />
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="114,0,0,0" KeySpline="0.0,1.0 1.0,0.8"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
+
+                        <Storyboard x:Key="OpenSearchContainer">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="332,0,0,0" KeySpline="0.0,1.0 1.0,0.8"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="CloseSearchContainer">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-332,0,0,0" KeySpline="0.0,1.0 0.6,1.0"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="OpenBackgroundRect">
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="0" To="1" Duration="0:0:0.2"/>
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2">
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="332,0,0,0"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="CloseBackgroundRect">
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="1" To="0" Duration="0:0:0.2"/>
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-300,0,0,0"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
                     </ControlTemplate.Resources>
-                    <DockPanel Margin="0,50,0,0" Width="382">
-                        <Grid Width="50" Height="50" VerticalAlignment="Top" DockPanel.Dock="Right" Name="DragTabParentGrid" Background="{StaticResource Gold}">
+                    <Grid Margin="0,50,0,0" Name="SearchMenuViewContainer">
+                        <!--Mag glass button. Closed Margin: 114, Open Margin: 714-->
+                        <Grid Margin="114,0,0,0"  Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Top" Name="SearchIconGrid" Background="{StaticResource Gold}" Visibility="Visible" Panel.ZIndex="98">
                             <Button Width="Auto" Height="Auto" Name="SecondaryMenuDragTabView" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <Button.Style>
                                     <Style TargetType="{x:Type Button}">
@@ -99,12 +125,42 @@
                                 </Button.Style>
                             </Button>
                         </Grid>
-
-                        <Canvas Name="SearchResultCountContainer" VerticalAlignment="Top" DockPanel.Dock="Right" Background="{StaticResource PrimaryBG_colour}" Width="32" Height="50" Panel.ZIndex="100" Margin="-635,0,0,0" Visibility="Hidden">
+                        
+                        <!--Search result count. Closed Margin: 32-->
+                        <Grid Name="SearchResultCountContainer" Margin="32,0,0,0" VerticalAlignment="Top" Background="{StaticResource PrimaryBG_colour}" Width="32" Height="50" Panel.ZIndex="100" Visibility="Hidden">
                             <TextBlock IsEnabled="False" Margin="0,12,2,0"  Name="SearchResultCount" Text="20" Foreground="{StaticResource LightGrey}" TextAlignment="Center" Width="32" Height="50" FontFamily="{StaticResource PrimaryUIFont}" FontSize="18"/>
-                        </Canvas>
+                        </Grid>
 
-                        <Grid Name="SecondaryMenuViewListContainer" DockPanel.Dock="Left" Visibility="Hidden">
+                        <!--<Grid>-->
+                        <Rectangle Name="BackgroundRect" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="332,0,0,0" Width="332" Height="50" Fill="{StaticResource PrimaryBG_colour}" RenderTransformOrigin="1.0, 0.0">
+                            <Rectangle.Resources>
+                                <Style TargetType="{x:Type Rectangle}">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="0"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Rectangle.Resources>
+                        </Rectangle>
+
+                        <Grid Name="SearchBox" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="332,0,0,0" Width="332" Height="50" RenderTransformOrigin="1.0, 0.0">
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type Grid}">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="0"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Border BorderBrush="White" Background="White" BorderThickness="1,1,1,1" CornerRadius="10" Width="295" Height="38" VerticalAlignment="Center" Margin="32,8,6,8">
+                                <TextBox Text="Enter Search Term" Name="SecondaryMenuViewSearchEditTextView" FontFamily="{StaticResource PrimaryUIFont}" FontSize="18" Foreground="{StaticResource InputTextColour}" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Margin="10,6,6,6"/>
+                            </Border>
+                        </Grid>
+
+                        <!--Main Container. Closed Margin: -332 Open Margin: 332-->
+                        <Grid Name="SerchMenuMainContainer" Margin="-332,0,0,0" Visibility="Visible" HorizontalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="50"/>
                                 <RowDefinition Height="6"/>
@@ -115,14 +171,6 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0">
-                                    <Rectangle Width="Auto" Height="Auto" Fill="{StaticResource Gold}"/>
-                                </Grid>
-                                <Grid Grid.Column="0">
-                                    <Border BorderBrush="White" Background="White" BorderThickness="1,1,1,1" CornerRadius="10" Width="295" Height="38" VerticalAlignment="Center" Margin="32,8,6,8">
-                                        <TextBox Text="Enter Search Term" Name="SecondaryMenuViewSearchEditTextView" FontFamily="{StaticResource PrimaryUIFont}" FontSize="18" Foreground="{StaticResource InputTextColour}" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Margin="10,6,6,6"/>
-                                    </Border>
-                                </Grid>
                                 <Grid Margin="270,0,0,0" Grid.Column="0" Name="SearchResultsSpinner" Visibility="Hidden">
                                     <Image Style="{StaticResource RotatingAnim}" Source="/Assets/search_results_spinner.png" Width="25" Height="25" RenderTransformOrigin="0.5,0.5"/>
                                 </Grid>
@@ -155,7 +203,7 @@
                             <Grid Grid.Row="1">
                                 <Grid Width="332" Height="6" Background="#002B63" Margin="0, 0, 0, 0"/>
                             </Grid>
-                            <Grid Grid.Row="2">
+                            <Grid Grid.Row="2" Grid.Column="0">
                                 <StackPanel  Orientation="Vertical" >
                                     <ScrollViewer Background="{StaticResource PrimaryBG_colour}" Name="MenuOptionsView" PanningMode="VerticalOnly" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False" >
                                         <StackPanel>
@@ -439,7 +487,7 @@
                                 </StackPanel>
                             </Grid>
                         </Grid>
-                    </DockPanel>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
