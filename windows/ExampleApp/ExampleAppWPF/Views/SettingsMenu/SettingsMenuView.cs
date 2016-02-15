@@ -25,6 +25,7 @@ namespace ExampleAppWPF
         private bool m_isMouseDown = false;
         private static readonly ResourceDictionary genericResourceDictionary;
         private CustomAppAnimation m_mainContainerAnim;
+        private ControlClickHandler m_menutItemHandler;
 
         static SettingsMenuView()
         {
@@ -51,7 +52,7 @@ namespace ExampleAppWPF
             base.OnApplyTemplate();
 
             m_list = (ListBox)GetTemplateChild("SecondaryMenuItemList");
-            m_list.SelectionChanged += SelectionChanged;
+            m_menutItemHandler = new ControlClickHandler(OnSelectionChanged, m_list);
 
             m_dragTabView = (Button)GetTemplateChild("SecondaryMenuDragTabView");
             m_dragTabContainer = (Grid)GetTemplateChild("DragTabParentGrid");
@@ -67,7 +68,7 @@ namespace ExampleAppWPF
             var fadeInItemStoryboard = ((Storyboard)Template.Resources["FadeInNewItems"]).Clone();
             var fadeOutItemStoryboard = ((Storyboard)Template.Resources["FadeOutOldItems"]).Clone();
 
-            m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard);
+            m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SettingsMenuItemPanel");
 
             PerformLayout(null, null);
         }
@@ -77,7 +78,7 @@ namespace ExampleAppWPF
             MenuViewCLIMethods.ViewClicked(m_nativeCallerPointer);
         }
 
-        private void SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OnSelectionChanged(object sender, MouseEventArgs e)
         {
             if (IsAnimating() || m_adapter.IsAnimating())
             {
@@ -85,23 +86,18 @@ namespace ExampleAppWPF
                 return;
             }
 
-            if (e.AddedItems != null && e.AddedItems.Count > 0)
+            var item = m_list.SelectedItem as SubMenuListItem;
+            if (item != null)
             {
-                MenuListItem item = (sender as ListBox).SelectedItem as MenuListItem;
-                (sender as ListBox).SelectedItem = null;
+                var position = m_adapter.Children
+                    .Select((_t, _i) => Tuple.Create(_t, _i))
+                    .Where(_t => _t.Item1.Heading == item.Heading)
+                    .Single().Item2;
 
-                if (item != null)
-                {
-                    var position = m_adapter.Children
-                        .Select((_t, _i) => Tuple.Create(_t, _i))
-                        .Where(_t => _t.Item1.Heading == item.Heading)
-                        .Single().Item2;
+                int sectionIndex = m_adapter.GetSectionIndex(position);
+                int childIndex = m_adapter.GetItemIndex(position);
 
-                    int sectionIndex = m_adapter.GetSectionIndex(position);
-                    int childIndex = m_adapter.GetItemIndex(position);
-
-                    MenuViewCLIMethods.SelectedItem(m_nativeCallerPointer, sectionIndex, childIndex);
-                }
+                MenuViewCLIMethods.SelectedItem(m_nativeCallerPointer, sectionIndex, childIndex);
             }
         }
 

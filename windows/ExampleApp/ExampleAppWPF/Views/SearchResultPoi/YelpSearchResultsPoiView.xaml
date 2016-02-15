@@ -143,7 +143,7 @@
                         <Rectangle x:Name="rectangle" Fill="{StaticResource PrimaryBG_Over_Colour}" Margin="0" Visibility="Hidden"/>
                         <Rectangle x:Name="rectangle2" Fill="{StaticResource PrimaryBG_Down_Colour}" Margin="0" Visibility="Hidden"/>
                         <Image x:Name="image" Source="/Assets/button_close_off.png"/>
-                        <Image x:Name="image1" Source="/Assets/button_close_off.png" Visibility="Hidden"/>
+                        <Image x:Name="image1" Source="/Assets/button_close_on.png" Visibility="Hidden"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -196,7 +196,7 @@
                                                             <ProgressBar Name="ImageProgress" HorizontalAlignment="Center" Visibility="Hidden"/>
                                                         </StackPanel>
                                                         <Grid Margin="0,0,0,0">
-                                                            <Image Name="PoiImage"/>
+                                                            <Image Name="PoiImage" Source="/Assets/poi_placeholder.png"/>
                                                             <Grid Name="ImageGradient" Height="30" VerticalAlignment="Bottom"/>
                                                         </Grid>
                                                         <Grid HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,5">

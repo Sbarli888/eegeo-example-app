@@ -57,7 +57,7 @@ namespace ExampleApp
 				// Override of Menu ItemSelected to allow expansion of a section to trigger clear search
 				void HandleItemSelected(int sectionIndex, int itemIndex);
 
-				void SetMenuSections(const std::vector<Menu::View::IMenuSectionViewModel*>& sections) { }
+				void SetMenuSections(const std::vector<Menu::View::IMenuSectionViewModel*>& sections);
             };
         }
     }
