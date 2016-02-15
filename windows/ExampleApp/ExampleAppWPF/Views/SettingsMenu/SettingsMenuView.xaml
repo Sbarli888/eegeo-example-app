@@ -25,6 +25,44 @@
                                 <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="0, -42,0,0" />
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
+
+                        <Storyboard x:Key="OpenSearchViewIcon">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="714,0,0,0" KeySpline="0.0,1.0 0.6,1.0"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="CloseSearchViewIcon">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="114,0,0,0" KeySpline="0.0,1.0 1.0,0.8"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="OpenSearchContainer">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="332,0,0,0" KeySpline="0.0,1.0 1.0,0.8"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="CloseSearchContainer">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-332,0,0,0" KeySpline="0.0,1.0 0.6,1.0"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="OpenBackgroundRect">
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="0" To="1" Duration="0:0:0.2"/>
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2">
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="332,0,0,0"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="CloseBackgroundRect">
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="1" To="0" Duration="0:0:0.2"/>
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-300,0,0,0"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
                     </ControlTemplate.Resources>
 
                     <DockPanel Margin="0,50,0,0" Width="382">

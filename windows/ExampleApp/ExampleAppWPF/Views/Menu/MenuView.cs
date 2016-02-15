@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 
 namespace ExampleAppWPF
 {
@@ -15,28 +17,41 @@ namespace ExampleAppWPF
         protected ControlClickHandler m_dragTabClickHandler = null;
 
         protected ListBox m_list = null;
-        protected Button m_searchIcon;
+        protected Button m_menuIcon;
         protected bool m_loggingEnabled = false;
 
         protected IntPtr m_nativeCallerPointer;
 
-        protected double m_stateChangeAnimationTimeMilliseconds = 200;
-        protected double m_mainContainerVisibleOnScreenWhenClosedDip = 0;
+        protected double m_animationTimeMilliseconds = 200;
 
-        protected double m_mainContainerOffscreenOffsetXPx;
+        protected Grid m_menuIconGrid;
+        protected Grid m_menuViewContainer;
+        protected Grid m_mainContainer;
 
-        protected double m_controlStartPosXPx;
+        protected Storyboard m_openSearchIconAnim;
+        protected Storyboard m_closeSearchIconAnim;
 
-        protected double m_touchAnchorXPx;
-        protected double m_touchAnchorYPx;
+        protected Storyboard m_openSearchContainerAnim;
+        protected Storyboard m_closeSearchContainerAnim;
 
-        protected double m_dragThresholdPx;
+        protected Storyboard m_openBackgroundRect;
+        protected Storyboard m_closeBackgroundRect;
+        protected Rectangle m_backgroundRectangle;
 
-        protected bool m_isFirstAnimationCeremony = true;
+        protected MainWindow m_mainWindow;
 
-        protected List<CustomAppAnimation> m_menuAnimations = new List<CustomAppAnimation>();
+        protected bool m_isAnimating;
+        protected bool m_isOffScreen;
+        protected float m_openState;
 
-        MainWindow m_mainWindow;
+        protected const float MENU_CLOSED = 0.0f;
+        protected const float MENU_OFFSCREEN = 0.0f;
+        protected const float MENU_OPEN = 1.0f;
+        protected const float MENU_CLOSING = 0.4f;
+        protected const float MENU_OPENING = 0.5f;
+        protected const float MENU_OFFSCREENING = 0.6f;
+
+        private Action<object, EventArgs> m_animationCompleteCallback;
 
         protected abstract void RefreshListData(List<string> groups, List<bool> groupsExpandable, Dictionary<string, List<string>> groupToChildrenMap);
 
@@ -49,10 +64,16 @@ namespace ExampleAppWPF
         {
             m_nativeCallerPointer = nativeCallerPointer;
 
-            int dragThesholdDip = 10;
-            m_dragThresholdPx = ConversionHelpers.AndroidToWindowsDip(dragThesholdDip);
-
             m_mainWindow = (MainWindow)Application.Current.MainWindow;
+
+            m_openState = -1.0f;
+            m_isAnimating = false;
+            m_isOffScreen = true;
+        }
+
+        protected void SetAnimationCompleteCallback(Action<object, EventArgs> callback)
+        {
+            m_animationCompleteCallback = callback;
         }
         
         public override void OnApplyTemplate()
@@ -87,193 +108,116 @@ namespace ExampleAppWPF
 
         public virtual bool IsAnimating()
         {
-            foreach (var anim in m_menuAnimations)
-            {
-                if (anim.m_animating)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return m_isAnimating;
         }
 
         public virtual void UpdateAnimation(float deltaSeconds)
         {
-            var isClosed = false;
-            var isOpen = false;
-
-            foreach (var anim in m_menuAnimations)
-            {
-                Vector totalDelta = anim.m_animationEndPos - anim.m_animationStartPos;
-
-                double totalDeltaLen = totalDelta.Length;
-                bool done;
-
-                if (totalDeltaLen > 0.001)
-                {
-                    double animationUnitsPerSecond = (totalDeltaLen / (m_stateChangeAnimationTimeMilliseconds / 1e3));
-                    double frameDeltaUnits = animationUnitsPerSecond * deltaSeconds;
-                    Vector norm = totalDelta / totalDeltaLen;
-                    Vector delta = norm * frameDeltaUnits;
-                    anim.m_animationCurrentPos += delta;
-
-                    Vector currentPosDirToEnd = anim.m_animationEndPos - anim.m_animationCurrentPos;
-                    currentPosDirToEnd.Normalize();
-
-                    double dp = Vector.Multiply(currentPosDirToEnd, norm);
-                    done = dp < 0.0;
-                }
-                else
-                {
-                    done = true;
-                }
-
-                AnimateToCurrentPos(anim, false);
-
-                if (done)
-                {
-                    anim.m_animationCurrentPos.X = anim.m_animationEndPos.X;
-                    anim.m_animationCurrentPos.Y = anim.m_animationEndPos.Y;
-
-                    AnimateToCurrentPos(anim, false);
-
-                    Debug.WriteLine("animation complete", "(" + anim.m_animationCurrentPos.X + "," + anim.m_animationCurrentPos.Y + ")");
-
-                    bool closed = (anim.m_animationEndPos.X == anim.m_closedPos.X && anim.m_animationStartPos.X != anim.m_animationEndPos.X) ||
-                                     (anim.m_animationEndPos.Y == anim.m_closedPos.Y && anim.m_animationStartPos.Y != anim.m_animationEndPos.Y);
-
-                    bool open = (anim.m_animationEndPos.X == anim.m_openPos.X && anim.m_animationStartPos.X != anim.m_animationEndPos.X) ||
-                                   (anim.m_animationEndPos.Y == anim.m_openPos.Y && anim.m_animationStartPos.Y != anim.m_animationEndPos.Y);
-
-                    if(closed)
-                    {
-                        isClosed = true;
-                    }
-                    else if(open)
-                    {
-                        AnimateToCurrentPos(anim, true);
-                        isOpen = true;
-                    }
-
-                    anim.m_animating = false;
-                } 
-            }
-
-            if (isClosed)
-            {
-                MenuViewCLIMethods.ViewCloseCompleted(m_nativeCallerPointer);
-                m_mainWindow.EnableInput();
-            }
-            else if (isOpen)
-            {
-                MenuViewCLIMethods.ViewOpenCompleted(m_nativeCallerPointer);
-                m_mainWindow.DisableInput();
-            }
+            
         }
 
-        void AnimateToCurrentPos(CustomAppAnimation anim, bool animationCompleteAndOpen)
+        void AnimateToCurrentPos(bool animationCompleteAndOpen)
         {
-            SetViewX(anim.m_uiElement, anim.m_animationCurrentPos.X);
-            SetViewY(anim.m_uiElement, anim.m_animationCurrentPos.Y);
-
             m_list.IsHitTestVisible = animationCompleteAndOpen;
         }
 
         public virtual float NormalisedAnimationProgress()
         {
-            float totalDistance = (float)(m_menuAnimations[0].m_animationEndPos - m_menuAnimations[0].m_animationStartPos).Length;
-            float currentDistance = (float)(m_menuAnimations[0].m_animationEndPos - m_menuAnimations[0].m_animationCurrentPos).Length;
-            float result = currentDistance / totalDistance;
-            result = Math.Max(Math.Min(result, 1.0f), 0.0f);
+            return m_openState;
+        }
 
-            if (m_menuAnimations[0].m_animationEndPos.X != m_menuAnimations[0].m_animationStartPos.X)
+        private void OnAnimCompleted(object sender, EventArgs e)
+        {
+            m_isAnimating = false;
+
+            if (m_openState == MENU_CLOSING)
             {
-                if (m_menuAnimations[0].m_animationEndPos.X == m_menuAnimations[0].m_openPos.X)
-                {
-                    result = 1.0f - result;
-                }
+                m_closeSearchIconAnim.Completed -= OnAnimCompleted;
+
+                m_openState = 0.0f;
+
+                MenuViewCLIMethods.ViewCloseCompleted(m_nativeCallerPointer);
+                m_isOffScreen = false;
             }
-            else if (m_menuAnimations[0].m_animationEndPos.Y != m_menuAnimations[0].m_animationStartPos.Y)
+            else if (m_openState == MENU_OPENING)
             {
-                if (m_menuAnimations[0].m_animationEndPos.Y == m_menuAnimations[0].m_openPos.Y)
-                {
-                    result = 1.0f - result;
-                }
+                m_openSearchIconAnim.Completed -= OnAnimCompleted;
+                m_openState = 1.0f;
+
+                MenuViewCLIMethods.ViewOpenCompleted(m_nativeCallerPointer);
+
+                m_isOffScreen = false;
+            }
+            else if (m_openState == MENU_OFFSCREENING)
+            {
+                MenuViewCLIMethods.ViewCloseCompleted(m_nativeCallerPointer);
+                m_openState = 0.0f;
             }
 
-            return result;
+            if (m_animationCompleteCallback != null)
+            {
+                m_animationCompleteCallback(sender, e);
+            }
         }
 
         public virtual void AnimateToClosedOnScreen()
         {
-            foreach (var anim in m_menuAnimations)
+            if (m_openState == MENU_CLOSED)
+                return;
+
+            m_closeSearchIconAnim.Completed += OnAnimCompleted;
+            m_closeSearchIconAnim.Begin(m_menuIconGrid);
+            m_closeSearchContainerAnim.Begin(m_mainContainer);
+            m_closeBackgroundRect.Begin(m_backgroundRectangle);
+
+            m_openState = MENU_CLOSING;
+            m_isAnimating = true;
+
+            if (m_isOffScreen)
             {
-                bool shouldRunAnimationBasedOnCurrentViewLocation = (ViewXPx(anim) != anim.m_closedPos.X);
+                var mainGrid = (Application.Current.MainWindow as MainWindow).MainGrid;
 
-                if (shouldRunAnimationBasedOnCurrentViewLocation || (anim.m_animating && anim.m_animationEndPos.X != anim.m_closedPos.X))
-                {
-                    double newXPx = anim.m_closedPos.X;
-                    Debug.WriteLine("AnimateToClosedOnScreen x: {0}", newXPx);
-                    AnimateViewToX(anim, newXPx);
+                var screenWidth = mainGrid.ActualWidth;
+                var totalWidth = m_mainContainer.ActualWidth + m_menuIcon.ActualWidth;
 
-                    if(anim.m_currentState == CustomAppAnimation.State.Open)
-                    {
-                        anim.m_animationCurrentPos = anim.m_openPos;
-                    }
-                    else if(anim.m_currentState == CustomAppAnimation.State.OffScreen)
-                    {
-                        anim.m_animationCurrentPos = anim.m_offscreenPos;
-                    }
+                var db = new DoubleAnimation(-(screenWidth / 2), TimeSpan.FromMilliseconds(200));
+                m_menuViewContainer.RenderTransform.BeginAnimation(TranslateTransform.XProperty, db);
 
-                    anim.m_currentState = CustomAppAnimation.State.Closed;
-                } 
+                m_isOffScreen = true;
             }
         }
 
         public virtual void AnimateToOpenOnScreen()
         {
-            foreach (var anim in m_menuAnimations)
-            {
-                bool shouldRunAnimationBasedOnCurrentViewLocation = (ViewXPx(anim) != anim.m_openPos.X);
+            if (m_openState == MENU_OPEN)
+                return;
 
-                if (shouldRunAnimationBasedOnCurrentViewLocation || (anim.m_animating && anim.m_animationEndPos.X != anim.m_openPos.X))
-                {
-                    double newXPx = anim.m_openPos.X;
-                    Debug.WriteLine("AnimateToOpenOnScreen x: {0}", newXPx);
-                    AnimateViewToX(anim, newXPx);
+            m_openSearchIconAnim.Completed += OnAnimCompleted;
+            m_openSearchIconAnim.Begin(m_menuIconGrid);
+            m_openSearchContainerAnim.Begin(m_mainContainer);
+            m_openBackgroundRect.Begin(m_backgroundRectangle);
 
-                    anim.m_currentState = CustomAppAnimation.State.Open;
-                }
-            }
+            m_isAnimating = true;
+
+            m_openState = MENU_OPENING;
         }
 
         public virtual void AnimateOffScreen()
         {
             Dispatcher.Invoke(() =>
             {
-                foreach (var anim in m_menuAnimations)
-                {
-                    bool shouldRunAnimationBasedOnCurrentViewLocation = (ViewXPx(anim) != anim.m_offscreenPos.X);
+                var mainGrid = (Application.Current.MainWindow as MainWindow).MainGrid;
 
-                    if (shouldRunAnimationBasedOnCurrentViewLocation || (anim.m_animating && anim.m_animationEndPos.X != anim.m_offscreenPos.X))
-                    {
-                        double newXPx = anim.m_offscreenPos.X;
-                        Debug.WriteLine("AnimateOffScreen x: {0}", newXPx);
-                        AnimateViewToX(anim, newXPx);
+                var screenWidth = mainGrid.ActualWidth;
+                var totalWidth = m_mainContainer.ActualWidth + m_menuIcon.ActualWidth;
 
-                        if(anim.m_currentState == CustomAppAnimation.State.Open)
-                        {
-                            anim.m_containerAnimationCurrentPos = anim.m_openPos;
-                        }
-                        else if (anim.m_currentState == CustomAppAnimation.State.Closed)
-                        {
-                            anim.m_containerAnimationCurrentPos = anim.m_closedPos;
-                        }
+                m_openState = MENU_OFFSCREENING;
 
-                        anim.m_currentState = CustomAppAnimation.State.OffScreen;
-                    } 
-                }
+                var db = new DoubleAnimation(-(screenWidth / 2) - (totalWidth / 2), TimeSpan.FromMilliseconds(m_animationTimeMilliseconds));
+                db.Completed += OnAnimCompleted;
+                m_menuViewContainer.RenderTransform.BeginAnimation(TranslateTransform.XProperty, db);
+
+                m_isOffScreen = true;
             });
         }
 
@@ -283,18 +227,6 @@ namespace ExampleAppWPF
             {
                 return;
             }
-
-            foreach (var anim in m_menuAnimations)
-            {
-                double viewXPx = ViewXPx(anim);
-                double newXPx = anim.m_offscreenPos.X + (((anim.m_closedPos.X - anim.m_offscreenPos.X) * onScreenState) + 0.5);
-
-                if (viewXPx != newXPx)
-                {
-                    Debug.WriteLine("AnimateToIntermediateOnScreenState x: {0}", newXPx);
-                    SetViewX(anim.m_uiElement, newXPx);
-                } 
-            }
         }
 
         public void AnimateToIntermediateOpenState(float openState)
@@ -302,17 +234,6 @@ namespace ExampleAppWPF
             if (IsAnimating())
             {
                 return;
-            }
-
-            foreach (var anim in m_menuAnimations)
-            {
-                double newXPx = anim.m_closedPos.X + (((anim.m_openPos.X - anim.m_closedPos.X) * openState) + 0.5);
-
-                if (ViewXPx(anim) != newXPx)
-                {
-                    Debug.WriteLine("AnimateToIntermediateOpenState x: {0}", newXPx);
-                    SetViewX(anim.m_uiElement, newXPx);
-                }
             }
         }
 
@@ -343,98 +264,9 @@ namespace ExampleAppWPF
             RefreshListData(groups, groupsExpandable, childMap);
         }
 
-        protected void AnimateViewToX(CustomAppAnimation anim, double xAsPx)
-        {
-            if (xAsPx == anim.m_offscreenPos.X || xAsPx == anim.m_closedPos.X)
-            {
-                anim.m_animationStartPos.X = m_isFirstAnimationCeremony ? anim.m_offscreenPos.X : anim.m_openPos.X;
-            }
-            else if (xAsPx == anim.m_openPos.X)
-            {
-                anim.m_animationStartPos.X = anim.m_closedPos.X;
-            }
-            else
-            {
-                throw new ArgumentException(string.Format("Invalid animation target {0} ", xAsPx));
-            }
-
-            m_isFirstAnimationCeremony = false;
-
-            anim.m_animationStartPos.Y = anim.m_animationCurrentPos.Y = anim.m_animationEndPos.Y = ViewYPx(anim);
-
-            anim.m_animationEndPos.X = xAsPx;
-
-            anim.m_animating = true;
-        }
-
-        protected void AnimateViewToY(CustomAppAnimation anim, double yAsPx)
-        {
-            bool fromOffScreen = (ViewYPx(anim) == anim.m_offscreenPos.Y);
-
-            if (yAsPx == anim.m_offscreenPos.Y || yAsPx == anim.m_closedPos.Y)
-            {
-                anim.m_animationStartPos.Y = (m_isFirstAnimationCeremony || fromOffScreen) ? anim.m_offscreenPos.Y : anim.m_openPos.Y;
-            }
-            else if (yAsPx == anim.m_openPos.Y)
-            {
-                anim.m_animationStartPos.Y = anim.m_closedPos.Y;
-            }
-            else
-            {
-                throw new ArgumentException(string.Format("Invalid animation target {0}", yAsPx));
-            }
-
-            m_isFirstAnimationCeremony = false;
-
-            anim.m_animationStartPos.X =
-                anim.m_animationCurrentPos.X =
-                    anim.m_animationEndPos.X = ViewXPx(anim);
-
-            anim.m_animationCurrentPos.Y = ViewYPx(anim);
-            anim.m_animationEndPos.Y = yAsPx;
-
-            anim.m_animating = true;
-        }
-        protected void SetViewX(UIElement element, double viewXPx)
-        {
-            var currentPosition = RenderTransform.Transform(new Point(0.0, 0.0));
-            Debug.WriteLine("SetViewX {0}", viewXPx);
-            RenderTransform = new TranslateTransform(viewXPx, currentPosition.Y);
-        }
-
-        protected void SetViewY(UIElement element, double viewYPx)
-        {
-            var currentPosition = element.RenderTransform.Transform(new Point(0.0, 0.0));
-            Debug.WriteLine("SetViewY {0}", viewYPx);
-            element.RenderTransform = new TranslateTransform(currentPosition.X, viewYPx);
-        }
-
-        protected void SetViewXY(double viewXPx, double viewYPx, UIElement element)
-        {
-            var currentPosition = element.RenderTransform.Transform(new Point(0.0, 0.0));
-            Debug.WriteLine("SetViewY {0}", viewYPx);
-            element.RenderTransform = new TranslateTransform(currentPosition.X, viewYPx);
-        }
-
-        protected int ViewXPx(CustomAppAnimation anim)
-        {
-            var currentPosition = anim.m_uiElement.RenderTransform.Transform(new Point(0.0, 0.0));
-            int x = (int)currentPosition.X;
-            return x;
-        }
-
-        protected int ViewYPx(CustomAppAnimation anim)
-        {
-            var currentPosition = anim.m_uiElement.RenderTransform.Transform(new Point(0.0, 0.0));
-            int y = (int)currentPosition.Y;
-            return y;
-        }
-
         protected bool StartedClosed(double controlStartPosXDip)
         {
-            double deltaClosed = Math.Abs(controlStartPosXDip - m_menuAnimations[0].m_closedPos.X);
-            double deltaOpen = Math.Abs(controlStartPosXDip - m_menuAnimations[0].m_openPos.X);
-            return deltaClosed < deltaOpen;
+            return false;
         }
 
         protected bool CanInteract()
@@ -444,12 +276,12 @@ namespace ExampleAppWPF
 
         protected bool IsClosed()
         {
-            return m_menuAnimations[0].m_currentState == CustomAppAnimation.State.Closed;
+            return m_openState == MENU_CLOSED;
         }
 
         protected bool IsOpen()
         {
-            return m_menuAnimations[0].m_currentState == CustomAppAnimation.State.Open;
+            return m_openState == MENU_OPEN;
         }
     }
 }
