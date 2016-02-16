@@ -44,8 +44,11 @@ namespace ExampleAppWPF
         protected bool m_isOffScreen;
         protected float m_openState;
 
+        protected double m_offScreenPos;
+        protected double m_onScreenPos;
+
         protected const float MENU_CLOSED = 0.0f;
-        protected const float MENU_OFFSCREEN = 0.0f;
+        protected const float MENU_OFFSCREEN = 0.1f;
         protected const float MENU_OPEN = 1.0f;
         protected const float MENU_CLOSING = 0.4f;
         protected const float MENU_OPENING = 0.5f;
@@ -69,6 +72,14 @@ namespace ExampleAppWPF
             m_openState = -1.0f;
             m_isAnimating = false;
             m_isOffScreen = true;
+        }
+
+        protected void PerformLayout(object sender, SizeChangedEventArgs e)
+        {
+            if (m_isOffScreen)
+                m_menuViewContainer.RenderTransform = new TranslateTransform(m_offScreenPos, 0);
+            else
+                m_menuViewContainer.RenderTransform = new TranslateTransform(m_onScreenPos, 0);
         }
 
         protected void SetAnimationCompleteCallback(Action<object, EventArgs> callback)
@@ -134,24 +145,25 @@ namespace ExampleAppWPF
             {
                 m_closeSearchIconAnim.Completed -= OnAnimCompleted;
 
-                m_openState = 0.0f;
+                m_openState = MENU_CLOSED;
 
                 MenuViewCLIMethods.ViewCloseCompleted(m_nativeCallerPointer);
+                m_mainWindow.EnableInput();
                 m_isOffScreen = false;
             }
             else if (m_openState == MENU_OPENING)
             {
                 m_openSearchIconAnim.Completed -= OnAnimCompleted;
-                m_openState = 1.0f;
+                m_openState = MENU_OPEN;
 
                 MenuViewCLIMethods.ViewOpenCompleted(m_nativeCallerPointer);
+                m_mainWindow.DisableInput();
 
                 m_isOffScreen = false;
             }
             else if (m_openState == MENU_OFFSCREENING)
             {
-                MenuViewCLIMethods.ViewCloseCompleted(m_nativeCallerPointer);
-                m_openState = 0.0f;
+                m_openState = MENU_OFFSCREEN;
             }
 
             if (m_animationCompleteCallback != null)
@@ -180,10 +192,18 @@ namespace ExampleAppWPF
                 var screenWidth = mainGrid.ActualWidth;
                 var totalWidth = m_mainContainer.ActualWidth + m_menuIcon.ActualWidth;
 
-                var db = new DoubleAnimation(-(screenWidth / 2), TimeSpan.FromMilliseconds(200));
-                m_menuViewContainer.RenderTransform.BeginAnimation(TranslateTransform.XProperty, db);
+                var db = new DoubleAnimation(m_onScreenPos, TimeSpan.FromMilliseconds(m_animationTimeMilliseconds));
 
-                m_isOffScreen = true;
+                try
+                {
+                    m_menuViewContainer.RenderTransform.BeginAnimation(TranslateTransform.XProperty, db);
+                }
+                catch (Exception e)
+                {
+                    e = null;
+                }
+
+                m_isOffScreen = false;
             }
         }
 
@@ -198,6 +218,7 @@ namespace ExampleAppWPF
             m_openBackgroundRect.Begin(m_backgroundRectangle);
 
             m_isAnimating = true;
+            m_isOffScreen = false;
 
             m_openState = MENU_OPENING;
         }
@@ -206,16 +227,19 @@ namespace ExampleAppWPF
         {
             Dispatcher.Invoke(() =>
             {
-                var mainGrid = (Application.Current.MainWindow as MainWindow).MainGrid;
-
-                var screenWidth = mainGrid.ActualWidth;
-                var totalWidth = m_mainContainer.ActualWidth + m_menuIcon.ActualWidth;
-
                 m_openState = MENU_OFFSCREENING;
 
-                var db = new DoubleAnimation(-(screenWidth / 2) - (totalWidth / 2), TimeSpan.FromMilliseconds(m_animationTimeMilliseconds));
+                var db = new DoubleAnimation(m_offScreenPos, TimeSpan.FromMilliseconds(m_animationTimeMilliseconds));
                 db.Completed += OnAnimCompleted;
-                m_menuViewContainer.RenderTransform.BeginAnimation(TranslateTransform.XProperty, db);
+
+                try
+                {
+                    m_menuViewContainer.RenderTransform.BeginAnimation(TranslateTransform.XProperty, db);
+                }
+                catch(Exception e)
+                {
+
+                }
 
                 m_isOffScreen = true;
             });
@@ -262,11 +286,6 @@ namespace ExampleAppWPF
             }
 
             RefreshListData(groups, groupsExpandable, childMap);
-        }
-
-        protected bool StartedClosed(double controlStartPosXDip)
-        {
-            return false;
         }
 
         protected bool CanInteract()

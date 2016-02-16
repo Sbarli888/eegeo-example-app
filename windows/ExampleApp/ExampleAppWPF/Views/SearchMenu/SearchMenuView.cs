@@ -52,15 +52,17 @@ namespace ExampleAppWPF
             PerformLayout(sender, null);
         }
 
-        private void PerformLayout(object sender, SizeChangedEventArgs e)
+        private new void PerformLayout(object sender, SizeChangedEventArgs e)
         {
             var screenWidth = m_mainWindow.MainGrid.ActualWidth;
             var totalWidth = m_mainContainer.ActualWidth + m_menuIcon.ActualWidth;
 
-            if(m_isOffScreen)
-                m_menuViewContainer.RenderTransform = new TranslateTransform(-(screenWidth / 2) - (totalWidth / 2), 0);
-            else
-                m_menuViewContainer.RenderTransform = new TranslateTransform(-(screenWidth / 2), 0);
+            m_onScreenPos = -(screenWidth / 2);
+            m_offScreenPos = -(screenWidth / 2) - (totalWidth / 2);
+
+            base.PerformLayout(sender, e);
+
+            m_menuOptionsView.MaxHeight = m_mainWindow.MainGrid.ActualHeight * 0.75;
         }
 
         public override void OnApplyTemplate()
@@ -245,13 +247,9 @@ namespace ExampleAppWPF
             m_closeBackgroundRect.Begin(m_searchBox);
         }
 
-        private void OnAnimCompleted(object sender, EventArgs e)
-        {
-            
-        }
-
         public override void AnimateToOpenOnScreen()
         {
+            base.AnimateToOpenOnScreen();
             m_openBackgroundRect.Begin(m_searchBox);
         }
 

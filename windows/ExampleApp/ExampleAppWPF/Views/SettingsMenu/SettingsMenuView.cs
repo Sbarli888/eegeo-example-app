@@ -41,27 +41,22 @@ namespace ExampleAppWPF
         {
             base.OnApplyTemplate();
 
-            m_list = (ListBox)GetTemplateChild("SecondaryMenuItemList");
+            m_list = (ListBox)GetTemplateChild("SettingsMenuItemList");
             m_menutItemHandler = new ControlClickHandler(OnSelectionChanged, m_list);
 
-            m_menuIcon = (Button)GetTemplateChild("SecondaryMenuDragTabView");
+            m_menuIcon = (Button)GetTemplateChild("SettingsMenuIconButton");
 
             m_menuIcon.Click += OnIconClick;
 
-            m_mainContainer = (Grid)GetTemplateChild("SecondaryMenuViewListContainer");
+            m_mainContainer = (Grid)GetTemplateChild("SettingsMenuMainContainer");
 
             var fadeInItemStoryboard = ((Storyboard)Template.Resources["FadeInNewItems"]).Clone();
             var fadeOutItemStoryboard = ((Storyboard)Template.Resources["FadeOutOldItems"]).Clone();
 
-            m_menuViewContainer = (Grid)GetTemplateChild("SearchMenuViewContainer");
+            m_menuViewContainer = (Grid)GetTemplateChild("SettingsMenuViewContainer");
             m_backgroundRectangle = (Rectangle)GetTemplateChild("BackgroundRect");
 
-            m_menuIcon = (Button)GetTemplateChild("SecondaryMenuDragTabView");
-            m_menuIconGrid = (Grid)GetTemplateChild("SearchIconGrid");
-
-            m_menuIcon.Click += OnIconClick;
-
-            m_mainContainer = (Grid)GetTemplateChild("SerchMenuMainContainer");
+            m_menuIconGrid = (Grid)GetTemplateChild("SettingsIconGrid");
 
             m_openSearchIconAnim = ((Storyboard)Template.Resources["OpenSearchViewIcon"]).Clone();
             m_closeSearchIconAnim = ((Storyboard)Template.Resources["CloseSearchViewIcon"]).Clone();
@@ -105,21 +100,15 @@ namespace ExampleAppWPF
             }
         }
 
-        public override void AnimateToClosedOnScreen()
+        public new void PerformLayout(object sender, SizeChangedEventArgs e)
         {
-            base.AnimateToClosedOnScreen();
-            m_mainContainer.Visibility = Visibility.Hidden;
-        }
+            var screenWidth = m_mainWindow.MainGrid.ActualWidth;
+            var totalWidth = m_mainContainer.ActualWidth + m_menuIcon.ActualWidth;
 
-        public override void AnimateToOpenOnScreen()
-        {
-            base.AnimateToOpenOnScreen();
-            m_mainContainer.Visibility = Visibility.Visible;
-        }
+            m_onScreenPos = (screenWidth / 2);
+            m_offScreenPos = (screenWidth / 2) + (totalWidth / 2);
 
-        private void PerformLayout(object sender, SizeChangedEventArgs e)
-        {
-            
+            base.PerformLayout(sender, e);
         }
 
 

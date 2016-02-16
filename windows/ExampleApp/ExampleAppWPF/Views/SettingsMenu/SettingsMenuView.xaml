@@ -28,46 +28,48 @@
 
                         <Storyboard x:Key="OpenSearchViewIcon">
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="714,0,0,0" KeySpline="0.0,1.0 0.6,1.0"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-714,0,0,0" KeySpline="0.0,1.0 0.6,1.0"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
 
                         <Storyboard x:Key="CloseSearchViewIcon">
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="114,0,0,0" KeySpline="0.0,1.0 1.0,0.8"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-114,0,0,0" KeySpline="0.0,1.0 1.0,0.8"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
 
                         <Storyboard x:Key="OpenSearchContainer">
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="332,0,0,0" KeySpline="0.0,1.0 1.0,0.8"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-332,0,0,0" KeySpline="0.0,1.0 1.0,0.8"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
 
                         <Storyboard x:Key="CloseSearchContainer">
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-332,0,0,0" KeySpline="0.0,1.0 0.6,1.0"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="332,0,0,0" KeySpline="0.0,1.0 0.6,1.0"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
 
                         <Storyboard x:Key="OpenBackgroundRect">
                             <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="0" To="1" Duration="0:0:0.2"/>
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2">
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="332,0,0,0"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-332,0,0,0"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
 
                         <Storyboard x:Key="CloseBackgroundRect">
                             <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="1" To="0" Duration="0:0:0.2"/>
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-300,0,0,0"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-268,0,0,0"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
                     </ControlTemplate.Resources>
 
-                    <DockPanel Margin="0,50,0,0" Width="382">
-                        <Grid Width="50" Height="50" VerticalAlignment="Top" DockPanel.Dock="Left" Name="DragTabParentGrid" Background="{StaticResource Gold}">
-                            <Button Width="Auto" Height="Auto" Name="SecondaryMenuDragTabView" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Grid Margin="0,50,0,0" Name="SettingsMenuViewContainer">
+                        
+                        <!--Closed: -114 Open: -714 -->
+                        <Grid Margin="-114,0,0,0" Width="50" Height="50" VerticalAlignment="Top" DockPanel.Dock="Left" Name="SettingsIconGrid" Background="{StaticResource PrimaryBG_colour}" Panel.ZIndex="99">
+                            <Button Width="Auto" Height="Auto" Name="SettingsMenuIconButton" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <Button.Style>
                                     <Style TargetType="{x:Type Button}">
                                         <Style.Setters>
@@ -104,7 +106,21 @@
                             </Button>
                         </Grid>
 
-                        <Grid Name="SecondaryMenuViewListContainer" DockPanel.Dock="Right">
+                        <!--Closed: 268 Open 332-->
+                        <Rectangle Name="BackgroundRect" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="-268,0,0,0" Width="332" Height="50" Fill="{StaticResource PrimaryBG_colour}" RenderTransformOrigin="1.0, 0.0">
+                            <Rectangle.Resources>
+                                <Style TargetType="{x:Type Rectangle}">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="0"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Rectangle.Resources>
+                        </Rectangle>
+                        
+                        <!--Closed: 332 Open: -332-->
+                        <Grid Name="SettingsMenuMainContainer" Margin="332,0,0,0" HorizontalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="50"/>
                                 <RowDefinition Height="6"/>
@@ -116,9 +132,6 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
-                                    <Rectangle Width="332" Height="50" Fill="{StaticResource Gold}"/>
-                                </Grid>
-                                <Grid Grid.Column="0">
                                     <TextBlock Text="Settings" Foreground="White" FontSize="22" FontFamily="{StaticResource PrimaryUIFont}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
                                 </Grid>
                             </Grid>
@@ -128,7 +141,7 @@
                             <Grid Grid.Row="2">
                                 <StackPanel  Orientation="Vertical">
                                     <ScrollViewer Background="{StaticResource PrimaryBG_colour}" PanningMode="VerticalOnly" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
-                                        <ListBox Margin="5,0,5,0" Name="SecondaryMenuItemList" Template="{StaticResource ListBoxControlTemplateNoPadding}" ItemsSource="{Binding Children}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" BorderThickness="0">
+                                        <ListBox Margin="5,0,5,0" Name="SettingsMenuItemList" Template="{StaticResource ListBoxControlTemplateNoPadding}" ItemsSource="{Binding Children}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" BorderThickness="0">
                                             <ListBox.Resources>
                                                 <Style TargetType="ListBoxItem">
                                                     <Style.Resources>
@@ -227,7 +240,7 @@
                                 </StackPanel>
                             </Grid>
                         </Grid>
-                    </DockPanel>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
