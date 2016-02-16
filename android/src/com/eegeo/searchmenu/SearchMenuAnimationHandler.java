@@ -7,10 +7,10 @@ import android.view.View;
 
 import com.eegeo.animation.ReversibleAnimatorSet;
 import com.eegeo.animation.ReversibleValueAnimator;
+import com.eegeo.animation.updatelisteners.ViewXAnimatorUpdateListener;
 import com.eegeo.entrypointinfrastructure.MainActivity;
 import com.eegeo.menu.MenuAnimationHandler;
 import com.eegeo.menu.MenuView;
-import com.eegeo.menu.ViewXAnimatorUpdateListener;
 import com.eegeo.mobileexampleapp.R;
 
 public class SearchMenuAnimationHandler extends MenuAnimationHandler

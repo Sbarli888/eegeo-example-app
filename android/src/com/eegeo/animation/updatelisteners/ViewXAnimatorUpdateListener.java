@@ -1,6 +1,6 @@
 //Copyright eeGeo Ltd (2012-2015), All Rights Reserved
 
-package com.eegeo.menu;
+package com.eegeo.animation.updatelisteners;
 
 import android.animation.ValueAnimator;
 import android.view.View;
