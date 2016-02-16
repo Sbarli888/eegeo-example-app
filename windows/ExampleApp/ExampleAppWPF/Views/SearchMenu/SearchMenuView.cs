@@ -242,15 +242,30 @@ namespace ExampleAppWPF
 
         public override void AnimateToClosedOnScreen()
         {
-            base.AnimateToClosedOnScreen();
+            if (m_openState != MENU_CLOSED && m_openState != MENU_CLOSING)
+            {
+                if(m_isOffScreen)
+                {
+                    m_searchBox.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    m_searchBox.Visibility = Visibility.Visible;
+                    m_closeBackgroundRect.Begin(m_searchBox);
+                }
 
-            m_closeBackgroundRect.Begin(m_searchBox);
+                base.AnimateToClosedOnScreen();
+            }
         }
 
         public override void AnimateToOpenOnScreen()
         {
-            base.AnimateToOpenOnScreen();
-            m_openBackgroundRect.Begin(m_searchBox);
+            if (m_openState != MENU_OPEN && m_openState != MENU_OPENING)
+            {
+                m_searchBox.Visibility = Visibility.Visible;
+                m_openBackgroundRect.Begin(m_searchBox);
+                base.AnimateToOpenOnScreen();
+            }
         }
 
         public void DisableEditText()
