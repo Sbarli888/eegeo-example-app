@@ -144,11 +144,11 @@ namespace ExampleAppWPF
             if (m_openState == MENU_CLOSING)
             {
                 m_closeSearchIconAnim.Completed -= OnAnimCompleted;
-
                 m_openState = MENU_CLOSED;
 
                 MenuViewCLIMethods.ViewCloseCompleted(m_nativeCallerPointer);
                 m_mainWindow.EnableInput();
+
                 m_isOffScreen = false;
             }
             else if (m_openState == MENU_OPENING)
@@ -164,6 +164,7 @@ namespace ExampleAppWPF
             else if (m_openState == MENU_OFFSCREENING)
             {
                 m_openState = MENU_OFFSCREEN;
+                m_isOffScreen = true;
             }
 
             if (m_animationCompleteCallback != null)
@@ -174,7 +175,7 @@ namespace ExampleAppWPF
 
         public virtual void AnimateToClosedOnScreen()
         {
-            if (m_openState == MENU_CLOSED)
+            if (m_openState == MENU_CLOSED || m_openState == MENU_CLOSING)
                 return;
 
             m_closeSearchIconAnim.Completed += OnAnimCompleted;
@@ -184,6 +185,8 @@ namespace ExampleAppWPF
 
             m_openState = MENU_CLOSING;
             m_isAnimating = true;
+
+            m_backgroundRectangle.Visibility = Visibility.Visible;
 
             if (m_isOffScreen)
             {
@@ -203,13 +206,13 @@ namespace ExampleAppWPF
                     e = null;
                 }
 
-                m_isOffScreen = false;
+                m_backgroundRectangle.Visibility = Visibility. Hidden;
             }
         }
 
         public virtual void AnimateToOpenOnScreen()
         {
-            if (m_openState == MENU_OPEN)
+            if (m_openState == MENU_OPEN || m_openState == MENU_OPENING)
                 return;
 
             m_openSearchIconAnim.Completed += OnAnimCompleted;
@@ -218,9 +221,9 @@ namespace ExampleAppWPF
             m_openBackgroundRect.Begin(m_backgroundRectangle);
 
             m_isAnimating = true;
-            m_isOffScreen = false;
 
             m_openState = MENU_OPENING;
+            m_backgroundRectangle.Visibility = Visibility.Visible;
         }
 
         public virtual void AnimateOffScreen()
@@ -240,8 +243,6 @@ namespace ExampleAppWPF
                 {
 
                 }
-
-                m_isOffScreen = true;
             });
         }
 
