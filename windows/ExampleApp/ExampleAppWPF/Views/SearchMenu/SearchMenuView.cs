@@ -33,6 +33,12 @@ namespace ExampleAppWPF
         private ControlClickHandler m_menuListClickHandler;
         private ControlClickHandler m_resultsListClickHandler;
 
+        private Storyboard m_searchInputOpen;
+        private Storyboard m_searchInputClose;
+
+        private Storyboard m_searchInputTextOpen;
+        private Storyboard m_searchInputTextClose;
+
         static SearchMenuView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchMenuView), new FrameworkPropertyMetadata(typeof(SearchMenuView)));
@@ -93,7 +99,7 @@ namespace ExampleAppWPF
 
             m_menuIcon.Click += OnIconClick;
 
-            m_editText = (TextBox)GetTemplateChild("SecondaryMenuViewSearchEditTextView");
+            m_editText = (TextBox)GetTemplateChild("SearchInputBox");
             m_editText.KeyDown += OnKeyDown;
             m_editText.GotFocus += OnSearchBoxSelected;
             m_editText.LostFocus += OnSearchBoxUnSelected;
@@ -113,13 +119,20 @@ namespace ExampleAppWPF
             m_openBackgroundRect = ((Storyboard)Template.Resources["OpenBackgroundRect"]).Clone();
             m_closeBackgroundRect = ((Storyboard)Template.Resources["CloseBackgroundRect"]).Clone();
 
+            m_searchInputOpen = ((Storyboard)Template.Resources["OpenSearchInputBox"]).Clone();
+            m_searchInputClose = ((Storyboard)Template.Resources["CloseSearchInputBox"]).Clone();
+
+            m_searchInputTextOpen = ((Storyboard)Template.Resources["OpenSearchInputBoxText"]).Clone();
+            m_searchInputTextClose = ((Storyboard)Template.Resources["CloseSearchInputBoxText"]).Clone();
+
             m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SubMenuItemPanel");
             m_resultListAdapter = new MenuListAdapter(false, m_resultsList, fadeInItemStoryboard, fadeOutItemStoryboard, "SearchResultPanel");
         }
 
         private void OnMenuScrollWheel(object sender, MouseWheelEventArgs e)
         {
-            m_menuOptionsView.RaiseEvent(e);
+            m_menuOptionsView.ScrollToVerticalOffset(m_menuOptionsView.VerticalOffset - e.Delta);
+            e.Handled = true;
         }
 
         private void OnMenuListItemSelected(object sender, MouseEventArgs e)
@@ -251,7 +264,9 @@ namespace ExampleAppWPF
                 else
                 {
                     m_searchBox.Visibility = Visibility.Visible;
-                    m_closeBackgroundRect.Begin(m_searchBox);
+
+                    m_searchInputClose.Begin(m_searchBox);
+                    m_searchInputTextClose.Begin(m_editText);
                 }
 
                 base.AnimateToClosedOnScreen();
@@ -263,7 +278,10 @@ namespace ExampleAppWPF
             if (m_openState != MENU_OPEN && m_openState != MENU_OPENING)
             {
                 m_searchBox.Visibility = Visibility.Visible;
-                m_openBackgroundRect.Begin(m_searchBox);
+
+                m_searchInputOpen.Begin(m_searchBox);
+                m_searchInputTextOpen.Begin(m_editText);
+
                 base.AnimateToOpenOnScreen();
             }
         }
