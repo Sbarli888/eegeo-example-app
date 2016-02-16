@@ -10,28 +10,18 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace ExampleAppWPF
 {
     public class SettingsMenuView : MenuView
     {
-        private double m_screenWidthPx;
-        private double m_mainContainerOnScreenWidthPx;
-        private TextBox m_editText;
         private MenuListAdapter m_adapter;
-        private bool m_isFirstLayout = true;
-        private Grid m_mainContainer;
-        private Grid m_dragTabContainer;
-        private bool m_isMouseDown = false;
-        private static readonly ResourceDictionary genericResourceDictionary;
-        private CustomAppAnimation m_mainContainerAnim;
         private ControlClickHandler m_menutItemHandler;
 
         static SettingsMenuView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SettingsMenuView), new FrameworkPropertyMetadata(typeof(SettingsMenuView)));
-            var uri = new Uri("/ExampleAppWPF;component/Colours.xaml", UriKind.Relative);
-            genericResourceDictionary = (ResourceDictionary)Application.LoadComponent(uri);
         }
 
         public SettingsMenuView(IntPtr nativeCallerPointer) : base(nativeCallerPointer)
@@ -51,22 +41,31 @@ namespace ExampleAppWPF
         {
             base.OnApplyTemplate();
 
-            m_list = (ListBox)GetTemplateChild("SecondaryMenuItemList");
+            m_list = (ListBox)GetTemplateChild("SettingsMenuItemList");
             m_menutItemHandler = new ControlClickHandler(OnSelectionChanged, m_list);
 
-            m_dragTabView = (Button)GetTemplateChild("SecondaryMenuDragTabView");
-            m_dragTabContainer = (Grid)GetTemplateChild("DragTabParentGrid");
+            m_menuIcon = (Button)GetTemplateChild("SettingsMenuIconButton");
 
-            m_dragTabView.Click += OnIconClick;
+            m_menuIcon.Click += OnIconClick;
 
-            m_mainContainer = (Grid)GetTemplateChild("SecondaryMenuViewListContainer");
-            m_mainContainerAnim = new CustomAppAnimation(m_mainContainer as FrameworkElement);
-            m_mainContainer.RenderTransformOrigin = new Point(0.5, 0.5);
-
-            m_menuAnimations.Add(m_mainContainerAnim);
+            m_mainContainer = (Grid)GetTemplateChild("SettingsMenuMainContainer");
 
             var fadeInItemStoryboard = ((Storyboard)Template.Resources["FadeInNewItems"]).Clone();
             var fadeOutItemStoryboard = ((Storyboard)Template.Resources["FadeOutOldItems"]).Clone();
+
+            m_menuViewContainer = (Grid)GetTemplateChild("SettingsMenuViewContainer");
+            m_backgroundRectangle = (Rectangle)GetTemplateChild("BackgroundRect");
+
+            m_menuIconGrid = (Grid)GetTemplateChild("SettingsIconGrid");
+
+            m_openSearchIconAnim = ((Storyboard)Template.Resources["OpenSearchViewIcon"]).Clone();
+            m_closeSearchIconAnim = ((Storyboard)Template.Resources["CloseSearchViewIcon"]).Clone();
+
+            m_openSearchContainerAnim = ((Storyboard)Template.Resources["OpenSearchContainer"]).Clone();
+            m_closeSearchContainerAnim = ((Storyboard)Template.Resources["CloseSearchContainer"]).Clone();
+
+            m_openBackgroundRect = ((Storyboard)Template.Resources["OpenBackgroundRect"]).Clone();
+            m_closeBackgroundRect = ((Storyboard)Template.Resources["CloseBackgroundRect"]).Clone();
 
             m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SettingsMenuItemPanel");
 
@@ -101,46 +100,15 @@ namespace ExampleAppWPF
             }
         }
 
-        public override void AnimateToClosedOnScreen()
+        public new void PerformLayout(object sender, SizeChangedEventArgs e)
         {
-            base.AnimateToClosedOnScreen();
-            m_mainContainer.Visibility = Visibility.Hidden;
-        }
+            var screenWidth = m_mainWindow.MainGrid.ActualWidth;
+            var totalWidth = m_mainContainer.ActualWidth + m_menuIcon.ActualWidth;
 
-        public override void AnimateToOpenOnScreen()
-        {
-            base.AnimateToOpenOnScreen();
-            m_mainContainer.Visibility = Visibility.Visible;
-        }
+            m_onScreenPos = (screenWidth / 2);
+            m_offScreenPos = (screenWidth / 2) + (totalWidth / 2);
 
-        private void PerformLayout(object sender, SizeChangedEventArgs e)
-        {
-            var currentPosition = RenderTransform.Transform(new Point(0.0, 0.0));
-            double onScreenState = (currentPosition.X - m_mainContainerAnim.m_offscreenPos.X) / (m_mainContainerAnim.m_openPos.X - m_mainContainerAnim.m_offscreenPos.X);
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-            m_screenWidthPx = mainWindow.MainGrid.ActualWidth;
-            var screenWidthPy = mainWindow.MainGrid.ActualHeight;
-
-            double dragTabWidthPx = m_dragTabView.ActualWidth;
-
-            m_mainContainerOffscreenOffsetXPx = -m_dragTabView.Margin.Right;
-            double mainContainerWidthPx = m_mainContainer.ActualWidth;
-            m_mainContainerOnScreenWidthPx = mainContainerWidthPx - m_mainContainerOffscreenOffsetXPx;
-
-            m_mainContainerAnim.m_widthHeight.X = mainContainerWidthPx + dragTabWidthPx;
-            m_mainContainerAnim.m_offscreenPos.X = (m_screenWidthPx / 2) + (m_mainContainerAnim.m_widthHeight.X / 2);
-            m_mainContainerAnim.m_closedPos.X = m_mainContainerAnim.m_offscreenPos.X - (dragTabWidthPx + 32);
-            m_mainContainerAnim.m_openPos.X = m_mainContainerAnim.m_offscreenPos.X - m_mainContainerAnim.m_widthHeight.X;
-
-            double layoutX = m_mainContainerAnim.m_offscreenPos.X;
-
-            if (!m_isFirstLayout)
-            {
-                layoutX = onScreenState * (m_mainContainerAnim.m_openPos.X - m_mainContainerAnim.m_offscreenPos.X) + m_mainContainerAnim.m_offscreenPos.X;
-            }
-
-            RenderTransform = new TranslateTransform(layoutX, currentPosition.Y);
-            m_isFirstLayout = false;
+            base.PerformLayout(sender, e);
         }
 
 

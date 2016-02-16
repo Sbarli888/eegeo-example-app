@@ -8,20 +8,16 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace ExampleAppWPF
 {
     public class SearchMenuView : MenuView
     {
-        private double m_screenWidthPx;
-        private double m_mainContainerOnScreenWidthPx;
         private TextBox m_editText;
         private MenuListAdapter m_adapter;
-        private bool m_isFirstLayout = true;
-        private Grid m_mainContainer;
-        private Grid m_dragTabContainer;
-        private CustomAppAnimation m_mainContainerAnim;
+        private Grid m_searchBox;
 
         private ListBox m_resultsList;
         private MenuListAdapter m_resultListAdapter;
@@ -30,9 +26,7 @@ namespace ExampleAppWPF
         private Button m_resultsClearButton;
         private ScrollViewer m_menuOptionsView;
 
-        private Canvas m_resultsCountContainer;
-        private Storyboard m_openResultCountAnim;
-        private Storyboard m_closeResultCountAnim;
+        private Grid m_resultsCountContainer;
 
         private string m_defaultEditText;
 
@@ -58,39 +52,17 @@ namespace ExampleAppWPF
             PerformLayout(sender, null);
         }
 
-        private void PerformLayout(object sender, SizeChangedEventArgs e)
+        private new void PerformLayout(object sender, SizeChangedEventArgs e)
         {
-            var currentPosition = RenderTransform.Transform(new Point(0.0, 0.0));
-            double onScreenState = (currentPosition.X - m_mainContainerAnim.m_offscreenPos.X) / (m_mainContainerAnim.m_openPos.X - m_mainContainerAnim.m_offscreenPos.X);
-            MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
-            m_screenWidthPx = mainWindow.MainGrid.ActualWidth;
-            var screenWidthPy = mainWindow.MainGrid.ActualHeight;
+            var screenWidth = m_mainWindow.MainGrid.ActualWidth;
+            var totalWidth = m_mainContainer.ActualWidth + m_menuIcon.ActualWidth;
 
-            double dragTabWidthPx = m_dragTabView.ActualWidth;
+            m_onScreenPos = -(screenWidth / 2);
+            m_offScreenPos = -(screenWidth / 2) - (totalWidth / 2);
 
-            m_mainContainerOffscreenOffsetXPx = -m_dragTabView.Margin.Right;
-            double mainContainerWidthPx = m_mainContainer.ActualWidth;
-            m_mainContainerOnScreenWidthPx = mainContainerWidthPx - m_mainContainerOffscreenOffsetXPx;
+            base.PerformLayout(sender, e);
 
-            var screenLeft = -(m_screenWidthPx / 2);
-
-            m_mainContainerAnim.m_widthHeight.X = mainContainerWidthPx + dragTabWidthPx;
-            m_mainContainerAnim.m_offscreenPos.X = screenLeft - ( (m_mainContainerAnim.m_widthHeight.X + m_resultsCountContainer.Width) / 2);
-            m_mainContainerAnim.m_closedPos.X = screenLeft - (m_mainContainer.ActualWidth / 2) + (m_resultsCountContainer.ActualWidth / 2) + 40;
-            m_mainContainerAnim.m_openPos.X = screenLeft + (m_mainContainer.ActualWidth / 2) + (m_resultsCountContainer.ActualWidth / 2) + 8;
-
-            double layoutX = m_mainContainerAnim.m_offscreenPos.X;
-
-            if (!m_isFirstLayout)
-            {
-                layoutX = onScreenState * (m_mainContainerAnim.m_openPos.X - m_mainContainerAnim.m_offscreenPos.X) + m_mainContainerAnim.m_offscreenPos.X;                
-            }
-                
-            RenderTransform = new TranslateTransform(layoutX, currentPosition.Y);
-            m_isFirstLayout = false;
-
-            m_mainContainer.MaxHeight = screenWidthPy - m_mainContainer.RenderTransform.Transform(new Point(0.0, 0.0)).Y - 50;
-            m_menuOptionsView.MaxHeight = screenWidthPy * 0.75;
+            m_menuOptionsView.MaxHeight = m_mainWindow.MainGrid.ActualHeight * 0.75;
         }
 
         public override void OnApplyTemplate()
@@ -100,7 +72,10 @@ namespace ExampleAppWPF
             m_menuOptionsView = (ScrollViewer)GetTemplateChild("MenuOptionsView");
             m_resultsSpinner = (Grid)GetTemplateChild("SearchResultsSpinner");
             m_resultsCount = (TextBlock)GetTemplateChild("SearchResultCount");
-            m_resultsCountContainer = (Canvas)GetTemplateChild("SearchResultCountContainer");
+            m_resultsCountContainer = (Grid)GetTemplateChild("SearchResultCountContainer");
+            m_menuViewContainer = (Grid)GetTemplateChild("SearchMenuViewContainer");
+            m_backgroundRectangle = (Rectangle)GetTemplateChild("BackgroundRect");
+            m_searchBox = (Grid)GetTemplateChild("SearchBox");
 
             m_resultsClearButton = (Button)GetTemplateChild("SearchClear");
             m_resultsClearButton.Click += OnResultsClear;
@@ -113,10 +88,10 @@ namespace ExampleAppWPF
             m_resultsListClickHandler = new ControlClickHandler(OnResultsListItemsSelected, m_resultsList);
             m_resultsList.PreviewMouseWheel += OnMenuScrollWheel;
 
-            m_dragTabView = (Button)GetTemplateChild("SecondaryMenuDragTabView");
-            m_dragTabContainer = (Grid)GetTemplateChild("DragTabParentGrid");
+            m_menuIcon = (Button)GetTemplateChild("SecondaryMenuDragTabView");
+            m_menuIconGrid = (Grid)GetTemplateChild("SearchIconGrid");
 
-            m_dragTabView.Click += OnIconClick;
+            m_menuIcon.Click += OnIconClick;
 
             m_editText = (TextBox)GetTemplateChild("SecondaryMenuViewSearchEditTextView");
             m_editText.KeyDown += OnKeyDown;
@@ -124,16 +99,19 @@ namespace ExampleAppWPF
             m_editText.LostFocus += OnSearchBoxUnSelected;
             m_defaultEditText = m_editText.Text;
 
-            m_mainContainer = (Grid)GetTemplateChild("SecondaryMenuViewListContainer");
-            m_mainContainerAnim = new CustomAppAnimation(m_mainContainer as FrameworkElement);
-
-            m_menuAnimations.Add(m_mainContainerAnim);
+            m_mainContainer = (Grid)GetTemplateChild("SerchMenuMainContainer");
 
             var fadeInItemStoryboard = ((Storyboard)Template.Resources["FadeInNewItems"]).Clone();
             var fadeOutItemStoryboard = ((Storyboard)Template.Resources["FadeOutOldItems"]).Clone();
 
-            m_openResultCountAnim = ((Storyboard)Template.Resources["OpenSearchCount"]).Clone();
-            m_closeResultCountAnim = ((Storyboard)Template.Resources["CloseSearchCount"]).Clone();
+            m_openSearchIconAnim = ((Storyboard)Template.Resources["OpenSearchViewIcon"]).Clone();
+            m_closeSearchIconAnim = ((Storyboard)Template.Resources["CloseSearchViewIcon"]).Clone();
+
+            m_openSearchContainerAnim = ((Storyboard)Template.Resources["OpenSearchContainer"]).Clone();
+            m_closeSearchContainerAnim = ((Storyboard)Template.Resources["CloseSearchContainer"]).Clone();
+
+            m_openBackgroundRect = ((Storyboard)Template.Resources["OpenBackgroundRect"]).Clone();
+            m_closeBackgroundRect = ((Storyboard)Template.Resources["CloseBackgroundRect"]).Clone();
 
             m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SubMenuItemPanel");
             m_resultListAdapter = new MenuListAdapter(false, m_resultsList, fadeInItemStoryboard, fadeOutItemStoryboard, "SearchResultPanel");
@@ -265,15 +243,14 @@ namespace ExampleAppWPF
         public override void AnimateToClosedOnScreen()
         {
             base.AnimateToClosedOnScreen();
-            m_mainContainer.Visibility = Visibility.Hidden;
-            m_closeResultCountAnim.Begin(m_resultsCountContainer);
+
+            m_closeBackgroundRect.Begin(m_searchBox);
         }
 
         public override void AnimateToOpenOnScreen()
         {
             base.AnimateToOpenOnScreen();
-            m_mainContainer.Visibility = Visibility.Visible;
-            m_openResultCountAnim.Begin(m_resultsCountContainer);
+            m_openBackgroundRect.Begin(m_searchBox);
         }
 
         public void DisableEditText()
