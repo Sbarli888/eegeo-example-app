@@ -2,9 +2,9 @@
 
 package com.eegeo.menu;
 
-import android.animation.ValueAnimator;
 import android.view.View;
 
+import com.eegeo.animation.ReversibleAnimatorSet;
 import com.eegeo.entrypointinfrastructure.MainActivity;
 
 public abstract class MenuAnimationHandler
@@ -13,8 +13,8 @@ public abstract class MenuAnimationHandler
 	protected View m_view;
 	protected MenuView m_menuView;
 	
-	protected ValueAnimator m_onScreenAnimator = null;
-	protected ValueAnimator m_openAnimator = null;
+	protected ReversibleAnimatorSet m_onScreenAnimatorSet = null;
+	protected ReversibleAnimatorSet m_openAnimatorSet = null;
 	
 	final private float m_lowEndThreshold = 0.01f;
 	final private float m_highEndThreshold = 0.99f;
@@ -25,6 +25,9 @@ public abstract class MenuAnimationHandler
 		m_view = view;
 		m_menuView = menuView;
 		
+		m_onScreenAnimatorSet = new ReversibleAnimatorSet();
+		m_openAnimatorSet = new ReversibleAnimatorSet();
+		
 		InitializeAnimators();
 	}
 	
@@ -32,58 +35,48 @@ public abstract class MenuAnimationHandler
 	
 	public void playToOffScreen()
 	{
-		m_onScreenAnimator.removeAllListeners();
-		m_onScreenAnimator.addListener(new MenuOffScreenAnimatorListener(m_menuView));
-		m_onScreenAnimator.setCurrentPlayTime(m_onScreenAnimator.getDuration());
-		m_onScreenAnimator.reverse();
+		boolean isReversed = true;
+		m_onScreenAnimatorSet.start(new MenuOffScreenAnimatorListener(m_menuView), isReversed);
 	}
 	
 	public void playToClosedOnScreen()
 	{
 		if(getOpenOnScreenState() > m_highEndThreshold)
 		{
-			m_openAnimator.removeAllListeners();
-			m_openAnimator.addListener(new MenuClosedOnScreenAnimatorListener(m_menuView));
-			m_openAnimator.setCurrentPlayTime(m_openAnimator.getDuration());
-			m_openAnimator.reverse();
+			boolean isReversed = true;
+			m_openAnimatorSet.start(new MenuClosedOnScreenAnimatorListener(m_menuView), isReversed);
 		}
 		else
 		{
-			m_onScreenAnimator.removeAllListeners();
-			m_onScreenAnimator.addListener(new MenuClosedOnScreenAnimatorListener(m_menuView));
-			m_onScreenAnimator.setCurrentPlayTime(0);
-			m_onScreenAnimator.start();
+			boolean isReversed = false;
+			m_onScreenAnimatorSet.start(new MenuClosedOnScreenAnimatorListener(m_menuView), isReversed);
 		}
 	}
 	
 	public void playToOpenOnScreen()
 	{
-		m_openAnimator.removeAllListeners();
-		m_openAnimator.addListener(new MenuOpenOnScreenAnimatorListener(m_menuView));
-		m_openAnimator.setCurrentPlayTime(0);
-		m_openAnimator.start();
+		boolean isReversed = false;
+		m_openAnimatorSet.start(new MenuOpenOnScreenAnimatorListener(m_menuView), isReversed);
 	}
 	
 	public void setToIntermediateOnScreenState(float onScreenState)
 	{
-		m_onScreenAnimator.removeAllListeners();
-		m_onScreenAnimator.setCurrentPlayTime((long)(onScreenState * m_onScreenAnimator.getDuration()));
+		m_onScreenAnimatorSet.setCurrentPlayTime((long)(onScreenState * m_onScreenAnimatorSet.getDurationMilliseconds()));
 	}
 	
 	public void setToIntermediateOpenState(float openState)
 	{
-		m_openAnimator.removeAllListeners();
-		m_openAnimator.setCurrentPlayTime((long)(openState * m_openAnimator.getDuration()));
+		m_openAnimatorSet.setCurrentPlayTime((long)(openState * m_openAnimatorSet.getDurationMilliseconds()));
 	}
 	
 	public float getOnScreenState()
 	{
-		return m_onScreenAnimator.getAnimatedFraction();
+		return m_onScreenAnimatorSet.getAnimatedFraction();
 	}
 	
 	public float getOpenOnScreenState()
 	{
-		return m_openAnimator.getAnimatedFraction();
+		return m_openAnimatorSet.getAnimatedFraction();
 	}
 	
 	public boolean isOffScreen()

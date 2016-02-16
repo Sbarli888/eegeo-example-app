@@ -2,10 +2,10 @@
 
 package com.eegeo.settingsmenu;
 
-import android.animation.ValueAnimator;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.eegeo.animation.ReversibleValueAnimator;
 import com.eegeo.entrypointinfrastructure.MainActivity;
 import com.eegeo.menu.MenuAnimationHandler;
 import com.eegeo.menu.MenuView;
@@ -38,12 +38,16 @@ public class SettingsMenuAnimationHandler extends MenuAnimationHandler
         int closedOnScreenXPx = screenWidthPx - dragTabWidthPx;
         int openOnScreenXPx = screenWidthPx - dragTabWidthPx - listContainerWidthPx;
 		
-		m_onScreenAnimator = ValueAnimator.ofInt(offScreenXPx, closedOnScreenXPx);
-		m_onScreenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		m_onScreenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
+        ReversibleValueAnimator onScreenAnimator = ReversibleValueAnimator.ofInt(offScreenXPx, closedOnScreenXPx);
+		onScreenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		onScreenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
 		
-		m_openAnimator = ValueAnimator.ofInt(closedOnScreenXPx, openOnScreenXPx);
-		m_openAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		m_openAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
+		m_onScreenAnimatorSet.addAnimator(onScreenAnimator);
+		
+		ReversibleValueAnimator openAnimator = ReversibleValueAnimator.ofInt(closedOnScreenXPx, openOnScreenXPx);
+		openAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		openAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
+		
+		m_openAnimatorSet.addAnimator(openAnimator);
 	}
 }
