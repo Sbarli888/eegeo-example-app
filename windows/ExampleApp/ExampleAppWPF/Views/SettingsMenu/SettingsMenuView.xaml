@@ -60,7 +60,7 @@
                         <Storyboard x:Key="CloseBackgroundRect">
                             <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="1" To="0" Duration="0:0:0.2"/>
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-268,0,0,0"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="300,0,0,0"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
                     </ControlTemplate.Resources>
@@ -140,7 +140,7 @@
                             </Grid>
                             <Grid Grid.Row="2">
                                 <StackPanel  Orientation="Vertical">
-                                    <ScrollViewer Background="{StaticResource PrimaryBG_colour}" PanningMode="VerticalOnly" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                                    <ScrollViewer Width="332"  Background="{StaticResource PrimaryBG_colour}" PanningMode="VerticalOnly" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
                                         <ListBox Margin="5,0,5,0" Name="SettingsMenuItemList" Template="{StaticResource ListBoxControlTemplateNoPadding}" ItemsSource="{Binding Children}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" BorderThickness="0">
                                             <ListBox.Resources>
                                                 <Style TargetType="ListBoxItem">
@@ -167,7 +167,7 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                     <ColumnDefinition Width="Auto"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                <StackPanel Name="SettingsMenuItemPanel" Margin="0,0,5,0" Orientation="Horizontal" HorizontalAlignment="Stretch"  Grid.Column="0" Background="{StaticResource SubMenuItemDefaultColour}" Width="330">
+                                                                <StackPanel Name="SettingsMenuItemPanel" Margin="0,0,0,0" Orientation="Horizontal" HorizontalAlignment="Stretch"  Grid.Column="0" Background="{StaticResource SubMenuItemDefaultColour}" Width="330">
                                                                     <StackPanel.Triggers>
                                                                         <EventTrigger RoutedEvent="MouseDown">
                                                                             <BeginStoryboard>
