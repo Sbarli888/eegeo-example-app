@@ -107,7 +107,7 @@
                         </Grid>
 
                         <!--Closed: 268 Open 332-->
-                        <Rectangle Name="BackgroundRect" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="-268,0,0,0" Width="332" Height="50" Fill="{StaticResource PrimaryBG_colour}" RenderTransformOrigin="1.0, 0.0">
+                        <Rectangle Name="BackgroundRect" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="-268,0,0,0" Width="332" Height="50" Fill="{StaticResource PrimaryBG_colour}" RenderTransformOrigin="0.0, 0.0">
                             <Rectangle.Resources>
                                 <Style TargetType="{x:Type Rectangle}">
                                     <Setter Property="RenderTransform">

@@ -375,7 +375,7 @@
                                                                     <ColumnDefinition Width="*"/>
                                                                     <ColumnDefinition Width="24"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                <Image Name="MenuListOpenableShape" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin=".5,.5" Source="/Assets/sub_menu_arrow.png" Width="19" Height="19">
+                                                                <Image Name="MenuListOpenableShape" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin=".5,.5" Source="/Assets/sub_menu_arrow_off.png" Width="19" Height="19">
                                                                     <Image.Style>
                                                                         <Style TargetType="{x:Type Image}">
                                                                             <Setter Property="RenderTransform">
