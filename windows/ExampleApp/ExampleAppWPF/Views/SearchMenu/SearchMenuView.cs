@@ -44,8 +44,6 @@ namespace ExampleAppWPF
         private Storyboard m_searchArrowOpen;
         private Storyboard m_searchArrowClosed;
 
-        private bool m_searchPerformed;
-
         static SearchMenuView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchMenuView), new FrameworkPropertyMetadata(typeof(SearchMenuView)));
@@ -58,8 +56,6 @@ namespace ExampleAppWPF
 
             Loaded += MainWindow_Loaded;
             mainWindow.SizeChanged += PerformLayout;
-
-            m_searchPerformed = false;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -191,9 +187,11 @@ namespace ExampleAppWPF
                 int sectionIndex = m_adapter.GetSectionIndex(position);
                 int childIndex = m_adapter.GetItemIndex(position);
 
+                SearchMenuViewCLIMethods.OnSearchCleared(m_nativeCallerPointer);
                 MenuViewCLIMethods.SelectedItem(m_nativeCallerPointer, sectionIndex, childIndex);
 
                 ClearSearchResultsListBox();
+
                 if (m_editText.Text != "" && m_editText.Text != m_defaultEditText)
                 {
                     m_resultsClearButton.Visibility = Visibility.Visible;
@@ -206,13 +204,12 @@ namespace ExampleAppWPF
             if (m_resultsList.SelectedItems?.Count > 0)
             {
                 SearchMenuViewCLIMethods.HandleSearchItemSelected(m_nativeCallerPointer, m_resultsList.SelectedIndex);
-                m_searchPerformed = true;
             }
         }
 
         private void OnSearchBoxUnSelected(object sender, RoutedEventArgs e)
         {
-            if( m_editText.Text.Replace(" ", null) == string.Empty)
+            if(m_editText.Text.Replace(" ", null) == string.Empty)
             {
                 m_editText.Text = m_defaultEditText;
             }
@@ -251,6 +248,9 @@ namespace ExampleAppWPF
             }
 
             ClearSearchResultsListBox();
+
+            m_editText.Text = m_defaultEditText;
+            m_editText.Foreground = Colour.darkgrey;
         }
 
         private void OnIconClick(object sender, RoutedEventArgs e)
@@ -270,19 +270,12 @@ namespace ExampleAppWPF
 
                     m_resultsSpinner.Visibility = Visibility.Visible;
                     m_resultsClearButton.Visibility = Visibility.Hidden;
-
-                    m_searchPerformed = true;
                 }
             }
         }
 
         public void SetSearchSection(string category, string[] searchResults)
         {
-            if(!m_searchPerformed)
-            {
-                return;
-            }
-
             m_resultListAdapter.ResetData();
 
             var groups = new List<string>(searchResults.Length);
@@ -317,8 +310,6 @@ namespace ExampleAppWPF
             m_resultsSpinner.Visibility = Visibility.Hidden;
             m_resultsClearButton.Visibility = Visibility.Visible;
             m_searchArrow.Visibility = Visibility.Visible;
-
-            m_searchPerformed = false;
         }
 
         public override void AnimateToClosedOnScreen()
