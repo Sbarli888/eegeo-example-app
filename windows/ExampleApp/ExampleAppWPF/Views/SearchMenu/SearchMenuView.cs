@@ -25,6 +25,7 @@ namespace ExampleAppWPF
         private TextBlock m_resultsCount;
         private Button m_resultsClearButton;
         private ScrollViewer m_menuOptionsView;
+        private ScrollViewer m_resultsOptionsView;
         private FrameworkElement m_searchArrow;
 
         private Grid m_resultsCountContainer;
@@ -77,6 +78,7 @@ namespace ExampleAppWPF
             base.PerformLayout(sender, e);
 
             m_menuOptionsView.MaxHeight = m_mainWindow.MainGrid.ActualHeight * 0.75;
+            m_resultsOptionsView.MaxHeight = m_mainWindow.MainGrid.ActualHeight * 0.55;
         }
 
         public override void OnApplyTemplate()
@@ -84,6 +86,7 @@ namespace ExampleAppWPF
             base.OnApplyTemplate();
 
             m_menuOptionsView = (ScrollViewer)GetTemplateChild("MenuOptionsView");
+            m_resultsOptionsView = (ScrollViewer)GetTemplateChild("ResultsMenuOptionsView");
             m_resultsSpinner = (Grid)GetTemplateChild("SearchResultsSpinner");
             m_resultsCount = (TextBlock)GetTemplateChild("SearchResultCount");
             m_resultsCountContainer = (Grid)GetTemplateChild("SearchResultCountContainer");
@@ -101,7 +104,7 @@ namespace ExampleAppWPF
 
             m_resultsList = (ListBox)GetTemplateChild("SearchResultsList");
             m_resultsListClickHandler = new ControlClickHandler(OnResultsListItemsSelected, m_resultsList);
-            m_resultsList.PreviewMouseWheel += OnMenuScrollWheel;
+            m_resultsList.PreviewMouseWheel += OnResultsMenuScrollWheel;
 
             m_menuIcon = (Button)GetTemplateChild("SecondaryMenuDragTabView");
             m_menuIconGrid = (Grid)GetTemplateChild("SearchIconGrid");
@@ -157,6 +160,12 @@ namespace ExampleAppWPF
         private void OnMenuScrollWheel(object sender, MouseWheelEventArgs e)
         {
             m_menuOptionsView.ScrollToVerticalOffset(m_menuOptionsView.VerticalOffset - e.Delta);
+            e.Handled = true;
+        }
+
+        private void OnResultsMenuScrollWheel(object sender, MouseWheelEventArgs e)
+        {
+            m_resultsOptionsView.ScrollToVerticalOffset(m_resultsOptionsView.VerticalOffset - e.Delta);
             e.Handled = true;
         }
 
