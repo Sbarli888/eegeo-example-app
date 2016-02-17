@@ -21,11 +21,16 @@ namespace ExampleAppWPF
 
         Storyboard m_fadeInItemAnimation;
         Storyboard m_fadeOutItemAnimation;
+
+        Storyboard m_slideInAnimation;
+        Storyboard m_slideOutAnimation;
+
         ListBox m_list;
 
         private readonly string ControlToAnimate;
 
-        public MenuListAdapter(bool shouldAlignIconRight, ListBox list, Storyboard fadeInItemAnimation, Storyboard fadeOutItemAnimation, string controlToAnimate)
+        public MenuListAdapter(bool shouldAlignIconRight, ListBox list,
+            Storyboard slideInAnimation, Storyboard slideOutAnimation, Storyboard fadeInItemAnimation, Storyboard fadeOutItemAnimation, string controlToAnimate)
         {   
             m_animatedSizesMap = new Dictionary<string, int>();
 
@@ -37,10 +42,15 @@ namespace ExampleAppWPF
             m_children = new ObservableCollection<MenuListItem>();
 
             m_list = list;
+
             m_fadeInItemAnimation = fadeInItemAnimation;
             m_fadeOutItemAnimation = fadeOutItemAnimation;
+
+            m_slideInAnimation = slideInAnimation;
+            m_slideOutAnimation = slideOutAnimation;
+
             m_fadeInItemAnimation.Completed += OnAnimationCompleted;
-            m_fadeOutItemAnimation.Completed += OnAnimationCompleted;
+            m_slideOutAnimation.Completed += OnAnimationCompleted;
 
             ControlToAnimate = controlToAnimate;
         }
@@ -236,6 +246,7 @@ namespace ExampleAppWPF
                         var control = FindChildControl<StackPanel>(item as DependencyObject, ControlToAnimate);
 
                         m_fadeOutItemAnimation.Begin(control as FrameworkElement);
+                        m_slideOutAnimation.Begin(item);
                     }
                 }
                 else
@@ -256,6 +267,7 @@ namespace ExampleAppWPF
                         var control = FindChildControl<StackPanel>(item as DependencyObject, ControlToAnimate);
 
                         m_fadeInItemAnimation.Begin(control as FrameworkElement);
+                        m_slideInAnimation.Begin(item);
                     }
                 }
             }

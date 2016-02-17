@@ -123,6 +123,9 @@ namespace ExampleAppWPF
             var fadeInItemStoryboard = ((Storyboard)Template.Resources["FadeInNewItems"]).Clone();
             var fadeOutItemStoryboard = ((Storyboard)Template.Resources["FadeOutOldItems"]).Clone();
 
+            var slideInItemStoryboard = ((Storyboard)Template.Resources["SlideInNewItems"]).Clone();
+            var slideOutItemStoryboard = ((Storyboard)Template.Resources["SlideOutOldItems"]).Clone();
+
             m_openSearchIconAnim = ((Storyboard)Template.Resources["OpenSearchViewIcon"]).Clone();
             m_closeSearchIconAnim = ((Storyboard)Template.Resources["CloseSearchViewIcon"]).Clone();
 
@@ -141,8 +144,8 @@ namespace ExampleAppWPF
             m_searchArrowOpen = ((Storyboard)Template.Resources["OpenSearchArrow"]).Clone();
             m_searchArrowClosed  = ((Storyboard)Template.Resources["CloseSearchArrow"]).Clone();
 
-            m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SubMenuItemPanel");
-            m_resultListAdapter = new MenuListAdapter(false, m_resultsList, fadeInItemStoryboard, fadeOutItemStoryboard, "SearchResultPanel");
+            m_adapter = new MenuListAdapter(false, m_list, slideInItemStoryboard, slideOutItemStoryboard, fadeInItemStoryboard, fadeOutItemStoryboard, "SubMenuItemPanel");
+            m_resultListAdapter = new MenuListAdapter(false, m_resultsList, slideInItemStoryboard, slideOutItemStoryboard, fadeInItemStoryboard, fadeOutItemStoryboard, "SearchResultPanel");
         }
 
         private void OnSearchBoxTextChanged(object sender, TextChangedEventArgs e)
@@ -150,10 +153,13 @@ namespace ExampleAppWPF
             if (m_editText.Text?.Length > 0 && m_editText.Text != m_defaultEditText)
             {
                 m_resultsClearButton.Visibility = Visibility.Visible;
+                m_editText.Foreground = Colour.black;
+
             }
             else
             {
                 m_resultsClearButton.Visibility = Visibility.Hidden;
+                m_editText.Foreground = Colour.darkgrey;
             }
         }
 

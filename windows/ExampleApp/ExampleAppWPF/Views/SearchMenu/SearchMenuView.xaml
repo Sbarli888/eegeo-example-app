@@ -33,18 +33,35 @@
                 <ControlTemplate TargetType="{x:Type local:SearchMenuView}">
                     <ControlTemplate.Resources>
                         <Storyboard x:Key="FadeInNewItems">
-                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="0" To="1" Duration="0:0:0.3">
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="0" To="0" Duration="0:0:0.0" BeginTime="0:0:0.0"/>
+
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="0" To="1" Duration="0:0:0.15" BeginTime="0:0:0.2">
                                 <DoubleAnimation.EasingFunction>
                                     <CubicEase EasingMode="EaseInOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                         </Storyboard>
+                        
                         <Storyboard x:Key="FadeOutOldItems">
-                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="0" Duration="0:0:0.3">
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" To="0" Duration="0:0:0.15" BeginTime="0:0:0.00">
                                 <DoubleAnimation.EasingFunction>
                                     <CubicEase EasingMode="EaseInOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
+                        </Storyboard>
+
+                        <Storyboard x:Key="SlideInNewItems">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.15" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.0" Value="0, -42, 0,0" />
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.15" Value="0, 0,0,0" />
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="SlideOutOldItems">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00.2" Duration="0:0:0.15" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.0" Value="0,0,0,0" />
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.15" Value="0,-42,0,0" />
+                            </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
 
                         <Storyboard x:Key="OpenSearchViewIcon">
@@ -188,7 +205,7 @@
                                 </Style>
                             </Grid.Resources>
                             <Border BorderBrush="White" Background="White" BorderThickness="1,1,1,1" CornerRadius="10" Width="295" Height="38" VerticalAlignment="Center" Margin="32,8,6,8">
-                                <TextBox Text="Enter Search Term" Name="SearchInputBox" FontFamily="{StaticResource PrimaryUIFont}" FontSize="18" Foreground="{StaticResource InputTextColour}" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Margin="7,5,6,6">
+                                <TextBox Text="Enter Search Term" Name="SearchInputBox" FontFamily="{StaticResource PrimaryUIFont}" FontSize="18" Foreground="{StaticResource DarkGrey}" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Margin="7,5,6,6">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type TextBox}">
                                             <Setter Property="RenderTransform">
@@ -203,8 +220,8 @@
                         </Grid>
 
                         <!--Search Arrow Open: 110, Closed: -110-->
-                        <Grid Name="SearchArrow" Margin="-410,38,0,0" Width="25" Height="19" HorizontalAlignment="Center" Panel.ZIndex="111" VerticalAlignment="Top" Visibility="Hidden">
-                            <Image Source="/Assets/arrow3_up.png" Width="Auto" Height="Auto"/>
+                        <Grid Name="SearchArrow" Margin="-410,38,0,0" Width="15" Height="19" HorizontalAlignment="Center" Panel.ZIndex="111" VerticalAlignment="Top" Visibility="Hidden">
+                            <Image Source="/Assets/arrow3_up.png" Stretch="Fill"/>
                         </Grid>
 
                         <!--Main Container. Closed Margin: -332 Open Margin: 332-->
@@ -421,11 +438,11 @@
                                                                     </Style>
                                                                 </Image.Style>
                                                             </Image>
-                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"  Grid.Column="0" Margin="0,0,10,0">
+                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"  Grid.Column="0" Margin="3,0,10,0">
                                                                 <Label Content="{Binding Path=Heading}" FontSize="22" Foreground="{StaticResource LightGrey}"/>
                                                             </StackPanel>
                                                         </Grid>
-                                                        <Grid Grid.Row="1" Grid.Column="1" Background="{StaticResource MenuSeparator}" Margin="0,0,5,0">
+                                                        <Grid Grid.Row="1" Grid.Column="1" Background="{StaticResource MenuSeparator}" Margin="-7,0,5,0">
                                                             <Grid.Style>
                                                                 <Style TargetType="{x:Type Grid}">
                                                                     <Style.Triggers>

@@ -53,6 +53,9 @@ namespace ExampleAppWPF
             var fadeInItemStoryboard = ((Storyboard)Template.Resources["FadeInNewItems"]).Clone();
             var fadeOutItemStoryboard = ((Storyboard)Template.Resources["FadeOutOldItems"]).Clone();
 
+            var slideInItemStoryboard = ((Storyboard)Template.Resources["SlideInNewItems"]).Clone();
+            var slideOutItemStoryboard = ((Storyboard)Template.Resources["SlideOutOldItems"]).Clone();
+
             m_menuViewContainer = (Grid)GetTemplateChild("SettingsMenuViewContainer");
             m_backgroundRectangle = (Rectangle)GetTemplateChild("BackgroundRect");
 
@@ -67,7 +70,7 @@ namespace ExampleAppWPF
             m_openBackgroundRect = ((Storyboard)Template.Resources["OpenBackgroundRect"]).Clone();
             m_closeBackgroundRect = ((Storyboard)Template.Resources["CloseBackgroundRect"]).Clone();
 
-            m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SettingsMenuItemPanel");
+            m_adapter = new MenuListAdapter(false, m_list,slideInItemStoryboard, slideOutItemStoryboard, fadeInItemStoryboard, fadeOutItemStoryboard, "SettingsMenuItemPanel");
 
             PerformLayout(null, null);
         }
