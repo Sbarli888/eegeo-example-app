@@ -25,6 +25,8 @@ namespace ExampleAppWPF
         private TextBlock m_resultsCount;
         private Button m_resultsClearButton;
         private ScrollViewer m_menuOptionsView;
+        private ScrollViewer m_resultsOptionsView;
+        private FrameworkElement m_searchArrow;
 
         private Grid m_resultsCountContainer;
 
@@ -32,6 +34,17 @@ namespace ExampleAppWPF
 
         private ControlClickHandler m_menuListClickHandler;
         private ControlClickHandler m_resultsListClickHandler;
+
+        private Storyboard m_searchInputOpen;
+        private Storyboard m_searchInputClose;
+
+        private Storyboard m_searchInputTextOpen;
+        private Storyboard m_searchInputTextClose;
+
+        private Storyboard m_searchArrowOpen;
+        private Storyboard m_searchArrowClosed;
+
+        private bool m_searchPerformed;
 
         static SearchMenuView()
         {
@@ -45,6 +58,8 @@ namespace ExampleAppWPF
 
             Loaded += MainWindow_Loaded;
             mainWindow.SizeChanged += PerformLayout;
+
+            m_searchPerformed = false;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -63,6 +78,7 @@ namespace ExampleAppWPF
             base.PerformLayout(sender, e);
 
             m_menuOptionsView.MaxHeight = m_mainWindow.MainGrid.ActualHeight * 0.75;
+            m_resultsOptionsView.MaxHeight = m_mainWindow.MainGrid.ActualHeight * 0.55;
         }
 
         public override void OnApplyTemplate()
@@ -70,12 +86,14 @@ namespace ExampleAppWPF
             base.OnApplyTemplate();
 
             m_menuOptionsView = (ScrollViewer)GetTemplateChild("MenuOptionsView");
+            m_resultsOptionsView = (ScrollViewer)GetTemplateChild("ResultsMenuOptionsView");
             m_resultsSpinner = (Grid)GetTemplateChild("SearchResultsSpinner");
             m_resultsCount = (TextBlock)GetTemplateChild("SearchResultCount");
             m_resultsCountContainer = (Grid)GetTemplateChild("SearchResultCountContainer");
             m_menuViewContainer = (Grid)GetTemplateChild("SearchMenuViewContainer");
             m_backgroundRectangle = (Rectangle)GetTemplateChild("BackgroundRect");
             m_searchBox = (Grid)GetTemplateChild("SearchBox");
+            m_searchArrow = (FrameworkElement)GetTemplateChild("SearchArrow");
 
             m_resultsClearButton = (Button)GetTemplateChild("SearchClear");
             m_resultsClearButton.Click += OnResultsClear;
@@ -86,17 +104,18 @@ namespace ExampleAppWPF
 
             m_resultsList = (ListBox)GetTemplateChild("SearchResultsList");
             m_resultsListClickHandler = new ControlClickHandler(OnResultsListItemsSelected, m_resultsList);
-            m_resultsList.PreviewMouseWheel += OnMenuScrollWheel;
+            m_resultsList.PreviewMouseWheel += OnResultsMenuScrollWheel;
 
             m_menuIcon = (Button)GetTemplateChild("SecondaryMenuDragTabView");
             m_menuIconGrid = (Grid)GetTemplateChild("SearchIconGrid");
 
             m_menuIcon.Click += OnIconClick;
 
-            m_editText = (TextBox)GetTemplateChild("SecondaryMenuViewSearchEditTextView");
+            m_editText = (TextBox)GetTemplateChild("SearchInputBox");
             m_editText.KeyDown += OnKeyDown;
             m_editText.GotFocus += OnSearchBoxSelected;
             m_editText.LostFocus += OnSearchBoxUnSelected;
+            m_editText.TextChanged += OnSearchBoxTextChanged;
             m_defaultEditText = m_editText.Text;
 
             m_mainContainer = (Grid)GetTemplateChild("SerchMenuMainContainer");
@@ -113,13 +132,41 @@ namespace ExampleAppWPF
             m_openBackgroundRect = ((Storyboard)Template.Resources["OpenBackgroundRect"]).Clone();
             m_closeBackgroundRect = ((Storyboard)Template.Resources["CloseBackgroundRect"]).Clone();
 
+            m_searchInputOpen = ((Storyboard)Template.Resources["OpenSearchInputBox"]).Clone();
+            m_searchInputClose = ((Storyboard)Template.Resources["CloseSearchInputBox"]).Clone();
+
+            m_searchInputTextOpen = ((Storyboard)Template.Resources["OpenSearchInputBoxText"]).Clone();
+            m_searchInputTextClose = ((Storyboard)Template.Resources["CloseSearchInputBoxText"]).Clone();
+
+            m_searchArrowOpen = ((Storyboard)Template.Resources["OpenSearchArrow"]).Clone();
+            m_searchArrowClosed  = ((Storyboard)Template.Resources["CloseSearchArrow"]).Clone();
+
             m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SubMenuItemPanel");
             m_resultListAdapter = new MenuListAdapter(false, m_resultsList, fadeInItemStoryboard, fadeOutItemStoryboard, "SearchResultPanel");
         }
 
+        private void OnSearchBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (m_editText.Text?.Length > 0 && m_editText.Text != m_defaultEditText)
+            {
+                m_resultsClearButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                m_resultsClearButton.Visibility = Visibility.Hidden;
+            }
+        }
+
         private void OnMenuScrollWheel(object sender, MouseWheelEventArgs e)
         {
-            m_menuOptionsView.RaiseEvent(e);
+            m_menuOptionsView.ScrollToVerticalOffset(m_menuOptionsView.VerticalOffset - e.Delta);
+            e.Handled = true;
+        }
+
+        private void OnResultsMenuScrollWheel(object sender, MouseWheelEventArgs e)
+        {
+            m_resultsOptionsView.ScrollToVerticalOffset(m_resultsOptionsView.VerticalOffset - e.Delta);
+            e.Handled = true;
         }
 
         private void OnMenuListItemSelected(object sender, MouseEventArgs e)
@@ -139,6 +186,12 @@ namespace ExampleAppWPF
                 int childIndex = m_adapter.GetItemIndex(position);
 
                 MenuViewCLIMethods.SelectedItem(m_nativeCallerPointer, sectionIndex, childIndex);
+
+                ClearSearchResultsListBox();
+                if (m_editText.Text != "" && m_editText.Text != m_defaultEditText)
+                {
+                    m_resultsClearButton.Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -147,6 +200,7 @@ namespace ExampleAppWPF
             if (m_resultsList.SelectedItems?.Count > 0)
             {
                 SearchMenuViewCLIMethods.HandleSearchItemSelected(m_nativeCallerPointer, m_resultsList.SelectedIndex);
+                m_searchPerformed = true;
             }
         }
 
@@ -173,13 +227,22 @@ namespace ExampleAppWPF
             m_resultListAdapter.CollapseAll();
             m_resultsList.DataContext = null;
             m_resultsList.ItemsSource = null;
+
+            m_resultsCountContainer.Visibility = Visibility.Hidden;
+            m_resultsClearButton.Visibility = Visibility.Hidden;
+            m_searchArrow.Visibility = Visibility.Hidden;
         }
 
         private void OnResultsClear(object sender, RoutedEventArgs e)
         {
-            SearchMenuViewCLIMethods.OnSearchCleared(m_nativeCallerPointer);
-
-            m_resultsClearButton.Visibility = Visibility.Hidden;
+            if(m_resultsList.Items?.Count > 0)
+            {
+                SearchMenuViewCLIMethods.OnSearchCleared(m_nativeCallerPointer);
+            }
+            else
+            {
+                m_editText.Text = string.Empty;
+            }
 
             ClearSearchResultsListBox();
         }
@@ -198,13 +261,22 @@ namespace ExampleAppWPF
                 if (queryText.Length > 0)
                 {
                     SearchMenuViewCLIMethods.PerformedSearchQuery(m_nativeCallerPointer, queryText);
+
                     m_resultsSpinner.Visibility = Visibility.Visible;
+                    m_resultsClearButton.Visibility = Visibility.Hidden;
+
+                    m_searchPerformed = true;
                 }
             }
         }
 
         public void SetSearchSection(string category, string[] searchResults)
         {
+            if(!m_searchPerformed)
+            {
+                return;
+            }
+
             m_resultListAdapter.ResetData();
 
             var groups = new List<string>(searchResults.Length);
@@ -238,6 +310,9 @@ namespace ExampleAppWPF
 
             m_resultsSpinner.Visibility = Visibility.Hidden;
             m_resultsClearButton.Visibility = Visibility.Visible;
+            m_searchArrow.Visibility = Visibility.Visible;
+
+            m_searchPerformed = false;
         }
 
         public override void AnimateToClosedOnScreen()
@@ -251,7 +326,10 @@ namespace ExampleAppWPF
                 else
                 {
                     m_searchBox.Visibility = Visibility.Visible;
-                    m_closeBackgroundRect.Begin(m_searchBox);
+
+                    m_searchInputClose.Begin(m_searchBox);
+                    m_searchInputTextClose.Begin(m_editText);
+                    m_searchArrowClosed.Begin(m_searchArrow);
                 }
 
                 base.AnimateToClosedOnScreen();
@@ -263,7 +341,11 @@ namespace ExampleAppWPF
             if (m_openState != MENU_OPEN && m_openState != MENU_OPENING)
             {
                 m_searchBox.Visibility = Visibility.Visible;
-                m_openBackgroundRect.Begin(m_searchBox);
+
+                m_searchInputOpen.Begin(m_searchBox);
+                m_searchInputTextOpen.Begin(m_editText);
+                m_searchArrowOpen.Begin(m_searchArrow);
+
                 base.AnimateToOpenOnScreen();
             }
         }

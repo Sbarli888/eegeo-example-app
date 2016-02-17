@@ -322,8 +322,11 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\..\Resources\sub_menu_arrow.png">
-      <Link>Assets\sub_menu_arrow.png</Link>
+    <Resource Include="..\..\Resources\sub_menu_arrow_off.png">
+      <Link>Assets\sub_menu_arrow_off.png</Link>
+    </Resource>
+    <Resource Include="..\..\Resources\sub_menu_arrow_on.png">
+      <Link>Assets\sub_menu_arrow_on.png</Link>
     </Resource>
   </ItemGroup>
   <ItemGroup>
