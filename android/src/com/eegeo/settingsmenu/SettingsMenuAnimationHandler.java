@@ -5,6 +5,7 @@ package com.eegeo.settingsmenu;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.eegeo.animation.CircleInOutTimeInterpolator;
 import com.eegeo.animation.ReversibleValueAnimator;
 import com.eegeo.animation.updatelisteners.LeftMarginAnimatorUpdateListener;
 import com.eegeo.animation.updatelisteners.ViewWidthAnimatorUpdateListener;
@@ -46,14 +47,17 @@ public class SettingsMenuAnimationHandler extends MenuAnimationHandler
         ReversibleValueAnimator onScreenAnimator = ReversibleValueAnimator.ofInt(offScreenXPx, closedOnScreenXPx);
 		onScreenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
 		onScreenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
+		onScreenAnimator.setInterpolator(new CircleInOutTimeInterpolator());
 		
 		ReversibleValueAnimator onScreenTitleViewAnimator = ReversibleValueAnimator.ofInt(0, 0);
 		onScreenTitleViewAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
 		onScreenTitleViewAnimator.addUpdateListener(new ViewWidthAnimatorUpdateListener(titleContainerView));
+		onScreenTitleViewAnimator.setInterpolator(new CircleInOutTimeInterpolator());
 		
 		ReversibleValueAnimator onScreenListViewAnimator = ReversibleValueAnimator.ofInt(listContainerLeftMarginPx, listContainerLeftMarginPx);
 		onScreenListViewAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
 		onScreenListViewAnimator.addUpdateListener(new LeftMarginAnimatorUpdateListener(listItemContainerView));
+		onScreenListViewAnimator.setInterpolator(new CircleInOutTimeInterpolator());
 		
 		m_onScreenAnimatorSet.addAnimator(onScreenAnimator);
 		m_onScreenAnimatorSet.addAnimator(onScreenTitleViewAnimator);
@@ -62,14 +66,17 @@ public class SettingsMenuAnimationHandler extends MenuAnimationHandler
 		ReversibleValueAnimator openAnimator = ReversibleValueAnimator.ofInt(closedOnScreenXPx, openOnScreenXPx);
 		openAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
 		openAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
+		openAnimator.setInterpolator(new CircleInOutTimeInterpolator());
 		
 		ReversibleValueAnimator openTitleViewAnimator = ReversibleValueAnimator.ofInt(0, titleContainerWidthPx);
 		openTitleViewAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
 		openTitleViewAnimator.addUpdateListener(new ViewWidthAnimatorUpdateListener(titleContainerView));
+		openTitleViewAnimator.setInterpolator(new CircleInOutTimeInterpolator());
 		
 		ReversibleValueAnimator openListViewAnimator = ReversibleValueAnimator.ofInt(listContainerLeftMarginPx, 0);
 		openListViewAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
 		openListViewAnimator.addUpdateListener(new LeftMarginAnimatorUpdateListener(listItemContainerView));
+		openListViewAnimator.setInterpolator(new CircleInOutTimeInterpolator());
 		
 		m_openAnimatorSet.addAnimator(openAnimator);
 		m_openAnimatorSet.addAnimator(openTitleViewAnimator);

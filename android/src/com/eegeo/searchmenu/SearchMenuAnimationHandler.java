@@ -2,11 +2,14 @@
 
 package com.eegeo.searchmenu;
 
-import android.animation.ValueAnimator;
 import android.view.View;
+import android.widget.RelativeLayout;
 
-import com.eegeo.animation.ReversibleAnimatorSet;
+import com.eegeo.animation.CircleInOutTimeInterpolator;
 import com.eegeo.animation.ReversibleValueAnimator;
+import com.eegeo.animation.updatelisteners.LeftMarginAnimatorUpdateListener;
+import com.eegeo.animation.updatelisteners.RightMarginAnimatorUpdateListener;
+import com.eegeo.animation.updatelisteners.ViewWidthAnimatorUpdateListener;
 import com.eegeo.animation.updatelisteners.ViewXAnimatorUpdateListener;
 import com.eegeo.entrypointinfrastructure.MainActivity;
 import com.eegeo.menu.MenuAnimationHandler;
@@ -25,26 +28,57 @@ public class SearchMenuAnimationHandler extends MenuAnimationHandler
 	@Override
 	protected void InitializeAnimators()
 	{
-		View listContainerView = m_view.findViewById(R.id.search_menu_view_list_container);
+		View listContainerView = m_view.findViewById(R.id.search_menu_list_container);
 		View dragTabView = m_view.findViewById(R.id.search_menu_drag_button_view);
+		View titleContainerView = m_view.findViewById(R.id.search_menu_title_bar);
 		
-		int listContainerWidthPx = listContainerView.getWidth();
         int dragTabWidthPx = dragTabView.getWidth();
+        int titleContainerWidthPx = titleContainerView.getWidth();
         
-        int offScreenXPx = -listContainerWidthPx - dragTabWidthPx;
-        int closedOnScreenXPx = -listContainerWidthPx;
-        int openOnScreenXPx = 0;
+        m_view.setX(0.0f);
         
-        ReversibleValueAnimator onScreenAnimator = ReversibleValueAnimator.ofInt(offScreenXPx, closedOnScreenXPx);
-		onScreenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		onScreenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
+        int menuButtonMargin = (int) m_mainActivity.getResources().getDimension(R.dimen.menu_button_margin);
 		
-		m_onScreenAnimatorSet.addAnimator(onScreenAnimator);
+		ReversibleValueAnimator dragTobOnScreenAnimator = ReversibleValueAnimator.ofInt(-dragTabWidthPx, menuButtonMargin);
+		dragTobOnScreenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		dragTobOnScreenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(dragTabView));
 		
-		ReversibleValueAnimator openAnimator = ReversibleValueAnimator.ofInt(closedOnScreenXPx, openOnScreenXPx);
-		openAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		openAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
+		ReversibleValueAnimator titleContainerOnScreenAnimator = ReversibleValueAnimator.ofInt(-titleContainerWidthPx, -titleContainerWidthPx);
+		titleContainerOnScreenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		titleContainerOnScreenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(titleContainerView));
 		
-		m_openAnimatorSet.addAnimator(openAnimator);
+		ReversibleValueAnimator titleContainerOnScreenWidthAnimator = ReversibleValueAnimator.ofInt(0, 0);
+		titleContainerOnScreenWidthAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		titleContainerOnScreenWidthAnimator.addUpdateListener(new ViewWidthAnimatorUpdateListener(titleContainerView));
+		
+		ReversibleValueAnimator listViewOnScreenAnimator = ReversibleValueAnimator.ofInt(-titleContainerWidthPx, -titleContainerWidthPx);
+		listViewOnScreenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		listViewOnScreenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(listContainerView));
+		
+		m_onScreenAnimatorSet.addAnimator(dragTobOnScreenAnimator);
+		m_onScreenAnimatorSet.addAnimator(titleContainerOnScreenAnimator);
+		m_onScreenAnimatorSet.addAnimator(titleContainerOnScreenWidthAnimator);
+		m_onScreenAnimatorSet.addAnimator(listViewOnScreenAnimator);
+		
+		ReversibleValueAnimator dragTobOpenAnimator = ReversibleValueAnimator.ofInt(menuButtonMargin, titleContainerWidthPx);
+		dragTobOpenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		dragTobOpenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(dragTabView));
+		
+		ReversibleValueAnimator titleContainerOpenAnimator = ReversibleValueAnimator.ofInt(menuButtonMargin, 0);
+		titleContainerOpenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		titleContainerOpenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(titleContainerView));
+		
+		ReversibleValueAnimator titleContainerOpenWidthAnimator = ReversibleValueAnimator.ofInt(0, titleContainerWidthPx);
+		titleContainerOpenWidthAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		titleContainerOpenWidthAnimator.addUpdateListener(new ViewWidthAnimatorUpdateListener(titleContainerView));
+		
+		ReversibleValueAnimator listViewOpenAnimator = ReversibleValueAnimator.ofInt(-titleContainerWidthPx, 0);
+		listViewOpenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
+		listViewOpenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(listContainerView));
+		
+		m_openAnimatorSet.addAnimator(dragTobOpenAnimator);
+		m_openAnimatorSet.addAnimator(titleContainerOpenAnimator);
+		m_openAnimatorSet.addAnimator(titleContainerOpenWidthAnimator);
+		m_openAnimatorSet.addAnimator(listViewOpenAnimator);
 	}
 }
