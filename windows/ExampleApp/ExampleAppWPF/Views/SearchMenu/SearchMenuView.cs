@@ -27,6 +27,7 @@ namespace ExampleAppWPF
         private ScrollViewer m_menuOptionsView;
         private ScrollViewer m_resultsOptionsView;
         private FrameworkElement m_searchArrow;
+        private FrameworkElement m_resultsSeparator;
 
         private Grid m_resultsCountContainer;
 
@@ -90,6 +91,7 @@ namespace ExampleAppWPF
             m_backgroundRectangle = (Rectangle)GetTemplateChild("BackgroundRect");
             m_searchBox = (Grid)GetTemplateChild("SearchBox");
             m_searchArrow = (FrameworkElement)GetTemplateChild("SearchArrow");
+            m_resultsSeparator = (FrameworkElement)GetTemplateChild("ResultsListSeparator");
 
             m_resultsClearButton = (Button)GetTemplateChild("SearchClear");
             m_resultsClearButton.Click += OnResultsClear;
@@ -234,6 +236,7 @@ namespace ExampleAppWPF
             m_resultsCountContainer.Visibility = Visibility.Hidden;
             m_resultsClearButton.Visibility = Visibility.Hidden;
             m_searchArrow.Visibility = Visibility.Hidden;
+            m_resultsSeparator.Visibility = Visibility.Collapsed;
         }
 
         private void OnResultsClear(object sender, RoutedEventArgs e)
@@ -310,6 +313,7 @@ namespace ExampleAppWPF
             m_resultsSpinner.Visibility = Visibility.Hidden;
             m_resultsClearButton.Visibility = Visibility.Visible;
             m_searchArrow.Visibility = Visibility.Visible;
+            m_resultsSeparator.Visibility = Visibility.Visible;
         }
 
         public override void AnimateToClosedOnScreen()
