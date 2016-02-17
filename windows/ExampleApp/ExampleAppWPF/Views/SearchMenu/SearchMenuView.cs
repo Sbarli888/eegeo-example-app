@@ -27,6 +27,7 @@ namespace ExampleAppWPF
         private ScrollViewer m_menuOptionsView;
         private ScrollViewer m_resultsOptionsView;
         private FrameworkElement m_searchArrow;
+        private FrameworkElement m_resultsSeparator;
 
         private Grid m_resultsCountContainer;
 
@@ -44,8 +45,6 @@ namespace ExampleAppWPF
         private Storyboard m_searchArrowOpen;
         private Storyboard m_searchArrowClosed;
 
-        private bool m_searchPerformed;
-
         static SearchMenuView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchMenuView), new FrameworkPropertyMetadata(typeof(SearchMenuView)));
@@ -58,8 +57,6 @@ namespace ExampleAppWPF
 
             Loaded += MainWindow_Loaded;
             mainWindow.SizeChanged += PerformLayout;
-
-            m_searchPerformed = false;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -94,6 +91,7 @@ namespace ExampleAppWPF
             m_backgroundRectangle = (Rectangle)GetTemplateChild("BackgroundRect");
             m_searchBox = (Grid)GetTemplateChild("SearchBox");
             m_searchArrow = (FrameworkElement)GetTemplateChild("SearchArrow");
+            m_resultsSeparator = (FrameworkElement)GetTemplateChild("ResultsListSeparator");
 
             m_resultsClearButton = (Button)GetTemplateChild("SearchClear");
             m_resultsClearButton.Click += OnResultsClear;
@@ -123,6 +121,9 @@ namespace ExampleAppWPF
             var fadeInItemStoryboard = ((Storyboard)Template.Resources["FadeInNewItems"]).Clone();
             var fadeOutItemStoryboard = ((Storyboard)Template.Resources["FadeOutOldItems"]).Clone();
 
+            var slideInItemStoryboard = ((Storyboard)Template.Resources["SlideInNewItems"]).Clone();
+            var slideOutItemStoryboard = ((Storyboard)Template.Resources["SlideOutOldItems"]).Clone();
+
             m_openSearchIconAnim = ((Storyboard)Template.Resources["OpenSearchViewIcon"]).Clone();
             m_closeSearchIconAnim = ((Storyboard)Template.Resources["CloseSearchViewIcon"]).Clone();
 
@@ -141,8 +142,8 @@ namespace ExampleAppWPF
             m_searchArrowOpen = ((Storyboard)Template.Resources["OpenSearchArrow"]).Clone();
             m_searchArrowClosed  = ((Storyboard)Template.Resources["CloseSearchArrow"]).Clone();
 
-            m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SubMenuItemPanel");
-            m_resultListAdapter = new MenuListAdapter(false, m_resultsList, fadeInItemStoryboard, fadeOutItemStoryboard, "SearchResultPanel");
+            m_adapter = new MenuListAdapter(false, m_list, slideInItemStoryboard, slideOutItemStoryboard, fadeInItemStoryboard, fadeOutItemStoryboard, "SubMenuItemPanel");
+            m_resultListAdapter = new MenuListAdapter(false, m_resultsList, slideInItemStoryboard, slideOutItemStoryboard, fadeInItemStoryboard, fadeOutItemStoryboard, "SearchResultPanel");
         }
 
         private void OnSearchBoxTextChanged(object sender, TextChangedEventArgs e)
@@ -150,10 +151,13 @@ namespace ExampleAppWPF
             if (m_editText.Text?.Length > 0 && m_editText.Text != m_defaultEditText)
             {
                 m_resultsClearButton.Visibility = Visibility.Visible;
+                m_editText.Foreground = Colour.black;
+
             }
             else
             {
                 m_resultsClearButton.Visibility = Visibility.Hidden;
+                m_editText.Foreground = Colour.darkgrey;
             }
         }
 
@@ -185,9 +189,11 @@ namespace ExampleAppWPF
                 int sectionIndex = m_adapter.GetSectionIndex(position);
                 int childIndex = m_adapter.GetItemIndex(position);
 
+                SearchMenuViewCLIMethods.OnSearchCleared(m_nativeCallerPointer);
                 MenuViewCLIMethods.SelectedItem(m_nativeCallerPointer, sectionIndex, childIndex);
 
                 ClearSearchResultsListBox();
+
                 if (m_editText.Text != "" && m_editText.Text != m_defaultEditText)
                 {
                     m_resultsClearButton.Visibility = Visibility.Visible;
@@ -200,13 +206,12 @@ namespace ExampleAppWPF
             if (m_resultsList.SelectedItems?.Count > 0)
             {
                 SearchMenuViewCLIMethods.HandleSearchItemSelected(m_nativeCallerPointer, m_resultsList.SelectedIndex);
-                m_searchPerformed = true;
             }
         }
 
         private void OnSearchBoxUnSelected(object sender, RoutedEventArgs e)
         {
-            if( m_editText.Text.Replace(" ", null) == string.Empty)
+            if(m_editText.Text.Replace(" ", null) == string.Empty)
             {
                 m_editText.Text = m_defaultEditText;
             }
@@ -231,6 +236,7 @@ namespace ExampleAppWPF
             m_resultsCountContainer.Visibility = Visibility.Hidden;
             m_resultsClearButton.Visibility = Visibility.Hidden;
             m_searchArrow.Visibility = Visibility.Hidden;
+            m_resultsSeparator.Visibility = Visibility.Collapsed;
         }
 
         private void OnResultsClear(object sender, RoutedEventArgs e)
@@ -245,6 +251,9 @@ namespace ExampleAppWPF
             }
 
             ClearSearchResultsListBox();
+
+            m_editText.Text = m_defaultEditText;
+            m_editText.Foreground = Colour.darkgrey;
         }
 
         private void OnIconClick(object sender, RoutedEventArgs e)
@@ -264,19 +273,12 @@ namespace ExampleAppWPF
 
                     m_resultsSpinner.Visibility = Visibility.Visible;
                     m_resultsClearButton.Visibility = Visibility.Hidden;
-
-                    m_searchPerformed = true;
                 }
             }
         }
 
         public void SetSearchSection(string category, string[] searchResults)
         {
-            if(!m_searchPerformed)
-            {
-                return;
-            }
-
             m_resultListAdapter.ResetData();
 
             var groups = new List<string>(searchResults.Length);
@@ -311,8 +313,7 @@ namespace ExampleAppWPF
             m_resultsSpinner.Visibility = Visibility.Hidden;
             m_resultsClearButton.Visibility = Visibility.Visible;
             m_searchArrow.Visibility = Visibility.Visible;
-
-            m_searchPerformed = false;
+            m_resultsSeparator.Visibility = Visibility.Visible;
         }
 
         public override void AnimateToClosedOnScreen()
