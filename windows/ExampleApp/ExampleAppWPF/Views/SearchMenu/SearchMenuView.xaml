@@ -107,6 +107,18 @@
                             <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="1" To="0" Duration="0:0:0.3"/>
                         </Storyboard>
 
+                        <Storyboard x:Key="OpenSearchArrow">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2">
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="110,38,0,0"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
+                        <Storyboard x:Key="CloseSearchArrow">
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-410,38,0,0"/>
+                            </ThicknessAnimationUsingKeyFrames>
+                        </Storyboard>
+
                     </ControlTemplate.Resources>
                     <Grid Margin="0,50,0,0" Name="SearchMenuViewContainer">
                         <!--Mag glass button. Closed Margin: 114, Open Margin: 714-->
@@ -153,7 +165,6 @@
                             <TextBlock IsEnabled="False" Margin="0,12,2,0"  Name="SearchResultCount" Text="20" Foreground="{StaticResource LightGrey}" TextAlignment="Center" Width="32" Height="50" FontFamily="{StaticResource PrimaryUIFont}" FontSize="18"/>
                         </Grid>
 
-                        <!--<Grid>-->
                         <Rectangle Name="BackgroundRect" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="332,0,0,0" Width="332" Height="50" Fill="{StaticResource PrimaryBG_colour}" RenderTransformOrigin="1.0, 0.0">
                             <Rectangle.Resources>
                                 <Style TargetType="{x:Type Rectangle}">
@@ -177,7 +188,7 @@
                                 </Style>
                             </Grid.Resources>
                             <Border BorderBrush="White" Background="White" BorderThickness="1,1,1,1" CornerRadius="10" Width="295" Height="38" VerticalAlignment="Center" Margin="32,8,6,8">
-                                <TextBox Text="Enter Search Term" Name="SearchInputBox" FontFamily="{StaticResource PrimaryUIFont}" FontSize="18" Foreground="{StaticResource InputTextColour}" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Margin="10,6,6,6">
+                                <TextBox Text="Enter Search Term" Name="SearchInputBox" FontFamily="{StaticResource PrimaryUIFont}" FontSize="18" Foreground="{StaticResource InputTextColour}" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Margin="7,5,6,6">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type TextBox}">
                                             <Setter Property="RenderTransform">
@@ -189,6 +200,11 @@
                                     </TextBox.Resources>
                                 </TextBox>
                             </Border>
+                        </Grid>
+
+                        <!--Search Arrow Open: 110, Closed: -110-->
+                        <Grid Name="SearchArrow" Margin="-410,38,0,0" Width="25" Height="19" HorizontalAlignment="Center" Panel.ZIndex="111" VerticalAlignment="Top" Visibility="Hidden">
+                            <Image Source="/Assets/arrow3_up.png" Width="Auto" Height="Auto"/>
                         </Grid>
 
                         <!--Main Container. Closed Margin: -332 Open Margin: 332-->
@@ -203,11 +219,11 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Grid Margin="295,0,0,0" Grid.Column="0" Name="SearchResultsSpinner" Visibility="Hidden">
+                                <Grid Margin="290,0,0,0" Grid.Column="0" Name="SearchResultsSpinner" Visibility="Hidden">
                                     <Image Style="{StaticResource RotatingAnim}" Source="/Assets/search_results_spinner.png" Width="25" Height="25" RenderTransformOrigin="0.5,0.5"/>
                                 </Grid>
 
-                                <Grid Margin="295,0,0,0" Grid.Column="0">
+                                <Grid Margin="290,0,0,0" Grid.Column="0">
                                     <Button Name="SearchClear" Width="25" Height="25" Visibility="Hidden">
                                         <Button.Style>
                                             <Style TargetType="{x:Type Button}">
@@ -232,9 +248,11 @@
                                     </Button>
                                 </Grid>
                             </Grid>
+
                             <Grid Grid.Row="1">
                                 <Grid Width="332" Height="6" Background="#002B63" Margin="0, 0, 0, 0"/>
                             </Grid>
+
                             <Grid Grid.Row="2">
                                 <StackPanel  Orientation="Vertical" >
                                     <ScrollViewer Width="332" Background="{StaticResource PrimaryBG_colour}" Name="MenuOptionsView" PanningMode="VerticalOnly" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False" >
@@ -315,7 +333,7 @@
 
                                                 </ListBox.Resources>
                                             </ListBox>
-                                            <ListBox Margin="33,0,0,0" Name="SecondaryMenuItemList" Template="{StaticResource ListBoxControlTemplateNoPadding}" ItemsSource="{Binding Children}" Background="{StaticResource Transparent}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" BorderThickness="0">
+                                            <ListBox Margin="34,0,0,0" Name="SecondaryMenuItemList" Template="{StaticResource ListBoxControlTemplateNoPadding}" ItemsSource="{Binding Children}" Background="{StaticResource Transparent}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" BorderThickness="0">
                                                 <ListBox.Resources>
                                                     <Style TargetType="ListBoxItem">
                                                         <Style.Resources>

@@ -25,6 +25,7 @@ namespace ExampleAppWPF
         private TextBlock m_resultsCount;
         private Button m_resultsClearButton;
         private ScrollViewer m_menuOptionsView;
+        private FrameworkElement m_searchArrow;
 
         private Grid m_resultsCountContainer;
 
@@ -38,6 +39,9 @@ namespace ExampleAppWPF
 
         private Storyboard m_searchInputTextOpen;
         private Storyboard m_searchInputTextClose;
+
+        private Storyboard m_searchArrowOpen;
+        private Storyboard m_searchArrowClosed;
 
         private bool m_searchPerformed;
 
@@ -86,6 +90,7 @@ namespace ExampleAppWPF
             m_menuViewContainer = (Grid)GetTemplateChild("SearchMenuViewContainer");
             m_backgroundRectangle = (Rectangle)GetTemplateChild("BackgroundRect");
             m_searchBox = (Grid)GetTemplateChild("SearchBox");
+            m_searchArrow = (FrameworkElement)GetTemplateChild("SearchArrow");
 
             m_resultsClearButton = (Button)GetTemplateChild("SearchClear");
             m_resultsClearButton.Click += OnResultsClear;
@@ -129,6 +134,9 @@ namespace ExampleAppWPF
 
             m_searchInputTextOpen = ((Storyboard)Template.Resources["OpenSearchInputBoxText"]).Clone();
             m_searchInputTextClose = ((Storyboard)Template.Resources["CloseSearchInputBoxText"]).Clone();
+
+            m_searchArrowOpen = ((Storyboard)Template.Resources["OpenSearchArrow"]).Clone();
+            m_searchArrowClosed  = ((Storyboard)Template.Resources["CloseSearchArrow"]).Clone();
 
             m_adapter = new MenuListAdapter(false, m_list, fadeInItemStoryboard, fadeOutItemStoryboard, "SubMenuItemPanel");
             m_resultListAdapter = new MenuListAdapter(false, m_resultsList, fadeInItemStoryboard, fadeOutItemStoryboard, "SearchResultPanel");
@@ -213,6 +221,7 @@ namespace ExampleAppWPF
 
             m_resultsCountContainer.Visibility = Visibility.Hidden;
             m_resultsClearButton.Visibility = Visibility.Hidden;
+            m_searchArrow.Visibility = Visibility.Hidden;
         }
 
         private void OnResultsClear(object sender, RoutedEventArgs e)
@@ -292,6 +301,7 @@ namespace ExampleAppWPF
 
             m_resultsSpinner.Visibility = Visibility.Hidden;
             m_resultsClearButton.Visibility = Visibility.Visible;
+            m_searchArrow.Visibility = Visibility.Visible;
 
             m_searchPerformed = false;
         }
@@ -310,6 +320,7 @@ namespace ExampleAppWPF
 
                     m_searchInputClose.Begin(m_searchBox);
                     m_searchInputTextClose.Begin(m_editText);
+                    m_searchArrowClosed.Begin(m_searchArrow);
                 }
 
                 base.AnimateToClosedOnScreen();
@@ -324,6 +335,7 @@ namespace ExampleAppWPF
 
                 m_searchInputOpen.Begin(m_searchBox);
                 m_searchInputTextOpen.Begin(m_editText);
+                m_searchArrowOpen.Begin(m_searchArrow);
 
                 base.AnimateToOpenOnScreen();
             }
