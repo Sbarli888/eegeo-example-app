@@ -136,7 +136,7 @@ namespace ExampleAppWPF
 
         private void OnSearchBoxTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (m_editText.Text?.Length > 0)
+            if (m_editText.Text?.Length > 0 && m_editText.Text != m_defaultEditText)
             {
                 m_resultsClearButton.Visibility = Visibility.Visible;
             }

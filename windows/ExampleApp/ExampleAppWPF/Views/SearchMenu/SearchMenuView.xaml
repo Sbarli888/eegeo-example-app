@@ -96,15 +96,11 @@
                         </Storyboard>
 
                         <Storyboard x:Key="CloseSearchInputBox">
-                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="1" To="0" Duration="0:0:0.1" BeginTime="0:0:0.1"/>
-
-                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.2" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="-268,0,0,0"/>
-                            </ThicknessAnimationUsingKeyFrames>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="1" To="0" Duration="0:0:0.065"/>
                         </Storyboard>
 
                         <Storyboard x:Key="OpenSearchInputBoxText">
-                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="0" To="1" Duration="0:0:0.3"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" From="-0.2" To="1" Duration="0:0:0.3"/>
                         </Storyboard>
 
                         <Storyboard x:Key="CloseSearchInputBoxText">
