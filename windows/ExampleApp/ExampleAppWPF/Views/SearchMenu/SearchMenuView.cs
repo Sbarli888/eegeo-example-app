@@ -171,6 +171,10 @@ namespace ExampleAppWPF
                 MenuViewCLIMethods.SelectedItem(m_nativeCallerPointer, sectionIndex, childIndex);
 
                 ClearSearchResultsListBox();
+                if (m_editText.Text != "" && m_editText.Text != m_defaultEditText)
+                {
+                    m_resultsClearButton.Visibility = Visibility.Visible;
+                }
             }
         }
 
