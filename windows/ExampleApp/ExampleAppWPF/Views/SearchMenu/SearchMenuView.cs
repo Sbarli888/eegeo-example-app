@@ -227,11 +227,7 @@ namespace ExampleAppWPF
 
         private void ClearSearchResultsListBox()
         {
-            m_resultListAdapter.ResetData();
-
-            m_resultListAdapter.CollapseAll();
-            m_resultsList.DataContext = null;
-            m_resultsList.ItemsSource = null;
+            m_resultListAdapter.CollapseAndClearAll();
 
             m_resultsCountContainer.Visibility = Visibility.Hidden;
             m_resultsClearButton.Visibility = Visibility.Hidden;

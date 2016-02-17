@@ -74,7 +74,7 @@
                         <Storyboard x:Key="CloseBackgroundRect">
                             <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="1" To="0" Duration="0:0:0.15"/>
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.15" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.15" Value="-400,0,0,0"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.15" Value="0,0,0,0"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
                     </ControlTemplate.Resources>
@@ -121,7 +121,7 @@
                         </Grid>
 
                         <!--Closed: 268 Open 332-->
-                        <Rectangle Name="BackgroundRect" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="300,0,0,0" Width="332" Height="50" Fill="{StaticResource PrimaryBG_colour}" RenderTransformOrigin="1.0, 0.0">
+                        <Rectangle Name="BackgroundRect" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="300,0,0,0" Width="332" Height="50" Fill="{StaticResource PrimaryBG_colour}" RenderTransformOrigin="0.0, 0.0">
                             <Rectangle.Resources>
                                 <Style TargetType="{x:Type Rectangle}">
                                     <Setter Property="RenderTransform">
