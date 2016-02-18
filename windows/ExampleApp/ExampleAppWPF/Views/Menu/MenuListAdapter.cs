@@ -159,18 +159,38 @@ namespace ExampleAppWPF
             --m_runningAnimations;
         }
 
-        public void CollapseAll()
+        public void CollapseAndClearAll()
         {
-            for (var i = 0; i < m_list.Items.Count; ++i)
+            m_runningAnimations = m_list.Items.Count;
+
+            for (var i = 0; i < m_runningAnimations; ++i)
             {
                 ListBoxItem item = (ListBoxItem)m_list.ItemContainerGenerator.ContainerFromItem(m_list.Items[i]);
 
                 var control = FindChildControl<StackPanel>(item as DependencyObject, ControlToAnimate);
 
+                m_slideOutAnimation.Completed += OnClearAllAnimsComplete;
+
                 m_fadeOutItemAnimation.Begin(control as FrameworkElement);
+                m_slideOutAnimation.Begin(item);
             }
 
             m_children.Clear();
+        }
+
+        private void OnClearAllAnimsComplete(object sender, EventArgs e)
+        {
+            --m_runningAnimations;
+
+            if(m_runningAnimations <= 0)
+            {
+                ResetData();
+
+                m_list.DataContext = null;
+                m_list.ItemsSource = null;
+
+                m_runningAnimations = 0;
+            }
         }
 
         private DependencyObject FindChildControl<T>(DependencyObject control, string name)
