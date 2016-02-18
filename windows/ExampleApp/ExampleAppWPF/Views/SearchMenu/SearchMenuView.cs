@@ -377,6 +377,8 @@ namespace ExampleAppWPF
             else
             {
                 m_resultsCountContainer.Visibility = Visibility.Hidden;
+                m_resultsSpinner.Visibility = Visibility.Hidden;
+                ClearSearchResultsListBox();
             }
         }
 
