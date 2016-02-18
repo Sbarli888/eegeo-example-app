@@ -74,7 +74,7 @@
                         <Storyboard x:Key="CloseBackgroundRect">
                             <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" From="1" To="0" Duration="0:0:0.15"/>
                             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Duration="0:0:0.15" >
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.15" Value="0,0,0,0"/>
+                                <SplineThicknessKeyFrame KeyTime="00:00:00.15" Value="100,0,0,0"/>
                             </ThicknessAnimationUsingKeyFrames>
                         </Storyboard>
                     </ControlTemplate.Resources>
