@@ -9,4 +9,6 @@ public interface MenuAnimationStateCallback
 	public void onClosedOnScreenAnimationComplete();
 
 	public void onOpenOnScreenAnimationComplete();
+	
+	public void onOpenOnScreenAnimationStart();
 }

@@ -72,6 +72,8 @@ public abstract class MenuView implements View.OnClickListener, MenuAnimationSta
     	m_animating = false;
     	
     	MenuViewJniMethods.ViewCloseCompleted(m_nativeCallerPointer);
+    	
+        m_list.setVisibility(View.GONE);
     }
     
     @Override
@@ -216,4 +218,10 @@ public abstract class MenuView implements View.OnClickListener, MenuAnimationSta
     {
     	return !m_animating && (m_menuAnimationHandler.isClosedOnScreen() || m_menuAnimationHandler.isOpenOnScreen());
     }
+	
+    @Override
+	public void onOpenOnScreenAnimationStart() 
+	{
+        m_list.setVisibility(View.VISIBLE);
+	}
 }

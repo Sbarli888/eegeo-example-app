@@ -33,6 +33,7 @@ public class MenuOpenOnScreenAnimatorListener implements AnimatorListener
 	@Override
 	public void onAnimationStart(Animator arg0)
 	{	
+		m_menuAnimationStateCallback.onOpenOnScreenAnimationStart();
 	}
 
 }

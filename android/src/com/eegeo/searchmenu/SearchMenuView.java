@@ -47,7 +47,9 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
     private TextView m_searchCountText;
     
     private boolean m_isCategory;
-
+    
+    private ArrayList<String> m_pendingResults = null;
+    	
     public SearchMenuView(MainActivity activity, long nativeCallerPointer)
     {
         super(activity, nativeCallerPointer);
@@ -256,7 +258,15 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
         	searchResultList.add(searchResults[i]);
         }
         
-    	m_searchListAdapter.setData(searchResultList);
+        if(m_menuAnimationHandler.isOffScreen())
+        {
+        	m_pendingResults = searchResultList;
+        }
+        else
+        {
+        	m_pendingResults = null;
+        	m_searchListAdapter.setData(searchResultList);
+        }
     }
 
 	@Override
@@ -265,6 +275,32 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
 		{
 			setEditTextInternal("", false);
 		}
+	}
+
+    private boolean hasPendingResults() { return m_pendingResults != null; }
+
+	@Override
+	public void onOpenOnScreenAnimationStart() 
+	{
+		super.onOpenOnScreenAnimationStart();
+		
+        m_list.setVisibility(View.VISIBLE);
+        m_searchList.setVisibility(View.VISIBLE);
+        
+		if(hasPendingResults())
+		{
+        	m_searchListAdapter.setData(m_pendingResults);
+        	m_pendingResults = null;
+		}
+	}
+
+	@Override
+	public void onClosedOnScreenAnimationComplete()
+	{
+		super.onClosedOnScreenAnimationComplete();
+		
+        m_list.setVisibility(View.GONE);
+        m_searchList.setVisibility(View.GONE);
 	}
 }
 
