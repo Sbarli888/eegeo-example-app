@@ -41,11 +41,9 @@
 
     <Button
         android:id="@+id/search_menu_clear_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/search_menu_view_edit_text_view"
-        android:layout_alignRight="@+id/search_menu_view_edit_text_view"
-        android:layout_marginRight="5dp"
+        android:layout_width="@dimen/search_clear_button_size"
+        android:layout_height="@dimen/search_clear_button_size"
+        android:layout_marginLeft="268dp"
         android:background="@drawable/buttonsmall_close_states"
         android:clickable="true" />
     
