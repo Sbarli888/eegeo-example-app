@@ -32,7 +32,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"
-            android:background="@drawable/sub_menu_arrow" >
+            android:background="@drawable/sub_menu_arrow_states" >
 
         </RelativeLayout>
 
