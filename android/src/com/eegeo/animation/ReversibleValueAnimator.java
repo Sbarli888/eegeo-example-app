@@ -6,6 +6,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class ReversibleValueAnimator extends ValueAnimator
 {
+	private long m_startDelayMilliseconds = 0;
+	
 	public static ReversibleValueAnimator ofInt(int... values)
 	{
 		ReversibleValueAnimator reversibleValueAnimator = new ReversibleValueAnimator();
@@ -38,5 +40,26 @@ public class ReversibleValueAnimator extends ValueAnimator
 	public ReversibleTimeInterpolator getReversibleInterpolator()
 	{
 		return (ReversibleTimeInterpolator)super.getInterpolator();
+	}
+	
+	@Override
+	public void setStartDelay(long delayMilliseconds)
+	{
+		m_startDelayMilliseconds = delayMilliseconds;
+	}
+	
+	@Override
+	public void start()
+	{
+		if(getReversibleInterpolator().getReversed())
+		{
+			super.setStartDelay(0);
+		}
+		else
+		{
+			super.setStartDelay(m_startDelayMilliseconds);
+		}
+		
+		super.start();
 	}
 }

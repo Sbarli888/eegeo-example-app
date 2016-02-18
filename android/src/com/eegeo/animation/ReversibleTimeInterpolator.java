@@ -18,6 +18,11 @@ public class ReversibleTimeInterpolator implements TimeInterpolator
 		m_reversed = reversed;
 	}
 	
+	public boolean getReversed()
+	{
+		return m_reversed;
+	}
+	
 	@Override
 	public float getInterpolation(float value)
 	{

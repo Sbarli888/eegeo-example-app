@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -24,7 +26,7 @@ import com.eegeo.menu.MenuListAdapter;
 import com.eegeo.menu.MenuView;
 import com.eegeo.mobileexampleapp.R;
 
-public class SearchMenuView extends MenuView implements TextView.OnEditorActionListener, OnFocusChangeListener
+public class SearchMenuView extends MenuView implements TextView.OnEditorActionListener, OnFocusChangeListener, TextWatcher
 {
     protected View m_closeButtonView = null;
     protected View m_progressSpinner = null;
@@ -63,7 +65,7 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
         ImageButton dragButtonView = (ImageButton)m_view.findViewById(R.id.search_menu_drag_button_view);
         dragButtonView.setOnClickListener(this);
         
-        m_closeButtonView = m_view.findViewById(R.id.search_menu_close_button);
+        m_closeButtonView = m_view.findViewById(R.id.search_menu_clear_button);
         m_closeButtonView.setOnClickListener(new SearchMenuCloseButtonClickedHandler(m_nativeCallerPointer, this));
         m_closeButtonView.setVisibility(View.GONE);
 
@@ -73,6 +75,7 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
         m_editText = (EditText)m_view.findViewById(R.id.search_menu_view_edit_text_view);
         m_editText.setImeActionLabel("Search", KeyEvent.KEYCODE_ENTER);
         m_editText.setOnEditorActionListener(this);
+        m_editText.addTextChangedListener(this);
         m_editText.setOnFocusChangeListener(this);
         m_editText.clearFocus();
         m_disabledTextColor = m_activity.getResources().getColor(R.color.text_field_disabled);
@@ -152,6 +155,24 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
 
         return false;
     }
+    
+    @Override
+    public void afterTextChanged(Editable s)
+    {
+    	
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after)
+    {
+        
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count)
+    {
+    	updateClearButtonVisibility();
+    } 
     
     public void removeSearchKeyboard()
     {

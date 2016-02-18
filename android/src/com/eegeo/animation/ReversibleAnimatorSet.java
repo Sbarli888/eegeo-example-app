@@ -31,13 +31,13 @@ public class ReversibleAnimatorSet
 	
 	public float getAnimatedFraction()
 	{
-		float animatedFraction = 0.0f;
+		float animatedFraction = 1.0f;
 		
 		ArrayList<Animator> valueAnimators = m_animatorSet.getChildAnimations();
 		
 		for(Animator animator : valueAnimators)
 		{
-			animatedFraction = Math.max(animatedFraction, ((ValueAnimator)animator).getAnimatedFraction());
+			animatedFraction = Math.min(animatedFraction, ((ValueAnimator)animator).getAnimatedFraction());
 		}
 		
 		return animatedFraction;
