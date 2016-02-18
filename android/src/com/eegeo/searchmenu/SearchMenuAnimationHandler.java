@@ -11,8 +11,8 @@ import com.eegeo.animation.CircleInOutTimeInterpolator;
 import com.eegeo.animation.ReversibleAnimatorSet;
 import com.eegeo.animation.ReversibleValueAnimator;
 import com.eegeo.animation.updatelisteners.ViewAlphaAnimatorUpdateListener;
+import com.eegeo.animation.updatelisteners.ViewScaleXAnimatorUpdateListener;
 import com.eegeo.animation.updatelisteners.ViewScaleYAnimatorUpdateListener;
-import com.eegeo.animation.updatelisteners.ViewWidthAnimatorUpdateListener;
 import com.eegeo.animation.updatelisteners.ViewXAnimatorUpdateListener;
 import com.eegeo.animation.updatelisteners.ViewYAnimatorUpdateListener;
 import com.eegeo.entrypointinfrastructure.MainActivity;
@@ -51,10 +51,12 @@ public class SearchMenuAnimationHandler extends MenuAnimationHandler
         m_view.setX(0.0f);
         
         int menuButtonMarginPx = (int) m_mainActivity.getResources().getDimension(R.dimen.menu_button_margin);
+        
+        titleContainerView.setPivotX(0.0f);
 		
 		addAnimator(m_onScreenAnimatorSet, -dragTabWidthPx, menuButtonMarginPx, false, new ViewXAnimatorUpdateListener(dragTabView), new CircleInOutTimeInterpolator());
-		addAnimator(m_onScreenAnimatorSet, -titleContainerWidthPx, -titleContainerWidthPx, false, new ViewXAnimatorUpdateListener(titleContainerView), new CircleInOutTimeInterpolator());
-		addAnimator(m_onScreenAnimatorSet, 0, 0, false, new ViewWidthAnimatorUpdateListener(titleContainerView), new CircleInOutTimeInterpolator());
+		addAnimator(m_onScreenAnimatorSet, menuButtonMarginPx, menuButtonMarginPx, false, new ViewXAnimatorUpdateListener(titleContainerView), new CircleInOutTimeInterpolator());
+		addAnimator(m_onScreenAnimatorSet, 0.0f, 0.0f, false, new ViewScaleXAnimatorUpdateListener(titleContainerView), new CircleInOutTimeInterpolator());
 		addAnimator(m_onScreenAnimatorSet, -titleContainerWidthPx, -titleContainerWidthPx, false, new ViewXAnimatorUpdateListener(listContainerView), new CircleInOutTimeInterpolator());
 		addAnimator(m_onScreenAnimatorSet, 0.0f, 0.0f, false, new ViewScaleYAnimatorUpdateListener(editBoxBackgroundView), new BackOutTimeInterpolator());
 		addAnimator(m_onScreenAnimatorSet, titleBarControlsYStartPx, titleBarControlsYStartPx, false, new ViewYAnimatorUpdateListener(editBoxView), new CircleInOutTimeInterpolator());
@@ -66,7 +68,7 @@ public class SearchMenuAnimationHandler extends MenuAnimationHandler
 		
 		addAnimator(m_openAnimatorSet, menuButtonMarginPx, titleContainerWidthPx, false, new ViewXAnimatorUpdateListener(dragTabView), new CircleInOutTimeInterpolator());
 		addAnimator(m_openAnimatorSet, menuButtonMarginPx, 0, false, new ViewXAnimatorUpdateListener(titleContainerView), new CircleInOutTimeInterpolator());
-		addAnimator(m_openAnimatorSet, 0, titleContainerWidthPx, false, new ViewWidthAnimatorUpdateListener(titleContainerView), new CircleInOutTimeInterpolator());
+		addAnimator(m_openAnimatorSet, 0.0f, 1.0f, false, new ViewScaleXAnimatorUpdateListener(titleContainerView), new CircleInOutTimeInterpolator());
 		addAnimator(m_openAnimatorSet, -titleContainerWidthPx, 0, false, new ViewXAnimatorUpdateListener(listContainerView), new CircleInOutTimeInterpolator());
 		addAnimator(m_openAnimatorSet, 0.0f, 1.0f, true, new ViewScaleYAnimatorUpdateListener(editBoxBackgroundView), new BackOutTimeInterpolator());
 		addAnimator(m_openAnimatorSet, titleBarControlsYStartPx, editTextYEndPx, true, new ViewYAnimatorUpdateListener(editBoxView), new CircleInOutTimeInterpolator());

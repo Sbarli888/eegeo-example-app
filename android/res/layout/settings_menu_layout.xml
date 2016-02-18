@@ -10,52 +10,20 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
         android:layout_marginTop="50dp">
-        
+
         <RelativeLayout
-		    android:layout_width="50dp"
-		    android:layout_height="50dp"
-		    android:id="@+id/settings_menu_drag_tab_view"
-	        android:clickable="true"
-	        android:focusable="true"
-	        android:focusableInTouchMode="true">
-
-		    <ImageButton
-		        android:id="@+id/settings_menu_drag_button_view"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:background="@drawable/menu_button_color_states"
-		        android:src="@drawable/button_settings_menu_states" />
-		
-		</RelativeLayout>
-
-		<RelativeLayout
-		    android:id="@+id/settings_menu_title_container"
-		    android:layout_width="249dp"
-		    android:layout_height="50dp"
-		    android:layout_toRightOf="@id/settings_menu_drag_tab_view"
-		    android:background="@color/gold"
-		    android:clipChildren="true" >
-
-		    <TextView
-		        android:id="@+id/settings_menu_title"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_centerVertical="true"
-		        android:layout_marginLeft="8dp"
-		        android:layout_marginRight="8dp"
-		        android:maxLines="1"
-		        android:text="@string/settings_header"
-		        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-		</RelativeLayout>
+            android:id="@+id/settings_menu_title_container"
+            android:layout_width="249dp"
+            android:layout_height="50dp"
+            android:background="@color/gold"
+            android:clipChildren="true" >
+        </RelativeLayout>
 
 		<FrameLayout
 		    android:id="@+id/settings_menu_list_container"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_below="@id/settings_menu_title_container"
-		    android:layout_marginLeft="28dp"
-		    android:layout_toRightOf="@id/settings_menu_drag_tab_view" >
+		    android:layout_marginTop="50dp" >
 
 			<ListView
 			    android:id="@+id/settings_menu_item_list"
@@ -75,6 +43,24 @@
 			</ListView>
 
 		</FrameLayout>
+
+		<TextView
+		    android:id="@+id/settings_menu_title"
+		    android:layout_width="wrap_content"
+		    android:layout_height="50dp"
+		    android:layout_marginLeft="8dp"
+		    android:layout_marginRight="8dp"
+		    android:gravity="center_vertical"
+		    android:maxLines="1"
+		    android:text="@string/settings_header"
+		    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+		<ImageButton
+		    android:id="@+id/settings_menu_drag_button_view"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:background="@drawable/menu_button_color_states"
+		    android:src="@drawable/button_settings_menu_states" />
 
 	</RelativeLayout>
 	

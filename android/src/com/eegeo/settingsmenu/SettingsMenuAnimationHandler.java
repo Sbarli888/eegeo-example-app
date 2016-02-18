@@ -2,13 +2,16 @@
 
 package com.eegeo.settingsmenu;
 
+import android.animation.TimeInterpolator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.eegeo.animation.CircleInOutTimeInterpolator;
+import com.eegeo.animation.ReversibleAnimatorSet;
 import com.eegeo.animation.ReversibleValueAnimator;
-import com.eegeo.animation.updatelisteners.LeftMarginAnimatorUpdateListener;
-import com.eegeo.animation.updatelisteners.ViewWidthAnimatorUpdateListener;
+import com.eegeo.animation.updatelisteners.ViewAlphaAnimatorUpdateListener;
+import com.eegeo.animation.updatelisteners.ViewScaleXAnimatorUpdateListener;
 import com.eegeo.animation.updatelisteners.ViewXAnimatorUpdateListener;
 import com.eegeo.entrypointinfrastructure.MainActivity;
 import com.eegeo.menu.MenuAnimationHandler;
@@ -27,59 +30,57 @@ public class SettingsMenuAnimationHandler extends MenuAnimationHandler
 	@Override
 	protected void InitializeAnimators()
 	{
-		View dragTabView = m_view.findViewById(R.id.settings_menu_drag_tab_view);
+		View dragTabView = m_view.findViewById(R.id.settings_menu_drag_button_view);
 		View titleContainerView = m_view.findViewById(R.id.settings_menu_title_container);
 		View listItemContainerView = m_view.findViewById(R.id.settings_menu_list_container);
+		View settingsMenuTitleView = m_view.findViewById(R.id.settings_menu_title);
 		
 		final RelativeLayout uiRoot = (RelativeLayout)m_mainActivity.findViewById(R.id.ui_container);
 		
 		int screenWidthPx = uiRoot.getWidth();
 		
+		int menuButtonMarginPx = (int) m_mainActivity.getResources().getDimension(R.dimen.menu_button_margin);
+		
 		int titleContainerWidthPx = titleContainerView.getWidth();
-		RelativeLayout.LayoutParams listContainerLayout = (RelativeLayout.LayoutParams)listItemContainerView.getLayoutParams();
-		int listContainerLeftMarginPx = listContainerLayout.leftMargin;
         int dragTabWidthPx = dragTabView.getWidth();
         
-        int offScreenXPx = screenWidthPx;
-        int closedOnScreenXPx = screenWidthPx - dragTabWidthPx - listContainerLeftMarginPx;
-        int openOnScreenXPx = screenWidthPx - dragTabWidthPx - titleContainerWidthPx;
+        titleContainerView.setPivotX(0.0f);
+        titleContainerView.setX(dragTabWidthPx);
+        
+        settingsMenuTitleView.setX(dragTabWidthPx);
+        
+        addAnimator(m_onScreenAnimatorSet, screenWidthPx, screenWidthPx - (dragTabWidthPx + menuButtonMarginPx), new ViewXAnimatorUpdateListener(m_view), new CircleInOutTimeInterpolator());
+		addAnimator(m_onScreenAnimatorSet, 0.0f, 0.0f, new ViewScaleXAnimatorUpdateListener(titleContainerView), new CircleInOutTimeInterpolator());
+		addAnimator(m_onScreenAnimatorSet, 0, dragTabWidthPx + menuButtonMarginPx, new ViewXAnimatorUpdateListener(listItemContainerView), new CircleInOutTimeInterpolator());
+		addAnimator(m_onScreenAnimatorSet, 0.0f, 0.0f, new ViewAlphaAnimatorUpdateListener(settingsMenuTitleView), new CircleInOutTimeInterpolator());
 		
-        ReversibleValueAnimator onScreenAnimator = ReversibleValueAnimator.ofInt(offScreenXPx, closedOnScreenXPx);
-		onScreenAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		onScreenAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
-		onScreenAnimator.setInterpolator(new CircleInOutTimeInterpolator());
+		addAnimator(m_openAnimatorSet, screenWidthPx - (dragTabWidthPx + menuButtonMarginPx), screenWidthPx - (dragTabWidthPx + titleContainerWidthPx), new ViewXAnimatorUpdateListener(m_view), new CircleInOutTimeInterpolator());
+		addAnimator(m_openAnimatorSet, 0.0f, 1.0f, new ViewScaleXAnimatorUpdateListener(titleContainerView), new CircleInOutTimeInterpolator());
+		addAnimator(m_openAnimatorSet, dragTabWidthPx + menuButtonMarginPx, dragTabWidthPx, new ViewXAnimatorUpdateListener(listItemContainerView), new CircleInOutTimeInterpolator());
+		addAnimator(m_openAnimatorSet, 0.0f, 1.0f, new ViewAlphaAnimatorUpdateListener(settingsMenuTitleView), new CircleInOutTimeInterpolator());
+	}
+	
+	protected void addAnimator(ReversibleAnimatorSet animatorSet, float startVal, float endVal, AnimatorUpdateListener updateListener, TimeInterpolator interpolator)
+	{
+		ReversibleValueAnimator valueAnimator = ReversibleValueAnimator.ofFloat(startVal, endVal);
 		
-		ReversibleValueAnimator onScreenTitleViewAnimator = ReversibleValueAnimator.ofInt(0, 0);
-		onScreenTitleViewAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		onScreenTitleViewAnimator.addUpdateListener(new ViewWidthAnimatorUpdateListener(titleContainerView));
-		onScreenTitleViewAnimator.setInterpolator(new CircleInOutTimeInterpolator());
+		addAnimator(animatorSet, valueAnimator, updateListener, interpolator);
+	}
+	
+	protected void addAnimator(ReversibleAnimatorSet animatorSet, int startVal, int endVal, AnimatorUpdateListener updateListener, TimeInterpolator interpolator)
+	{
+		ReversibleValueAnimator valueAnimator = ReversibleValueAnimator.ofInt(startVal, endVal);
 		
-		ReversibleValueAnimator onScreenListViewAnimator = ReversibleValueAnimator.ofInt(listContainerLeftMarginPx, listContainerLeftMarginPx);
-		onScreenListViewAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		onScreenListViewAnimator.addUpdateListener(new LeftMarginAnimatorUpdateListener(listItemContainerView));
-		onScreenListViewAnimator.setInterpolator(new CircleInOutTimeInterpolator());
+		addAnimator(animatorSet, valueAnimator, updateListener, interpolator);
+	}
+	
+	protected void addAnimator(ReversibleAnimatorSet animatorSet, ReversibleValueAnimator valueAnimator, AnimatorUpdateListener updateListener, TimeInterpolator interpolator)
+	{
+		valueAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
 		
-		m_onScreenAnimatorSet.addAnimator(onScreenAnimator);
-		m_onScreenAnimatorSet.addAnimator(onScreenTitleViewAnimator);
-		m_onScreenAnimatorSet.addAnimator(onScreenListViewAnimator);
+		valueAnimator.addUpdateListener(updateListener);
+		valueAnimator.setInterpolator(interpolator);
 		
-		ReversibleValueAnimator openAnimator = ReversibleValueAnimator.ofInt(closedOnScreenXPx, openOnScreenXPx);
-		openAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		openAnimator.addUpdateListener(new ViewXAnimatorUpdateListener(m_view));
-		openAnimator.setInterpolator(new CircleInOutTimeInterpolator());
-		
-		ReversibleValueAnimator openTitleViewAnimator = ReversibleValueAnimator.ofInt(0, titleContainerWidthPx);
-		openTitleViewAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		openTitleViewAnimator.addUpdateListener(new ViewWidthAnimatorUpdateListener(titleContainerView));
-		openTitleViewAnimator.setInterpolator(new CircleInOutTimeInterpolator());
-		
-		ReversibleValueAnimator openListViewAnimator = ReversibleValueAnimator.ofInt(listContainerLeftMarginPx, 0);
-		openListViewAnimator.setDuration(m_stateChangeAnimationTimeMilliseconds);
-		openListViewAnimator.addUpdateListener(new LeftMarginAnimatorUpdateListener(listItemContainerView));
-		openListViewAnimator.setInterpolator(new CircleInOutTimeInterpolator());
-		
-		m_openAnimatorSet.addAnimator(openAnimator);
-		m_openAnimatorSet.addAnimator(openTitleViewAnimator);
-		m_openAnimatorSet.addAnimator(openListViewAnimator);
+		animatorSet.addAnimator(valueAnimator);
 	}
 }
