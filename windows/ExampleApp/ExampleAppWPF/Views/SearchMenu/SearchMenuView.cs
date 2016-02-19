@@ -32,6 +32,7 @@ namespace ExampleAppWPF
         private Grid m_resultsCountContainer;
 
         private string m_defaultEditText;
+        private bool m_searchInFlight;
 
         private ControlClickHandler m_menuListClickHandler;
         private ControlClickHandler m_resultsListClickHandler;
@@ -57,6 +58,7 @@ namespace ExampleAppWPF
 
             Loaded += MainWindow_Loaded;
             mainWindow.SizeChanged += PerformLayout;
+            m_searchInFlight = false;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -175,7 +177,7 @@ namespace ExampleAppWPF
 
         private void OnMenuListItemSelected(object sender, MouseEventArgs e)
         {
-            if (IsAnimating() || m_adapter.IsAnimating())
+            if (m_searchInFlight || IsAnimating() || m_adapter.IsAnimating())
             {
                 (sender as ListBox).SelectedItem = null;
                 return;
@@ -269,6 +271,8 @@ namespace ExampleAppWPF
 
                     m_resultsSpinner.Visibility = Visibility.Visible;
                     m_resultsClearButton.Visibility = Visibility.Hidden;
+
+                    m_searchInFlight = true;
                 }
             }
         }
@@ -310,6 +314,8 @@ namespace ExampleAppWPF
             m_resultsClearButton.Visibility = Visibility.Visible;
             m_searchArrow.Visibility = Visibility.Visible;
             m_resultsSeparator.Visibility = Visibility.Visible;
+
+            m_searchInFlight = false;
         }
 
         public override void AnimateToClosedOnScreen()
@@ -380,6 +386,8 @@ namespace ExampleAppWPF
                 m_resultsSpinner.Visibility = Visibility.Hidden;
                 ClearSearchResultsListBox();
             }
+
+            m_searchInFlight = false;
         }
 
         protected override void RefreshListData(List<string> groups, List<bool> groupsExpandable, Dictionary<string, List<string>> groupToChildrenMap)
