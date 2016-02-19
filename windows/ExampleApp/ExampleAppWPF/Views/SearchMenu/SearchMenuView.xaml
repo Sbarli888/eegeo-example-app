@@ -299,7 +299,7 @@
                                                             </Grid.ColumnDefinitions>
                                                             <StackPanel Name="SearchResultPanel" Orientation="Horizontal" HorizontalAlignment="Stretch" Width="295"  Grid.Column="0" Background="{StaticResource SubMenuItemDefaultColour}" Margin="33,0,0,0" >
                                                                 <StackPanel.Triggers>
-                                                                    <EventTrigger RoutedEvent="MouseDown">
+                                                                    <EventTrigger RoutedEvent="MouseLeftButtonDown">
                                                                         <BeginStoryboard>
                                                                             <Storyboard>
                                                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchResultPanel" Storyboard.TargetProperty="Background">
@@ -368,11 +368,20 @@
                                                 <DataTemplate DataType="{x:Type local:MenuListItem}">
                                                     <Grid Name="MenuItemGrid" HorizontalAlignment="Stretch" Height="42" Background="{StaticResource Gold}" Width="295">
                                                         <Grid.Triggers>
-                                                            <EventTrigger RoutedEvent="MouseDown">
+                                                            <EventTrigger RoutedEvent="MouseLeftButtonDown">
                                                                 <BeginStoryboard>
                                                                     <Storyboard>
                                                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MenuItemGrid" Storyboard.TargetProperty="Background">
                                                                             <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource PrimaryBG_Down_Colour}"/>
+                                                                        </ObjectAnimationUsingKeyFrames>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </EventTrigger>
+                                                            <EventTrigger RoutedEvent="MouseLeftButtonUp">
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MenuItemGrid" Storyboard.TargetProperty="Background">
+                                                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource PrimaryBG_Over_Colour}"/>
                                                                         </ObjectAnimationUsingKeyFrames>
                                                                     </Storyboard>
                                                                 </BeginStoryboard>
@@ -484,11 +493,20 @@
                                                                 </Grid.ColumnDefinitions>
                                                                 <StackPanel Name="SubMenuItemPanel" Margin="0,0,0,0" Orientation="Horizontal" HorizontalAlignment="Stretch"  Grid.Column="0" Background="{StaticResource SubMenuItemDefaultColour}" Width="290">
                                                                     <StackPanel.Triggers>
-                                                                        <EventTrigger RoutedEvent="MouseDown">
+                                                                        <EventTrigger RoutedEvent="MouseLeftButtonDown">
                                                                             <BeginStoryboard>
                                                                                 <Storyboard>
                                                                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SubMenuItemPanel" Storyboard.TargetProperty="Background">
                                                                                         <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource SubMenuItemMouseDownColour}"/>
+                                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                                </Storyboard>
+                                                                            </BeginStoryboard>
+                                                                        </EventTrigger>
+                                                                        <EventTrigger RoutedEvent="MouseLeftButtonUp">
+                                                                            <BeginStoryboard>
+                                                                                <Storyboard>
+                                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SubMenuItemPanel" Storyboard.TargetProperty="Background">
+                                                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource SubMenuItemMouseOverColour}"/>
                                                                                     </ObjectAnimationUsingKeyFrames>
                                                                                 </Storyboard>
                                                                             </BeginStoryboard>
