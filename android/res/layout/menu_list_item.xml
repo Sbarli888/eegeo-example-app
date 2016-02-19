@@ -22,7 +22,7 @@
             android:layout_marginLeft="8dp"
             android:gravity="left|center_vertical"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
-            android:textColor="@color/table_header_text"
+            android:textColor="@drawable/menu_item_states"
             android:textSize="22sp" />
 
         <RelativeLayout
