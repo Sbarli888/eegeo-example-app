@@ -170,10 +170,11 @@
 	
 		       		    <com.eegeo.helpers.TintableImageView
 		       		        android:id="@+id/poi_creation_details_button_close"
-		       		        android:layout_width="wrap_content"
-		       		        android:layout_height="wrap_content"
+		       		        android:layout_width="48dp"
+		       		        android:layout_height="48dp"
 		       		        android:layout_centerInParent="true"
-		       		        android:background="@drawable/button_close_off" />
+		       		        android:background="@drawable/button_pressed_colour_change"
+		       		        android:src="@drawable/button_pin_close_states" />
 	
 		       		</RelativeLayout>
 		            
@@ -186,7 +187,8 @@
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
 			                android:layout_centerInParent="true"
-			                android:background="@drawable/button_photo_off"/>
+		       		        android:background="@drawable/button_pressed_colour_change"
+			                android:src="@drawable/button_photo_states"/>
 		            </RelativeLayout>
 		            
 		            <RelativeLayout
@@ -198,7 +200,8 @@
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
 			                android:layout_centerInParent="true"
-			                android:background="@drawable/button_gallery_off"/>
+		       		        android:background="@drawable/button_pressed_colour_change"
+			                android:src="@drawable/button_gallery_states"/>
 			        </RelativeLayout>
 		            
 		            <RelativeLayout
@@ -207,10 +210,11 @@
 		       		    android:layout_weight="0.25">
 			            <com.eegeo.helpers.TintableImageView
 			                android:id="@+id/poi_creation_details_button_submit"
-			                android:layout_width="wrap_content"
-			                android:layout_height="wrap_content"
+			                android:layout_width="48dp"
+			                android:layout_height="48dp"
 			                android:layout_centerInParent="true"
-			                android:background="@drawable/button_ok_off"/>
+		       		        android:background="@drawable/button_pressed_colour_change"
+			                android:src="@drawable/button_pin_ok_states"/>
 			        </RelativeLayout>
 
 		        </LinearLayout>

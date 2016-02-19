@@ -116,14 +116,16 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:layout_alignParentLeft="true"
-             android:background="@drawable/button_remove_pin_off" />
+    		 android:background="@drawable/button_pressed_colour_change"
+             android:src="@drawable/pin_remove_states" />
             
          <com.eegeo.helpers.TintableImageView
              android:id="@+id/my_pin_details_view_close_button"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
+             android:layout_width="48dp"
+             android:layout_height="48dp"
              android:layout_alignParentRight="true"
-             android:background="@drawable/button_close_off" />
+    		 android:background="@drawable/button_pressed_colour_change"
+		     android:src="@drawable/button_pin_close_states" />
          
          </RelativeLayout>
 	        
