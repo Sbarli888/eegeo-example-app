@@ -41,7 +41,7 @@ namespace ExampleApp
 
                 for (int i = 0; i < resultCount; ++i)
                 {
-                    System::String^ str = gcnew System::String(searchSection.GetItemAtIndex(i).SerializeJson().c_str());
+                    System::String^ str = ConvertUTF8ToManagedString(searchSection.GetItemAtIndex(i).SerializeJson());
                     searchResultArray[i] = str;
                 }
 
