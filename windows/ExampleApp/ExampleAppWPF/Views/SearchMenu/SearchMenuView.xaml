@@ -483,7 +483,6 @@
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition Height="*"/>
                                                                 <RowDefinition Height="Auto"/>
-                                                                <RowDefinition Height="1"/>
                                                             </Grid.RowDefinitions>
                                                             <Grid HorizontalAlignment="Stretch" Grid.Row="0" >
                                                                 <Grid.ColumnDefinitions>
@@ -543,22 +542,7 @@
                                                                     <Label Content="{Binding Path=Heading}" FontSize="16" Foreground="{StaticResource DarkGrey}" VerticalAlignment="Center"/>
                                                                 </StackPanel>
                                                             </Grid>
-                                                            <Grid Grid.Row="1" Grid.Column="1" Background="{StaticResource SubMenuSeparator}">
-                                                                <Grid.Style>
-                                                                    <Style TargetType="{x:Type Grid}">
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SubMenuListItem}}, Path=IsExpanded}" Value="false">
-                                                                                <Setter Property="Visibility" Value="Visible">
-                                                                                </Setter>
-                                                                            </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SubMenuListItem}}, Path=IsExpanded}" Value="true">
-                                                                                <Setter Property="Visibility" Value="Hidden">
-                                                                                </Setter>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </Grid.Style>
-                                                            </Grid>
+                                                            <Grid Grid.Row="1" Background="{StaticResource PrimaryBG_colour}" IsHitTestVisible="False" Height="1"/>
                                                         </Grid>
                                                     </Grid>
                                                 </DataTemplate>
