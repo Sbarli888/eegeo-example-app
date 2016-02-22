@@ -29,10 +29,10 @@ namespace ExampleAppWPF
         protected Grid m_mainContainer;
 
         protected Storyboard m_openSearchIconAnim;
-        protected Storyboard m_closeSearchIconAnim;
+        protected Storyboard m_closeMenuIconAnim;
 
         protected Storyboard m_openSearchContainerAnim;
-        protected Storyboard m_closeSearchContainerAnim;
+        protected Storyboard m_closeMenuContainerAnim;
 
         protected Storyboard m_openBackgroundRect;
         protected Storyboard m_closeBackgroundRect;
@@ -134,7 +134,22 @@ namespace ExampleAppWPF
 
         public virtual float NormalisedAnimationProgress()
         {
-            return m_openState;
+            double? progress = 0.0;
+
+            if (m_openState == MENU_CLOSING)
+            {
+                progress = m_closeMenuIconAnim.GetCurrentProgress(m_menuIconGrid);
+
+                progress = progress == null ? 0.0f : 1.0 - progress;
+            }
+            else if (m_openState == MENU_OPENING)
+            {
+                progress = m_openSearchIconAnim.GetCurrentProgress(m_menuIconGrid);
+
+                progress = progress == null ? 0.0f : progress;
+            }
+
+            return (float)progress;
         }
 
         private void OnAnimCompleted(object sender, EventArgs e)
@@ -143,7 +158,7 @@ namespace ExampleAppWPF
 
             if (m_openState == MENU_CLOSING)
             {
-                m_closeSearchIconAnim.Completed -= OnAnimCompleted;
+                m_closeMenuIconAnim.Completed -= OnAnimCompleted;
                 m_openState = MENU_CLOSED;
 
                 MenuViewCLIMethods.ViewCloseCompleted(m_nativeCallerPointer);
@@ -178,9 +193,9 @@ namespace ExampleAppWPF
             if (m_openState == MENU_CLOSED || m_openState == MENU_CLOSING)
                 return;
 
-            m_closeSearchIconAnim.Completed += OnAnimCompleted;
-            m_closeSearchIconAnim.Begin(m_menuIconGrid);
-            m_closeSearchContainerAnim.Begin(m_mainContainer);
+            m_closeMenuIconAnim.Completed += OnAnimCompleted;
+            m_closeMenuIconAnim.Begin(m_menuIconGrid, isControllable:true);
+            m_closeMenuContainerAnim.Begin(m_mainContainer);
             m_closeBackgroundRect.Begin(m_backgroundRectangle);
 
             m_openState = MENU_CLOSING;
@@ -216,7 +231,7 @@ namespace ExampleAppWPF
                 return;
 
             m_openSearchIconAnim.Completed += OnAnimCompleted;
-            m_openSearchIconAnim.Begin(m_menuIconGrid);
+            m_openSearchIconAnim.Begin(m_menuIconGrid, isControllable:true);
             m_openSearchContainerAnim.Begin(m_mainContainer);
             m_openBackgroundRect.Begin(m_backgroundRectangle);
 
@@ -260,6 +275,8 @@ namespace ExampleAppWPF
             {
                 return;
             }
+
+            
         }
 
         public void PopulateData(
