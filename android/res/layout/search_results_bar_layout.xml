@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="249dp"
+    android:layout_width="@dimen/search_results_bar_width"
     android:layout_height="50dp"
-    android:background="@color/transparent" >
+    android:background="@color/transparent"
+    android:gravity="center_vertical"  >
 
     <View
         android:id="@+id/search_menu_result_background_view"
-        android:layout_width="249dp"
+        android:layout_width="@dimen/search_results_bar_width"
         android:layout_height="50dp"
         android:background="@color/ui_border" />
 
@@ -20,7 +21,7 @@
 
     <View
         android:id="@+id/search_menu_edit_text_background"
-        android:layout_width="212dp"
+        android:layout_width="@dimen/search_menu_edit_text_background_width"
         android:layout_height="34dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="32dp"
@@ -29,7 +30,7 @@
 
     <EditText
         android:id="@+id/search_menu_view_edit_text_view"
-        android:layout_width="212dp"
+        android:layout_width="@dimen/search_menu_edit_text_background_width"
         android:layout_height="42dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="32dp"
@@ -44,14 +45,6 @@
 
     </EditText>
 
-    <Button
-        android:id="@+id/search_menu_clear_button"
-        android:layout_width="@dimen/search_clear_button_size"
-        android:layout_height="@dimen/search_clear_button_size"
-        android:layout_marginLeft="218dp"
-        android:background="@drawable/buttonsmall_close_states"
-        android:clickable="true" />
-
     <ProgressBar
         android:id="@+id/search_menu_spinner"
         android:layout_width="24dp"
@@ -60,6 +53,16 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:background="@android:color/transparent" />
+
+    <Button
+        android:id="@+id/search_menu_clear_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/search_menu_view_edit_text_view"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/buttonsmall_close_states"
+        android:clickable="true" />
 
 </RelativeLayout>
  

@@ -13,15 +13,10 @@ import com.eegeo.entrypointinfrastructure.MainActivity;
 import com.eegeo.mobileexampleapp.R;
 import com.eegeo.categories.CategoryResources;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.animation.AnimatorSet;
-import android.view.animation.LinearInterpolator;
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,26 +34,12 @@ public class MenuListAdapter extends BaseAdapter
     private SparseArray< SparseArray<View>> m_groupToChildrenViewMap;
     private int m_groupViewId;
     private int m_childViewId;
-    private int m_menuBackgroundId;
-    private int m_subMenuBackgroundId;
     private HashMap<String, Float> m_animatedSizesMap;
     private AnimatorSet m_expandContractAnim;
-    private boolean m_shouldAlignIconRight;
-    
-    private final long MinAnimationDurationMilis = 100;
-    private final long MaxAnimationDurationMilis = 200;
-    private final long CellAnimationDurationMilis = 25; 
-    
-    private static long Clamp(long val, long min, long max) {
-        return Math.max(min, Math.min(max, val));
-    }
     
     public MenuListAdapter(MainActivity context,
                            final int groupViewId,
-                           final int childViewId,
-                           final boolean shouldAlignIconRight,
-                           final int menuBackgroundId,
-                           final int subMenuBackgroundId)
+                           final int childViewId)
     {
         m_context = context;
 
@@ -70,9 +51,6 @@ public class MenuListAdapter extends BaseAdapter
         m_groupsExpandable = new ArrayList<Boolean>();
         m_groupToChildrenMap = new HashMap<String, List<String>>();
 
-        m_shouldAlignIconRight = shouldAlignIconRight;
-        m_menuBackgroundId = menuBackgroundId;
-        m_subMenuBackgroundId = subMenuBackgroundId;
         m_groupToChildrenViewMap = new SparseArray<SparseArray<View>>();
     }
 
@@ -87,16 +65,9 @@ public class MenuListAdapter extends BaseAdapter
         final HashMap<String, List<String>> groupToChildren)
     {
     	m_groupToChildrenViewMap.clear();
-        if(m_groups.size() != groups.size())
-        {
-            updateSources(groups, groupsExpandable, groupToChildren);
-            forceSetAnimatedSizes();
-            notifyDataSetChanged();
-        }
-        else
-        {
-            updateAndAnimateSources(groups, groupsExpandable, groupToChildren);
-        }
+        updateSources(groups, groupsExpandable, groupToChildren);
+        forceSetAnimatedSizes();
+        notifyDataSetChanged();
     }
 
     public void updateSources(
@@ -115,88 +86,6 @@ public class MenuListAdapter extends BaseAdapter
         {
             String key = m_groups.get(i);
             m_animatedSizesMap.put(key, (float)m_groupToChildrenMap.get(key).size());
-        }
-    }
-
-    public void setAnimatedGroupSize(String groupName, float size)
-    {
-        if(!m_animatedSizesMap.containsKey(groupName))
-        {
-            throw new IllegalArgumentException("No group named " + groupName + " found!");
-        }
-
-        if(m_animatedSizesMap.get(groupName) != size)
-        {
-            m_animatedSizesMap.put(groupName, size);
-            notifyDataSetChanged();
-        }
-    }
-
-    private void updateAndAnimateSources(
-        final List<String> groups,
-        final List<Boolean> groupsExpandable,
-        final HashMap<String, List<String>> groupToChildren)
-    {
-        boolean anySizeChanges = false;
-        boolean anyContractionAnimations = false;
-        List<Animator> animations = new ArrayList<Animator>();
-        
-        HashMap<String, List<String>> groupToChildrenForAnimation = (HashMap<String, List<String>>) groupToChildren.clone();
-        // Check each group to see if it has changed in size.
-        for(int i = 0; i < m_groups.size(); i++)
-        {
-            final int groupIndex = i;
-            final String groupName = m_groups.get(groupIndex);
-            int currentSize = m_groupToChildrenMap.get(groupName).size();
-
-            if(!groupToChildren.containsKey(groupName))
-            {
-                throw new IllegalArgumentException("New data source missing group '" + groupName + "'. Cannot animate sizes!");
-            }
-            int targetSize = groupToChildren.get(groupName).size();
-
-            if(currentSize == targetSize)
-            {
-                continue;
-            }
-
-            anySizeChanges = true;
-
-            // If so, animate them to the new size.
-            ValueAnimator anim = ValueAnimator.ofFloat(currentSize, targetSize);
-            anim.setDuration( Clamp( Math.abs((targetSize - currentSize) * CellAnimationDurationMilis), MinAnimationDurationMilis, MaxAnimationDurationMilis) );
-            anim.addUpdateListener(new MenuSectionAnimatorUpdateListener(this, groupName));
-            animations.add(anim);
-
-            // If contracting, update sources at the end of the animation, otherwise update it at the beginning.
-            if(targetSize < currentSize)
-            {
-            	anyContractionAnimations = true;
-            	groupToChildrenForAnimation.put(groupName, m_groupToChildrenMap.get(groupName));
-            }
-        }
-
-        // If there were no size changes, don't animate anything and just refresh the data sources.
-        if(!anySizeChanges)
-        {
-            updateSources(groups, groupsExpandable, groupToChildren);
-            notifyDataSetChanged();
-        }
-        else 
-        {
-        	m_expandContractAnim = new AnimatorSet();
-        	m_expandContractAnim.playTogether(animations);
-        	m_expandContractAnim.setInterpolator(new LinearInterpolator());
-        	if(!anyContractionAnimations)
-        	{
-        		updateSources(groups, groupsExpandable, groupToChildren);
-        	}
-        	else
-        	{
-        		m_groupToChildrenMap = groupToChildrenForAnimation;
-        		m_expandContractAnim.addListener(new MenuDelayedSourceUpdateAnimatorListener(this, groups, groupsExpandable, groupToChildren));
-        	}
-        	m_expandContractAnim.start();
         }
     }
 
@@ -306,14 +195,17 @@ public class MenuListAdapter extends BaseAdapter
         final float animatedGroupSize = m_animatedSizesMap.get(groupName);
         final float animationPercentage = animatedGroupSize / totalGroupSize;
         SparseArray<View> childrenViewMap = m_groupToChildrenViewMap.get(groupIndex);
+      
         if(childrenViewMap == null)
         {
         	childrenViewMap = new SparseArray<View>();
         	m_groupToChildrenViewMap.put(groupIndex, childrenViewMap);
         }
+        
         final int childId = getPlaceInGroup(index);
         final int viewId = isHeader ? m_groupViewId : m_childViewId;
         View cachedView = childrenViewMap.get(childId);
+     
         if(cachedView == null)
         {
         	LayoutInflater inflater = (LayoutInflater)m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -325,7 +217,7 @@ public class MenuListAdapter extends BaseAdapter
         {
         	if(isHeader)
         	{
-        		RelativeLayout openableArrow = (RelativeLayout)cachedView.findViewById(R.id.menu_list_openable_shape);
+        		ImageView openableArrow = (ImageView)cachedView.findViewById(R.id.menu_list_openable_shape);
         		if(animatedGroupSize > 1)
         		{
         			openableArrow.setRotation(-90 * animationPercentage);
@@ -339,6 +231,7 @@ public class MenuListAdapter extends BaseAdapter
         	{
         		cachedView.setScaleY(animationPercentage);
         	}
+        	
         	return cachedView;
         }
 
@@ -350,31 +243,11 @@ public class MenuListAdapter extends BaseAdapter
 
             TextView nameLabel = (TextView)reusableView.findViewById(R.id.menu_list_item_name);
             nameLabel.setText(data.getString("name"));
-
-            int margin = 0;
-            ImageView icon = null;
+        	ImageView icon = (ImageView)reusableView.findViewById(R.id.menu_list_item_icon);
             
-            if(!isHeader)
+            if(icon != null)
             {
-            	icon = (ImageView)reusableView.findViewById(R.id.menu_list_item_icon);
             	icon.setImageResource(CategoryResources.getSmallIconForResourceName(m_context, data.getString("icon")));
-
-            	margin = icon.getLayoutParams().width + 10;
-            }
-
-            if (m_shouldAlignIconRight)
-            {
-                if(icon != null)
-                {
-	                RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams(icon.getLayoutParams());
-	                iconParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-	                icon.setLayoutParams(iconParams);
-                }
-
-                RelativeLayout.LayoutParams textParams = new RelativeLayout.LayoutParams(nameLabel.getLayoutParams());
-                nameLabel.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
-                textParams.setMargins(0, 0, margin, 0);
-                nameLabel.setLayoutParams(textParams);
             }
         }
         catch(JSONException e)
@@ -384,7 +257,7 @@ public class MenuListAdapter extends BaseAdapter
         
         if(isHeader)
         {
-            RelativeLayout openableArrow = (RelativeLayout)reusableView.findViewById(R.id.menu_list_openable_shape);
+        	ImageView openableArrow = (ImageView)reusableView.findViewById(R.id.menu_list_openable_shape);
 
             if(m_groupsExpandable.get(groupIndex))
             {
@@ -408,31 +281,6 @@ public class MenuListAdapter extends BaseAdapter
             {
                 openableArrow.setVisibility(View.GONE);
             }
-        }
-        
-        View backgroundContainer = reusableView.findViewById(R.id.menu_list_item_background_container);
-        if(isHeader)
-        {
-        	backgroundContainer.setBackgroundDrawable(m_context.getResources().getDrawable(m_menuBackgroundId));
-        }
-        else
-        {
-        	backgroundContainer.setBackgroundDrawable(m_context.getResources().getDrawable(m_subMenuBackgroundId));	
-        }
-        
-        View dividerContainer = reusableView.findViewById(R.id.menu_list_divider_container);
-        
-        if(isHeader && !m_groupsExpandable.get(groupIndex) && getPlaceInGroup(index) == 0)
-        {
-        	dividerContainer.setVisibility(View.GONE);
-        }
-        else if(m_groupsExpandable.get(groupIndex) && isHeader && groupIndex == 0)
-        {
-        	dividerContainer.setVisibility(View.GONE);
-        }
-        else
-        {
-        	dividerContainer.setVisibility(View.VISIBLE);
         }
         
         return reusableView;

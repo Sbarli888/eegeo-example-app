@@ -10,7 +10,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class SearchMenuItemSelectedListener implements OnItemClickListener
 {
-
     private final long m_nativeCallerPointer;
     private final SearchMenuView m_searchMenuView;
 

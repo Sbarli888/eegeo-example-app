@@ -38,6 +38,7 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
 
     private ListView m_searchList = null;
     private SearchMenuAdapter m_searchListAdapter = null;
+    private MenuListAdapter m_listAdapter = null;
     private OnItemClickListener m_searchMenuItemSelectedListener = null;
     
     private EditText m_editText;
@@ -109,17 +110,13 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
         m_listAdapter = new MenuListAdapter(
         		m_activity, 
         		R.layout.menu_list_item, 
-        		R.layout.menu_list_subitem, 
-        		false,
-        		R.drawable.menu_header_item_selected_states, 
-        		R.drawable.menu_sub_item_selected_states);
+        		R.layout.menu_list_subitem);
         
         m_list.setAdapter(m_listAdapter);
         
         m_menuItemSelectedListener = new MenuItemSelectedListener(
                 m_listAdapter,
                 this,
-                m_activity,
                 m_nativeCallerPointer
             );
         m_list.setOnItemClickListener(m_menuItemSelectedListener);

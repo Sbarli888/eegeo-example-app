@@ -22,7 +22,6 @@ public abstract class MenuView implements View.OnClickListener, MenuAnimationSta
     protected long m_nativeCallerPointer;
     protected View m_view = null;
     protected ListView m_list = null;
-    protected MenuListAdapter m_listAdapter = null;
     protected OnItemClickListener m_menuItemSelectedListener = null;
     protected Boolean m_loggingEnabled = true;
     

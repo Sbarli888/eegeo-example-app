@@ -18,6 +18,8 @@ import com.eegeo.mobileexampleapp.R;
 
 public class SettingsMenuView extends MenuView
 {
+    private MenuListAdapter m_listAdapter = null;
+    
     public SettingsMenuView(MainActivity activity, long nativeCallerPointer)
     {
         super(activity, nativeCallerPointer);
@@ -55,18 +57,14 @@ public class SettingsMenuView extends MenuView
 
         m_listAdapter = new MenuListAdapter(
         		m_activity, 
-        		R.layout.menu_list_item, 
-        		R.layout.menu_list_subitem, 
-        		false,
-        		R.drawable.menu_header_item_selected_states, 
-        		R.drawable.menu_sub_item_selected_states);
+        		R.layout.settings_menu_item, 
+        		R.layout.menu_list_subitem);
         
         m_list.setAdapter(m_listAdapter);
 
         m_menuItemSelectedListener = new MenuItemSelectedListener(
             m_listAdapter,
             this,
-            m_activity,
             m_nativeCallerPointer
         );
 
