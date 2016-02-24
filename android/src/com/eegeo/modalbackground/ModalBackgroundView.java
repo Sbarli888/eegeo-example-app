@@ -23,9 +23,20 @@ public class ModalBackgroundView implements View.OnClickListener
 
         final RelativeLayout uiRoot = (RelativeLayout)m_activity.findViewById(R.id.ui_container);
         m_view = m_activity.getLayoutInflater().inflate(R.layout.modal_background_layout, uiRoot, false);
-        m_view.setClickable(false);
-        m_view.setOnClickListener(this);
-
+		m_view.setOnClickListener(this);
+      
+        m_view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() 
+        {
+			@Override
+			public void onLayoutChange(View v, int left, int top, int right,
+					int bottom, int oldLeft, int oldTop, int oldRight,
+					int oldBottom) 
+			{ 
+				m_view.setClickable(false);
+		        m_view.removeOnLayoutChangeListener(this);
+			}
+		});
+        
         uiRoot.addView(m_view);
     }
 
