@@ -64,7 +64,12 @@ public class ReversibleAnimatorSet
 		}
 		
 		m_animatorSet.removeAllListeners();
-		m_animatorSet.addListener(listener);
+		
+		if(listener != null) 
+		{
+			m_animatorSet.addListener(listener);
+		}
+		
 		m_animatorSet.start();
 	}
 	

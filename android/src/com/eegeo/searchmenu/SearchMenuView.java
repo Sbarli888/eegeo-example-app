@@ -50,6 +50,8 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
     private boolean m_isCategory;
     
     private ArrayList<String> m_pendingResults = null;
+    
+    private SearchMenuAnimationHandler m_searchMenuAnimationHandler = null;
     	
     public SearchMenuView(MainActivity activity, long nativeCallerPointer)
     {
@@ -97,7 +99,7 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
 					int bottom, int oldLeft, int oldTop, int oldRight,
 					int oldBottom) 
 			{
-		        m_menuAnimationHandler = new SearchMenuAnimationHandler(m_activity, m_view, scopedMenuView);
+		        m_menuAnimationHandler = m_searchMenuAnimationHandler = new SearchMenuAnimationHandler(m_activity, m_view, scopedMenuView);
 		        
 		        m_menuAnimationHandler.setToIntermediateOnScreenState(0.0f);
 		        
@@ -218,11 +220,13 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
     	if(searchResultCount == 0)
     	{
     		m_searchCountText.setText("");
+    		m_searchMenuAnimationHandler.hideSearchResultsView();
     	}
     	else
     	{
     		Integer searchResultCountWrapp = searchResultCount;
     		m_searchCountText.setText(searchResultCountWrapp.toString());
+    		m_searchMenuAnimationHandler.showSearchResultsView();
     	}
     }
 

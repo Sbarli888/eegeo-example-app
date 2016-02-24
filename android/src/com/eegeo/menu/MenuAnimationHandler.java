@@ -27,11 +27,7 @@ public abstract class MenuAnimationHandler
 		
 		m_onScreenAnimatorSet = new ReversibleAnimatorSet();
 		m_openAnimatorSet = new ReversibleAnimatorSet();
-		
-		InitializeAnimators();
 	}
-	
-	protected abstract void InitializeAnimators();
 	
 	public void playToOffScreen()
 	{

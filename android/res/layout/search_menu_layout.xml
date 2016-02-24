@@ -55,14 +55,29 @@
             </ListView>
 
         </LinearLayout>
-        
 
-        <ImageButton
-            android:id="@+id/search_menu_drag_button_view"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:contentDescription="Open menu."
-            android:background="@drawable/menu_button_color_states"
-            android:src="@drawable/button_search_menu_states" />
+    <RelativeLayout
+        android:id="@+id/search_menu_result_count_container"
+        android:layout_width="@dimen/menu_button_margin"
+        android:layout_height="50dp"
+        android:background="@color/ui_border" >
 
+        <TextView
+            android:id="@+id/search_menu_result_count"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/search_menu_drag_button_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/menu_button_color_states"
+        android:contentDescription="Open menu."
+        android:src="@drawable/button_search_menu_states" />
+    
 </RelativeLayout>

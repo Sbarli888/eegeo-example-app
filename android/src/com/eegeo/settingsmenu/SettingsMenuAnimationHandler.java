@@ -25,11 +25,7 @@ public class SettingsMenuAnimationHandler extends MenuAnimationHandler
 	public SettingsMenuAnimationHandler(MainActivity mainActivity, View view, MenuView menuView)
 	{
 		super(mainActivity, view, menuView);
-	}
-	
-	@Override
-	protected void InitializeAnimators()
-	{
+		
 		View dragTabView = m_view.findViewById(R.id.settings_menu_drag_button_view);
 		View titleContainerView = m_view.findViewById(R.id.settings_menu_title_container);
 		View listItemContainerView = m_view.findViewById(R.id.settings_menu_list_container);
