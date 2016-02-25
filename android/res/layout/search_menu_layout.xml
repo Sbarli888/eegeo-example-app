@@ -62,6 +62,7 @@
         android:layout_height="50dp"
         android:background="@color/ui_border" >
 
+
         <TextView
             android:id="@+id/search_menu_result_count"
             android:layout_width="32dp"
@@ -72,12 +73,12 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/search_menu_drag_button_view"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/menu_button_color_states"
-        android:contentDescription="Open menu."
-        android:src="@drawable/button_search_menu_states" />
-    
+	<ImageButton
+	    android:id="@+id/search_menu_drag_button_view"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:contentDescription="Open menu."
+	    android:background="@drawable/menu_button_color_states"
+	    android:src="@drawable/button_search_menu_states" />
+
 </RelativeLayout>

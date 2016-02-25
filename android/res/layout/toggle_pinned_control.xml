@@ -4,14 +4,14 @@
     android:layout_height="wrap_content"
    	android:layout_width="wrap_content">
 	
-	<com.eegeo.helpers.TintableImageView
+	<ImageView
 		android:id="@+id/toggle_pinned_control_unpinned"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:background="@drawable/button_pressed_colour_change"
 	    android:src="@drawable/pin_add_states" />
 	
-	<com.eegeo.helpers.TintableImageView
+	<ImageView
 		android:id="@+id/toggle_pinned_control_pinned"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"

@@ -67,7 +67,7 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
         m_list = (ListView)m_view.findViewById(R.id.search_menu_options_list_view);
         m_searchList = (ListView)m_view.findViewById(R.id.search_menu_item_list);
         
-        ImageButton dragButtonView = (ImageButton)m_view.findViewById(R.id.search_menu_drag_button_view);
+        View dragButtonView = m_view.findViewById(R.id.search_menu_drag_button_view);
         dragButtonView.setOnClickListener(this);
         
         m_closeButtonView = m_view.findViewById(R.id.search_menu_clear_button);
