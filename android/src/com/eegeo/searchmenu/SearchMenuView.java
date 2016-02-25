@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,6 +49,7 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
     private boolean m_isCategory;
     
     private ArrayList<String> m_pendingResults = null;
+    private int m_resultsCount = 0;
     
     private SearchMenuAnimationHandler m_searchMenuAnimationHandler = null;
     	
@@ -245,7 +245,7 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
     protected void refreshListData(List<String> groups,
                                    List<Boolean> groupsExpandable,
                                    HashMap<String, List<String>> groupToChildrenMap)
-    {
+    {   
     	m_listAdapter.setData(groups, groupsExpandable, groupToChildrenMap);
     }
     
@@ -270,23 +270,26 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
     
     private void updateResults(ArrayList<String> searchResults)
     {
-    	m_pendingResults = null;
-    	updateSearchMenuHeight(searchResults.size());
+        m_resultsCount = searchResults.size();
+    	updateSearchMenuHeight(m_resultsCount);
     	m_searchListAdapter.setData(searchResults);
+    	m_pendingResults = null;
     }
     
     private void updateSearchMenuHeight(int resultCount)
-    {
+    {   
         final RelativeLayout mainSearchSubview = (RelativeLayout)m_view.findViewById(R.id.search_menu_view);
-        final LinearLayout listsContainer = (LinearLayout)m_view.findViewById(R.id.search_menu_list_container);
+
+        final View topBar = (View)m_view.findViewById(R.id.search_menu_title_bar);
+        final View menuListContainer = (View)m_view.findViewById(R.id.search_menu_options_list_view);
         
         final float viewHeight = mainSearchSubview.getHeight();
-        final float occupiedHeight = listsContainer.getHeight();
+        final float occupiedHeight = topBar.getHeight() + menuListContainer.getHeight();    
         final float availableHeight = viewHeight - occupiedHeight;
         
     	final float cellHeight = m_activity.getResources().getDimension(R.dimen.search_menu_result_cell_height);
     	final float fullHeight = cellHeight * resultCount;
-    	
+
     	final int height = (int)Math.min(fullHeight, availableHeight);
     	
     	ViewGroup.LayoutParams params = m_searchList.getLayoutParams();
@@ -317,6 +320,8 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
 		{
         	updateResults(m_pendingResults);
 		}
+		
+    	updateSearchMenuHeight(m_resultsCount);
 	}
 
 	@Override
