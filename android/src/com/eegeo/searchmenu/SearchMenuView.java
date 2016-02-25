@@ -211,8 +211,7 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
     
     private void updateClearButtonVisibility()
     {
-    	final String currentSearchText = m_editText.getText().toString();
-    	m_closeButtonView.setVisibility(currentSearchText.isEmpty() ? View.GONE : View.VISIBLE);
+    	m_closeButtonView.setVisibility(View.VISIBLE);
     }
     
     public void setSearchResultCount(final int searchResultCount)
