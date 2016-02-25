@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -264,13 +264,39 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
         }
         else
         {
-        	m_pendingResults = null;
-        	m_searchListAdapter.setData(searchResultList);
+        	updateResults(searchResultList);
         }
+    }
+    
+    private void updateResults(ArrayList<String> searchResults)
+    {
+    	m_pendingResults = null;
+    	updateSearchMenuHeight(searchResults.size());
+    	m_searchListAdapter.setData(searchResults);
+    }
+    
+    private void updateSearchMenuHeight(int resultCount)
+    {
+        final RelativeLayout mainSearchSubview = (RelativeLayout)m_view.findViewById(R.id.search_menu_view);
+        final LinearLayout listsContainer = (LinearLayout)m_view.findViewById(R.id.search_menu_list_container);
+        
+        final float viewHeight = mainSearchSubview.getHeight();
+        final float occupiedHeight = listsContainer.getHeight();
+        final float availableHeight = viewHeight - occupiedHeight;
+        
+    	final float cellHeight = m_activity.getResources().getDimension(R.dimen.search_menu_result_cell_height);
+    	final float fullHeight = cellHeight * resultCount;
+    	
+    	final int height = (int)Math.min(fullHeight, availableHeight);
+    	
+    	ViewGroup.LayoutParams params = m_searchList.getLayoutParams();
+    	params.height = height; 
+    	m_searchList.setLayoutParams(params);
     }
 
 	@Override
-	public void onFocusChange(View v, boolean hasFocus) {
+	public void onFocusChange(View v, boolean hasFocus) 
+	{
 		if(hasFocus && m_isCategory)
 		{
 			setEditTextInternal("", false);
@@ -289,8 +315,7 @@ public class SearchMenuView extends MenuView implements TextView.OnEditorActionL
         
 		if(hasPendingResults())
 		{
-        	m_searchListAdapter.setData(m_pendingResults);
-        	m_pendingResults = null;
+        	updateResults(m_pendingResults);
 		}
 	}
 
