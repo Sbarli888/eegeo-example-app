@@ -405,29 +405,34 @@ namespace ExampleApp
         if(useGeoName)
         {
             m_searchServiceModules[Search::GeoNamesVendorName] = Eegeo_NEW(Search::GeoNames::SdkModel::GeoNamesSearchServiceModule)(m_platformAbstractions.GetWebLoadRequestFactory(),
-                                                                                                          m_platformAbstractions.GetUrlEncoder(),
-                                                                                                          m_networkCapabilities);
+                                                                                                                                    m_platformAbstractions.GetUrlEncoder(),
+                                                                                                                                    m_networkCapabilities,
+                                                                                                                                    ExampleApp::GeoNamesUserName);
         }
-        const bool useEegeoPois = false;
+        const bool useEegeoPois = true;
         if(useEegeoPois)
         {
-            // For Mobile Example App purposes, we use the same taxonomy as Yelp
-            // You could configure your own taxonomy via the category: attribute of a POI submitted to poi-service
             std::vector<std::string> supportedCategories = Search::Yelp::SearchConstants::GetCategories();
+            const std::string eeGeoSearchServiceUrl = "http://poi.eegeo.com/";
             m_searchServiceModules[Search::EegeoVendorName] = Eegeo_NEW(Search::EegeoPois::SdkModel::EegeoSearchServiceModule)(m_platformAbstractions.GetWebLoadRequestFactory(),
-                                                                                                                                       m_platformAbstractions.GetUrlEncoder(),
-                                                                                                                                       m_networkCapabilities,
-                                                                                                                                       supportedCategories,
-                                                                                                                                       apiKey);
+                                                                                                                               m_platformAbstractions.GetUrlEncoder(),
+                                                                                                                               m_networkCapabilities,
+                                                                                                                               supportedCategories,
+                                                                                                                               eeGeoSearchServiceUrl,
+                                                                                                                               apiKey,
+                                                                                                                               world.GetMapModule().GetInteriorsPresentationModule().GetInteriorInteractionModel()
+                                                                                                                               );
         }
+        
         
         searchServiceModulesForCombinedSearch.insert(m_searchServiceModules.begin(), m_searchServiceModules.end());
         
-        m_pSearchServiceModule = Eegeo_NEW(Search::Combined::SdkModel::CombinedSearchServiceModule)(searchServiceModulesForCombinedSearch);
+        m_pSearchServiceModule = Eegeo_NEW(Search::Combined::SdkModel::CombinedSearchServiceModule)(searchServiceModulesForCombinedSearch, m_pWorld->GetMapModule().GetInteriorsPresentationModule().GetInteriorInteractionModel());
         
         m_pSearchModule = Eegeo_NEW(Search::SdkModel::SearchModule)(m_pSearchServiceModule->GetSearchService(),
                                                                     *m_pGlobeCameraController,
                                                                     *m_pCameraTransitionService,
+                                                                    m_pWorld->GetMapModule().GetInteriorsPresentationModule().GetInteriorInteractionModel(),
                                                                     m_messageBus,
                                                                     m_sdkDomainEventBus);
         
