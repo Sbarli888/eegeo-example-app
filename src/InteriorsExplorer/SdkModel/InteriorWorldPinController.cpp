@@ -94,7 +94,7 @@ namespace ExampleApp
                 
                 const float heightOffsetMetres = 0.0f;
                 const bool isInterior = false;
-                const int iconIndex = 23;
+                const int iconIndex = 11;
                 WorldPins::SdkModel::WorldPinInteriorData worldPinInteriorData;
                 
                 ExampleApp::WorldPins::SdkModel::WorldPinFocusData worldPinFocusData(markerModel.GetInteriorName(),

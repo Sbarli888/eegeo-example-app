@@ -119,22 +119,7 @@ namespace ExampleApp
                 m_searchMenuView.CollapseAll();
                 m_searchMenuView.SetSearchInProgress(false);
                 
-                int resultCount = static_cast<int>(message.GetResults().size());
-                
-                if(resultCount > 0)
-                {
-                    for(std::vector<Search::SdkModel::SearchResultModel>::const_iterator it = message.GetResults().begin(); it != message.GetResults().end(); ++it)
-                    {
-                        --resultCount;
-                        
-                        if(resultCount == 0)
-                        {
-                            break;
-                        }
-                    }
-                }
-                
-                m_searchMenuView.SetSearchResultCount(resultCount);
+                m_searchMenuView.SetSearchResultCount(static_cast<int>(message.GetResults().size()));
             }
             
             void SearchMenuController::OnSearch(const std::string& searchQuery)
