@@ -7,7 +7,9 @@
 #include "IModalBackgroundView.h"
 #include "ISearchMenuView.h"
 #include "SearchQuery.h"
+#include "SearchResultModel.h"
 #include "SearchResultViewClearedMessage.h"
+#include "SwallowSearchConstants.h"
 
 namespace ExampleApp
 {
@@ -118,7 +120,25 @@ namespace ExampleApp
                 m_searchMenuView.CollapseAll();
                 m_searchMenuView.SetSearchInProgress(false);
                 
-                m_searchMenuView.SetSearchResultCount(static_cast<int>(message.GetResults().size()));
+                int resultCount = static_cast<int>(message.GetResults().size());
+                
+                if(resultCount > 0)
+                {
+                    for(std::vector<Search::SdkModel::SearchResultModel>::const_iterator it = message.GetResults().begin(); it != message.GetResults().end(); ++it)
+                    {
+                        if(!Search::Swallow::SearchConstants::ShouldShowCategoryAsSearchResult((*it).GetCategory()))
+                        {
+                            --resultCount;
+                            
+                            if(resultCount == 0)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                m_searchMenuView.SetSearchResultCount(resultCount);
             }
             
             void SearchMenuController::OnSearch(const std::string& searchQuery)
@@ -128,32 +148,16 @@ namespace ExampleApp
             
             void SearchMenuController::OnAppModeChanged(const AppModes::AppModeChangedMessage& message)
             {
-                m_appModeAllowsOpen = message.GetAppMode() != AppModes::SdkModel::InteriorMode;
                 
-                if (!m_appModeAllowsOpen)
-                {
-                    m_viewModel.RemoveFromScreen();
-                }
             }
             
             bool SearchMenuController::TryDrag()
             {
-                if (!m_appModeAllowsOpen)
-                {
-                    m_viewModel.Close();
-                    return false;
-                }
-                
                 return MenuController::TryDrag();
             }
             
             void SearchMenuController::OnViewClicked()
             {
-                if (!m_appModeAllowsOpen)
-                {
-                    m_viewModel.Close();
-                    return;
-                }
                 MenuController::OnViewClicked();
             }
             
