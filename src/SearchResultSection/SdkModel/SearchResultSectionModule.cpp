@@ -34,9 +34,7 @@ namespace ExampleApp
                 
                 m_pSearchResultViewClearedObserver = Eegeo_NEW(SearchResultViewClearedObserver)(searchQueryPerformer, messageBus);
                 
-                m_pSearchResultSectionOrder = Eegeo_NEW(View::SearchResultSectionOrder)(interiorInteractionModel,
-                                                                                        interiorMarkerRepository,
-                                                                                        appCameraController);
+                m_pSearchResultSectionOrder = Eegeo_NEW(View::SearchResultSectionOrder)();
             }
 
             SearchResultSectionModule::~SearchResultSectionModule()

@@ -9,7 +9,6 @@
 #include "SearchQuery.h"
 #include "SearchResultModel.h"
 #include "SearchResultViewClearedMessage.h"
-#include "SwallowSearchConstants.h"
 
 namespace ExampleApp
 {
@@ -126,14 +125,11 @@ namespace ExampleApp
                 {
                     for(std::vector<Search::SdkModel::SearchResultModel>::const_iterator it = message.GetResults().begin(); it != message.GetResults().end(); ++it)
                     {
-                        if(!Search::Swallow::SearchConstants::ShouldShowCategoryAsSearchResult((*it).GetCategory()))
+                        --resultCount;
+                        
+                        if(resultCount == 0)
                         {
-                            --resultCount;
-                            
-                            if(resultCount == 0)
-                            {
-                                break;
-                            }
+                            break;
                         }
                     }
                 }
