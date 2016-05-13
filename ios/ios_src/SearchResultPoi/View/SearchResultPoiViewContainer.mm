@@ -89,6 +89,10 @@
     {
         return [[GeoNamesSearchResultPoiView alloc] initWithInterop:m_pInterop];
     }
+    else if(vendor == ExampleApp::Search::EegeoVendorName)
+    {
+        return [[EegeoSearchResultPoiView alloc] initWithInterop:m_pInterop];
+    }
     else if(vendor == ExampleApp::Search::ExampleTourVendorName)
     {
         return [[ExampleTourSearchResultPoiView alloc] initWithInterop:m_pInterop];
