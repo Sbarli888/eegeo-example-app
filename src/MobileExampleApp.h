@@ -255,6 +255,16 @@ namespace ExampleApp
         {
             return *m_pCameraTransitionService;
         }
+
+        Menu::View::IMenuIgnoredReactionModel& ModalityIgnoredReactionModel() const
+        {
+            return *m_pModalityIgnoredReactionModel;
+        }
+
+        Menu::View::IMenuIgnoredReactionModel& ReactorIgnoredReactionModel() const
+        {
+            return *m_pReactorIgnoredReactionModel;
+        }
         
         const ExampleApp::SettingsMenu::SdkModel::ISettingsMenuModule& SettingsMenuModule() const
         {
