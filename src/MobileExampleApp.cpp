@@ -209,7 +209,7 @@ namespace ExampleApp
         , m_pWorld(NULL)
         , m_platformAbstractions(platformAbstractions, networkCapabilities)
         , m_pLoadingScreen(NULL)
-        , m_pinDiameter(48.f)
+        , m_pinDiameter(36.f)
         , m_initialisedApplicationViewState(false)
         , m_pCameraTransitionController(NULL)
         , m_pSettingsMenuModule(NULL)

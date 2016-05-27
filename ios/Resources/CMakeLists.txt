@@ -423,6 +423,7 @@ set(resources ${resources}
 		Resources/Tours/States/Twitter/tweet_bird@3x.png
 		Resources/weatherstates.json
 		Resources/Yelp
+		Resources/yelp_map.json
 		Resources/Yelp/reviewsFromYelpRED.png
 		Resources/Yelp/reviewsFromYelpRED@2x.png
 		Resources/Yelp/reviewsFromYelpRED@3x.png

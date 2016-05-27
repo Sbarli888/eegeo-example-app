@@ -1,6 +1,7 @@
 // Copyright eeGeo Ltd (2012-2015), All Rights Reserved
 
 #include "YelpSearchConstants.h"
+#include "Document.h"
 
 //
 // Yelp categories from http://www.yelp.com/developers/documentumentation/v2/all_category_list
