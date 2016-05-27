@@ -7,6 +7,7 @@
 #include "YelpSearchQueryFactory.h"
 #include "YelpSearchQuery.h"
 #include "YelpBusinessQuery.h"
+#include "YelpSearchConstants.h"
 
 namespace ExampleApp
 {
@@ -21,15 +22,15 @@ namespace ExampleApp
                     const std::string& yelpConsumerSecret,
                     const std::string& yelpOAuthToken,
                     const std::string& yelpOAuthTokenSecret,
-                    SdkModel::IYelpCategoryMapper& yelpCategoryMapper,
                     Eegeo::Web::IWebLoadRequestFactory& webRequestFactory)
                     : m_yelpConsumerKey(yelpConsumerKey)
                     , m_yelpConsumerSecret(yelpConsumerSecret)
                     , m_yelpOAuthToken(yelpOAuthToken)
                     , m_yelpOAuthTokenSecret(yelpOAuthTokenSecret)
-                    //, m_yelpCategoryMapper(yelpCategoryMapper)
                     , m_webRequestFactory(webRequestFactory)
                 {
+
+                    m_applicationToYelpCategoryMap = Yelp::SearchConstants::GetApplicationToYelpCategoryMap();
                 }
 
                 YelpSearchQueryFactory::~YelpSearchQueryFactory()
@@ -40,6 +41,18 @@ namespace ExampleApp
                     Eegeo::Helpers::ICallback0 &completionCallback)
 
                 {
+                    std::string yelpCategory;
+                    
+                    if (query.IsCategory())
+                    {
+                        std::map<std::string, std::string>::const_iterator category = m_applicationToYelpCategoryMap.find(query.Query());
+
+                        if (category != m_applicationToYelpCategoryMap.end())
+                        {
+                            yelpCategory = category->second;
+                        }
+                    }
+
                     return Eegeo_NEW(YelpSearchQuery)(
                         m_yelpConsumerKey,
                         m_yelpConsumerSecret,
@@ -47,7 +60,8 @@ namespace ExampleApp
                         m_yelpOAuthTokenSecret,
                         query,
                         completionCallback,
-                        m_webRequestFactory);
+                        m_webRequestFactory,
+                        yelpCategory);
                 }
 
                 SdkModel::IYelpSearchQuery* YelpSearchQueryFactory::CreateYelpSearchForSpecificLocation(

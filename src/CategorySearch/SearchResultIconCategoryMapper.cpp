@@ -9,35 +9,28 @@ namespace ExampleApp
     {
         SearchResultIconCategoryMapper::SearchResultIconCategoryMapper()
         {
-            m_categoryToIconIndex["caf\u00E9/pub"] = 1;
-            m_categoryToIconIndex["coffee"] = 1;
+            m_categoryToIconIndex["transport"] = 0;
             
-            m_categoryToIconIndex["restaurant"] = 2;
-            m_categoryToIconIndex["restaurants"] = 2;
-            m_categoryToIconIndex["fast food"] = 2;
-            m_categoryToIconIndex["food"] = 2;
+            m_categoryToIconIndex["health"] = 1;
             
-            m_categoryToIconIndex["night life"] = 3;
-            m_categoryToIconIndex["nightlife"] = 3;
-            m_categoryToIconIndex["nightlife"] = 3;
+            m_categoryToIconIndex["shopping"] = 2;
             
-            m_categoryToIconIndex["park"] = 4;
-            m_categoryToIconIndex["parks"] = 4;
+            m_categoryToIconIndex["food_drink"] = 3;
             
-            m_categoryToIconIndex["theatre"] = 5;
-            m_categoryToIconIndex["theater"] = 5;
+            m_categoryToIconIndex["arts"] = 4;
             
-            m_categoryToIconIndex["hotel"] = 6;
-            m_categoryToIconIndex["hotels"] = 6;
-            m_categoryToIconIndex["hotel/motel"] = 6;
-            
-            m_categoryToIconIndex["bank"] = 7;
-            m_categoryToIconIndex["banks"] = 7;
-            m_categoryToIconIndex["financialservices"] = 7;
-            
-            m_categoryToIconIndex["museum"] = 8;
-            m_categoryToIconIndex["museums"] = 8;
-            m_categoryToIconIndex["arts"] = 8;
+            m_categoryToIconIndex["art_museums"] = 5;
+
+            m_categoryToIconIndex["tourism"] = 6;
+
+            m_categoryToIconIndex["business"] = 7;
+
+            m_categoryToIconIndex["accommodation"] = 8;
+
+            m_categoryToIconIndex["sports_leisure"] = 9;
+
+            m_categoryToIconIndex["amenities"] = 10;
+
         }
         
         SearchResultIconCategoryMapper::~SearchResultIconCategoryMapper()
@@ -51,7 +44,7 @@ namespace ExampleApp
             
             if(it == m_categoryToIconIndex.end())
             {
-                return 0;
+                return 12;
             }
             else
             {

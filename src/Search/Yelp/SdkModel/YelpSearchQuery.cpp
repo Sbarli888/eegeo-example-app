@@ -43,6 +43,7 @@ namespace ExampleApp
                     const Search::SdkModel::SearchQuery& searchQuery,
                     Eegeo::Helpers::ICallback0& completionCallback,
                     Eegeo::Web::IWebLoadRequestFactory& webRequestFactory,
+                    const std::string& categoryOverride,
                     bool enableSSL)
                     : MaxRadiusMetres(40000.0f)
                     , m_searchQuery(searchQuery)
@@ -65,6 +66,7 @@ namespace ExampleApp
                     , m_searchPath("/v2/search")
                     , m_searchLimit("20")
                     , m_webRequestCompleteCallback(this, &YelpSearchQuery::HandleWebResponseComplete)
+                    , m_categoryOverride(categoryOverride)
                 {
 
                 }
@@ -83,7 +85,7 @@ namespace ExampleApp
 
                     if (m_searchQuery.IsCategory())
                     {
-                        categoryFilter = m_searchQuery.Query();
+                        categoryFilter = m_categoryOverride.empty() ? m_searchQuery.Query() : m_categoryOverride;
                     }
                     else
                     {

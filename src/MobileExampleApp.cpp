@@ -442,7 +442,8 @@ namespace ExampleApp
                 YelpConsumerKey,
                 YelpConsumerSecret,
                 YelpOAuthToken,
-                YelpOAuthTokenSecret
+                YelpOAuthTokenSecret,
+                m_platformAbstractions.GetFileIO()
                 );
         }
         
@@ -886,7 +887,7 @@ namespace ExampleApp
                                                  const float screenOversampleScale)
     {
         
-        m_pPinsModule = CreatePlatformPinsModuleInstance(mapModule, world, "SearchResultOnMap/pin_icon_texture_page", m_pinDiameter, 5);
+        m_pPinsModule = CreatePlatformPinsModuleInstance(mapModule, world, "SearchResultOnMap/pin_icon_texture_page", m_pinDiameter, 8);
 
         Eegeo::Modules::Map::Layers::InteriorsPresentationModule& interiorsPresentationModule = mapModule.GetInteriorsPresentationModule();
         

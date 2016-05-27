@@ -32,6 +32,7 @@ namespace ExampleApp
                         const Search::SdkModel::SearchQuery& searchQuery,
                         Eegeo::Helpers::ICallback0& completionCallback,
                         Eegeo::Web::IWebLoadRequestFactory& webRequestFactory,
+                        const std::string& categoryOverride,
                         bool enableSSL = false);
 
                     ~YelpSearchQuery();
@@ -52,6 +53,7 @@ namespace ExampleApp
                     const float MaxRadiusMetres;
 
                     const Search::SdkModel::SearchQuery& m_searchQuery;
+                    std::string m_categoryOverride;
                     Eegeo::Helpers::ICallback0& m_completionCallback;
                     std::string m_responseString;
                     bool m_cancelled;
