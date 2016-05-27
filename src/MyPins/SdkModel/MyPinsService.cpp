@@ -181,7 +181,7 @@ namespace ExampleApp
                                                       bool shouldShare)
             {
                 MyPinModel::TPinIdType idForThisPin = ++m_lastIdUsed;
-                const int myPinIconIndex = 9;
+                const int myPinIconIndex = 6;
                 
                 IMyPinBoundObject& boundObject = *m_myPinBoundObjectFactory.CreateUserCreatedPinBoundObject(m_myPinsFileIO,
                                                                                                             idForThisPin,

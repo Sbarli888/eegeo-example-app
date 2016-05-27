@@ -17,19 +17,19 @@ namespace ExampleApp
             
             m_categoryToIconIndex["food_drink"] = 3;
             
-            m_categoryToIconIndex["arts"] = 4;
+            m_categoryToIconIndex["entertainment"] = 4;
+
+            m_categoryToIconIndex["accommodation"] = 5;
             
-            m_categoryToIconIndex["art_museums"] = 5;
+            m_categoryToIconIndex["art_museums"] = 15;
 
-            m_categoryToIconIndex["tourism"] = 6;
+            m_categoryToIconIndex["tourism"] = 11;
 
-            m_categoryToIconIndex["business"] = 7;
+            m_categoryToIconIndex["business"] = 12;
 
-            m_categoryToIconIndex["accommodation"] = 8;
+            m_categoryToIconIndex["sports_leisure"] = 19;
 
-            m_categoryToIconIndex["sports_leisure"] = 9;
-
-            m_categoryToIconIndex["amenities"] = 10;
+            m_categoryToIconIndex["amenities"] = 24;
 
         }
         
@@ -44,7 +44,8 @@ namespace ExampleApp
             
             if(it == m_categoryToIconIndex.end())
             {
-                return 12;
+                const int defaultIconIndex = 23;
+                return defaultIconIndex;
             }
             else
             {

@@ -886,8 +886,9 @@ namespace ExampleApp
                                                  const bool interiorsAffectedByFlattening,
                                                  const float screenOversampleScale)
     {
-        
-        m_pPinsModule = CreatePlatformPinsModuleInstance(mapModule, world, "SearchResultOnMap/pin_icon_texture_page", m_pinDiameter, 8);
+        const int iconsPerRowColum = 5;
+
+        m_pPinsModule = CreatePlatformPinsModuleInstance(mapModule, world, "SearchResultOnMap/pin_icon_texture_page", m_pinDiameter, iconsPerRowColum);
 
         Eegeo::Modules::Map::Layers::InteriorsPresentationModule& interiorsPresentationModule = mapModule.GetInteriorsPresentationModule();
         
