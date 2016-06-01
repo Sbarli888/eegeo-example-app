@@ -15,15 +15,12 @@ public class CategoryResources
 
     public static int getSmallIconForCategory(Activity activity, String category)
     {
-        return getIconForResourceName(activity, category, false);
+        return getIconForResourceName(activity, category);
     }
 
-    public static int getIconForResourceName(Activity activity, String resourceName, boolean isSmallIcon)
+    public static int getIconForResourceName(Activity activity, String resourceName)
     {
-    	//TODO: Remove once icon2 (smaller) assets have been added
-    	isSmallIcon = false;
-    	
-    	String iconPrefix = isSmallIcon ? "icon2_" : "icon1_";
+    	String iconPrefix = "icon1_";
         String uri = "drawable/" + iconPrefix + resourceName;
         int imageResource = activity.getResources().getIdentifier(uri, null, activity.getPackageName());
         return imageResource;
