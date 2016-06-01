@@ -20,6 +20,9 @@ public class CategoryResources
 
     public static int getIconForResourceName(Activity activity, String resourceName, boolean isSmallIcon)
     {
+    	//TODO: Remove once icon2 (smaller) assets have been added
+    	isSmallIcon = false;
+    	
     	String iconPrefix = isSmallIcon ? "icon2_" : "icon1_";
         String uri = "drawable/" + iconPrefix + resourceName;
         int imageResource = activity.getResources().getIdentifier(uri, null, activity.getPackageName());
