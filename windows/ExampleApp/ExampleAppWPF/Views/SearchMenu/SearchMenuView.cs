@@ -321,7 +321,7 @@ namespace ExampleAppWPF
 
                 JToken iconStringToken;
                 var iconString = jObject.TryGetValue("icon", out iconStringToken) ? iconStringToken.Value<string>() : "misc";
-                //item.Icon = new System.Windows.Media.Imaging.BitmapImage(ViewHelpers.MakeUriForImage(string.Format("icon1_{0}.png", iconString)));
+                item.Icon = new System.Windows.Media.Imaging.BitmapImage(ViewHelpers.MakeUriForImage(string.Format("icon1_{0}.png", iconString)));
                 itemsSource.Add(item);
 
                 groups.Add(str);

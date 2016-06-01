@@ -86,17 +86,17 @@ namespace ExampleApp
                     
                     std::vector<ExampleApp::CategorySearch::View::CategorySearchModel> categories;
                     categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Around Me", "", false, "aroundme", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Accommodation", "accommodation", false, "hotels", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Art & Museum", "art_museums", false, "museums", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Business", "business", false, "museums", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Entertainment", "entertainment", false, "museums", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Food & Drink", "food_drink", false, "restaurants", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("General Amenities", "amenities", false, "coffee", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Health", "health", false, "coffee", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Shopping", "shopping", false, "coffee", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Sport & Leisure", "sports_leisure", false, "coffee", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Tourist", "tourism", false, "coffee", showCategoriesInSearchMenu));
-                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Transport", "transport", false, "coffee", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Accommodation", "accommodation", false, "accommodation", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Art & Museum", "art_museums", false, "art_museums", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Business", "business", false, "business", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Entertainment", "entertainment", false, "entertainment", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Food & Drink", "food_drink", false, "food_drink", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("General Amenities", "amenities", false, "amenities", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Health", "health", false, "health", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Shopping", "shopping", false, "shopping", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Sport & Leisure", "sports_leisure", false, "sports_leisure", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Tourist", "tourism", false, "tourism", showCategoriesInSearchMenu));
+                    categories.push_back(ExampleApp::CategorySearch::View::CategorySearchModel("Transport", "transport", false, "transport", showCategoriesInSearchMenu));
 
                     return categories;
                 }
