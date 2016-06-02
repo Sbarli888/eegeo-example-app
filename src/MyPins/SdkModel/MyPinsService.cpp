@@ -91,7 +91,7 @@ namespace ExampleApp
                                                                                                       pMyPinModel->IsInterior(),
                                                                                                       worldPinInteriorData,
                                                                                                       pMyPinModel->GetLatLong(),
-                                                                                                      pMyPinModel->GetSdkMapPinIconIndexIcon(),
+                                                                                                      pMyPinModel->GetPinIconKey(),
                                                                                                       pMyPinModel->GetHeightAboveTerrainMetres(),
                                                                                                       pinVisibilityMask);
 
@@ -181,7 +181,7 @@ namespace ExampleApp
                                                       bool shouldShare)
             {
                 MyPinModel::TPinIdType idForThisPin = ++m_lastIdUsed;
-                const int myPinIconIndex = 6;
+                const std::string pinIconKey = "my_pins";
                 
                 IMyPinBoundObject& boundObject = *m_myPinBoundObjectFactory.CreateUserCreatedPinBoundObject(m_myPinsFileIO,
                                                                                                             idForThisPin,
@@ -196,8 +196,8 @@ namespace ExampleApp
                                                              description,
                                                              Search::MyPinVendorName,
                                                              ratingsImage,
+                                                             pinIconKey,
                                                              reviewCount,
-                                                             myPinIconIndex,
                                                              latLong,
                                                              heightAboveTerrainMetres,
                                                              interior,
@@ -212,7 +212,7 @@ namespace ExampleApp
             }
             
             void MyPinsService::SaveSearchResultPoiPin(const Search::SdkModel::SearchResultModel& searchResult,
-                                                       int pinIconIndex)
+                                                       const std::string& pinIconKey)
             {
                 
                 
@@ -236,8 +236,8 @@ namespace ExampleApp
                                                              searchResult.GetSubtitle(),
                                                              searchResult.GetVendor(),
                                                              ratingImageUrl,
+                                                             pinIconKey,
                                                              reviewCount,
-                                                             pinIconIndex,
                                                              searchResult.GetLocation(),
                                                              searchResult.GetHeightAboveTerrainMetres(),
                                                              searchResult.IsInterior(),

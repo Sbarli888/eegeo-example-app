@@ -110,6 +110,7 @@
 #include "InteriorsNavigationService.h"
 #include "ModalityIgnoredReactionModel.h"
 #include "ReactorIgnoredReactionModel.h"
+#include "WorldPinIconMappingFactory.h"
 
 namespace ExampleApp
 {
@@ -209,7 +210,7 @@ namespace ExampleApp
         , m_pWorld(NULL)
         , m_platformAbstractions(platformAbstractions, networkCapabilities)
         , m_pLoadingScreen(NULL)
-        , m_pinDiameter(36.f)
+        , m_pinDiameter(48.f)
         , m_initialisedApplicationViewState(false)
         , m_pCameraTransitionController(NULL)
         , m_pSettingsMenuModule(NULL)
@@ -886,11 +887,13 @@ namespace ExampleApp
                                                  const bool interiorsAffectedByFlattening,
                                                  const float screenOversampleScale)
     {
-        const int iconsPerRowColum = 5;
+        const int iconsPerRowColum = 10;
 
         m_pPinsModule = CreatePlatformPinsModuleInstance(mapModule, world, "SearchResultOnMap/pin_icon_texture_page", m_pinDiameter, iconsPerRowColum);
-
+        
         Eegeo::Modules::Map::Layers::InteriorsPresentationModule& interiorsPresentationModule = mapModule.GetInteriorsPresentationModule();
+        
+        ExampleApp::WorldPins::SdkModel::WorldPinIconMappingFactory worldPinIconMappingFactory;
         
         m_pWorldPinsModule = Eegeo_NEW(ExampleApp::WorldPins::SdkModel::WorldPinsModule)(
                                  m_pPinsModule->GetRepository(),
@@ -903,7 +906,8 @@ namespace ExampleApp
                                  m_sdkDomainEventBus,
                                  interiorsAffectedByFlattening,
                                  m_menuReaction,
-                                 screenOversampleScale);
+                                 screenOversampleScale,
+                                 worldPinIconMappingFactory);
     }
     
     void MobileExampleApp::InitialiseToursModules(Eegeo::Modules::Map::MapModule& mapModule, Eegeo::EegeoWorld& world, const bool interiorsAffectedByFlattening)
@@ -944,10 +948,10 @@ namespace ExampleApp
                                                              "Some more example text",
                                                              "Tours/page",
                                                              "tours"));
-        const int tourIconIndex = 10;
+        const std::string tourPinIconKey = "tour_entry";
         ExampleApp::Tours::SdkModel::TourModel tourModel("Example",
                                                          "Take the tour",
-                                                         tourIconIndex,
+                                                         tourPinIconKey,
                                                          Eegeo::Space::LatLong::FromDegrees(37.784783, -122.402659),
                                                          true,
                                                          false,
