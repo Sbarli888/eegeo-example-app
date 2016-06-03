@@ -113,10 +113,11 @@
     <Compile Include="Views\Options\OptionsView.cs" />
     <Compile Include="Views\SearchMenu\SearchMenuListItem.cs" />
     <Compile Include="StartupResourceLoader.cs" />
+    <Compile Include="Views\SearchMenu\SearchMenuResultIconProvider.cs" />
     <Compile Include="Views\SearchResultPoi\eeGeoSearchResultsPoiView.cs" />
     <Compile Include="Views\SearchResultPoi\GeonamesSearchResultsPoiView.cs" />
     <Compile Include="Views\SearchResultPoi\ResultModels\YelpResultModel.cs" />
-    <Compile Include="Views\SearchResultPoi\SearchResultCategoryMapper.cs" />
+    <Compile Include="Views\SearchResultPoi\SearchResultPoiViewIconProvider.cs" />
     <Compile Include="Views\SearchResultPoi\SearchResultPoiViewBase.cs" />
     <Compile Include="Views\SearchResultPoi\YelpSearchResultsPoiView.cs" />
     <Compile Include="Views\SearchMenu\SubMenuListItem.cs" />
@@ -429,16 +430,16 @@
     <Resource Include="..\..\Resources\icon1_my_pins.png">
       <Link>Assets\icon_my_pins.png</Link>
     </Resource>
-	<Resource Include="..\..\Resources\icon1_shopping.png">
+    <Resource Include="..\..\Resources\icon1_shopping.png">
       <Link>Assets\icon1_shopping.png</Link>
     </Resource>
-	<Resource Include="..\..\Resources\icon1_sports_leisure.png">
+    <Resource Include="..\..\Resources\icon1_sports_leisure.png">
       <Link>Assets\icon1_sports_leisure.png</Link>
     </Resource>
-	<Resource Include="..\..\Resources\icon1_tourism.png">
+    <Resource Include="..\..\Resources\icon1_tourism.png">
       <Link>Assets\icon1_tourism.png</Link>
     </Resource>
-	<Resource Include="..\..\Resources\icon1_transport.png">
+    <Resource Include="..\..\Resources\icon1_transport.png">
       <Link>Assets\icon1_transport.png</Link>
     </Resource>
     <Resource Include="..\..\Resources\button_close_place_pin_off.png">

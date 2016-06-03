@@ -372,6 +372,7 @@ namespace ExampleApp
                                                                                                                         pinId,
                                                                                                                         semanticPinType,
                                                                                                                         pinTypeMetadata,
+                                                                                                                        pinIconKey,
                                                                                                                         myPinService));
                         
                         if(pPinBoundObject == NULL)

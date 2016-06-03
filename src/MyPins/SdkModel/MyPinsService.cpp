@@ -187,7 +187,8 @@ namespace ExampleApp
                                                                                                             idForThisPin,
                                                                                                             imageData,
                                                                                                             imageSize,
-                                                                                                            shouldShare);
+                                                                                                            shouldShare,
+                                                                                                            pinIconKey);
                 m_myPinBoundObjectRepository.AddBoundItemForPin(idForThisPin, boundObject);
                 
                 MyPinModel *pinModel = Eegeo_NEW(MyPinModel)(MyPinModel::CurrentVersion,

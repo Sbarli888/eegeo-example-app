@@ -13,17 +13,19 @@ namespace ExampleApp
         {
             UserCreatedPinBoundObject* UserCreatedPinBoundObject::FromSerializedData(MyPinModel::TPinIdType pinId,
                                                                                      const std::string& serializedData,
+                                                                                     const std::string& pinIconKey,
                                                                                      MyPinsFileIO& myPinsFileIO,
                                                                                      ExampleAppMessaging::TMessageBus& messageBus,
                                                                                      MyPins::SdkModel::MyPinsWebService& webService)
             {
-                return Eegeo_NEW(UserCreatedPinBoundObject)(pinId, serializedData, myPinsFileIO, messageBus, webService);
+                return Eegeo_NEW(UserCreatedPinBoundObject)(pinId, serializedData, pinIconKey, myPinsFileIO, messageBus, webService);
             }
             
             UserCreatedPinBoundObject::UserCreatedPinBoundObject(MyPinModel::TPinIdType pinId,
                                                                  Byte* pImageData,
                                                                  size_t imageSize,
                                                                  bool share,
+                                                                 const std::string& pinIconKey,
                                                                  MyPinsFileIO& myPinsFileIO,
                                                                  ExampleAppMessaging::TMessageBus& messageBus,
                                                                  MyPins::SdkModel::MyPinsWebService& webService)
@@ -32,15 +34,17 @@ namespace ExampleApp
             , m_imageSize(imageSize)
             , m_share(share)
             , m_imagePath("")
+            , m_pinIconKey(pinIconKey)
             , m_myPinsFileIO(myPinsFileIO)
             , m_messageBus(messageBus)
             , m_webService(webService)
             {
-                
+                Eegeo_ASSERT(!pinIconKey.empty());
             }
             
             UserCreatedPinBoundObject::UserCreatedPinBoundObject(MyPinModel::TPinIdType pinId,
                                                                  const std::string& imagePath,
+                                                                 const std::string& pinIconKey,
                                                                  MyPinsFileIO& myPinsFileIO,
                                                                  ExampleAppMessaging::TMessageBus& messageBus,
                                                                  MyPins::SdkModel::MyPinsWebService& webService)
@@ -49,11 +53,12 @@ namespace ExampleApp
             , m_imageSize(0)
             , m_share(false)
             , m_imagePath(imagePath)
+            , m_pinIconKey(pinIconKey)
             , m_myPinsFileIO(myPinsFileIO)
             , m_messageBus(messageBus)
             , m_webService(webService)
             {
-                
+                Eegeo_ASSERT(!pinIconKey.empty());
             }
             
             UserCreatedPinBoundObject::~UserCreatedPinBoundObject()
@@ -119,7 +124,7 @@ namespace ExampleApp
             
             std::string UserCreatedPinBoundObject::GetIconForPin() const
             {
-                return "place";
+                return m_pinIconKey;
             }
             
             const std::string& UserCreatedPinBoundObject::GetSerialized() const

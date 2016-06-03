@@ -21,14 +21,12 @@ namespace ExampleApp
             {
                 ExampleAppMessaging::TMessageBus& m_messageBus;
                 ExampleAppMessaging::TSdkModelDomainEventBus& m_sdkModelDomainEventBus;
-                CategorySearch::View::ICategorySearchRepository& m_categorySearchRepository;
                 Search::SdkModel::MyPins::IMyPinsSearchResultRefreshService& m_myPinsSearchResultRefreshService;
                 MyPinsWebService& m_webService;
                 
             public:
                 MyPinBoundObjectFactory(ExampleAppMessaging::TMessageBus& messageBus,
                                         ExampleAppMessaging::TSdkModelDomainEventBus& sdkModelDomainEventBus,
-                                        CategorySearch::View::ICategorySearchRepository& categorySearchRepository,
                                         Search::SdkModel::MyPins::IMyPinsSearchResultRefreshService& myPinsSearchResultRefreshService,
                                         MyPinsWebService& webService);
                 
@@ -38,7 +36,8 @@ namespace ExampleApp
                                                                    MyPinModel::TPinIdType pinId,
                                                                    Byte* imageData,
                                                                    size_t imageSize,
-                                                                   bool share);
+                                                                   bool share,
+                                                                   const std::string& pinIconKey);
                 
                 IMyPinBoundObject* CreateSearchResultPinBoundObject(MyPinsFileIO& myPinsFileIO,
                                                                     MyPinModel::TPinIdType pinId,
@@ -49,6 +48,7 @@ namespace ExampleApp
                                                                       MyPinModel::TPinIdType pinId,
                                                                       const MyPinsSemanticPinType& semanticPinType,
                                                                       const std::string& serializedData,
+                                                                      const std::string& pinIconKey,
                                                                       ExampleApp::MyPins::SdkModel::IMyPinsService& myPinsService);
             };
         }

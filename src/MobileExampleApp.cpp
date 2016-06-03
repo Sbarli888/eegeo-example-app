@@ -522,7 +522,6 @@ namespace ExampleApp
                                                                                 m_messageBus,
                                                                                 m_sdkDomainEventBus,
                                                                                 *m_pCameraTransitionService,
-                                                                                m_pCategorySearchModule->GetCategorySearchRepository(),
                                                                                 m_pSearchModule->GetMyPinsSearchResultRefreshService(),
                                                                                 m_metricsService,
                                                                                 "",

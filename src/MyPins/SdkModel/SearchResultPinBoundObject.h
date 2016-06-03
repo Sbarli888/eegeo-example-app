@@ -25,7 +25,6 @@ namespace ExampleApp
                 Search::SdkModel::SearchResultModel m_searchResult;
                 std::string m_serialized;
                 MyPinsFileIO& m_myPinsFileIO;
-                CategorySearch::View::ICategorySearchRepository& m_categorySearchRepository;
                 Search::SdkModel::MyPins::IMyPinsSearchResultRefreshService& m_myPinsSearchResultRefreshService;
                 ExampleAppMessaging::TMessageBus& m_messageBus;
                 ExampleAppMessaging::TSdkModelDomainEventBus& m_sdkModelDomainEventBus;
@@ -38,8 +37,8 @@ namespace ExampleApp
             public:
                 static SearchResultPinBoundObject* FromSerializedData(MyPinModel::TPinIdType pinId,
                                                                       const std::string& serializedData,
+                                                                      const std::string& pinIconKey,
                                                                       MyPinsFileIO& myPinsFileIO,
-                                                                      CategorySearch::View::ICategorySearchRepository& categorySearchRepository,
                                                                       Search::SdkModel::MyPins::IMyPinsSearchResultRefreshService& myPinsSearchResultRefreshService,
                                                                       ExampleAppMessaging::TMessageBus& messageBus,
                                                                       ExampleAppMessaging::TSdkModelDomainEventBus& sdkModelDomainEventBus,
@@ -48,7 +47,6 @@ namespace ExampleApp
                 SearchResultPinBoundObject(MyPinModel::TPinIdType pinId,
                                            const Search::SdkModel::SearchResultModel& searchResult,
                                            MyPinsFileIO& myPinsFileIO,
-                                           CategorySearch::View::ICategorySearchRepository& categorySearchRepository,
                                            Search::SdkModel::MyPins::IMyPinsSearchResultRefreshService& myPinsSearchResultRefreshService,
                                            ExampleAppMessaging::TMessageBus& messageBus,
                                            ExampleAppMessaging::TSdkModelDomainEventBus& sdkModelDomainEventBus,
