@@ -57,13 +57,25 @@ namespace ExampleApp
                     "default"       // (blank icon)
                 };
                 
-                std::string PinIconKeyFromLegacyIconIndex(int legacyIconIndex)
+                std::string PinIconKeyFromLegacyIconIndex(const rapidjson::Value& entry)
                 {
-                    if (legacyIconIndex < 0 || legacyIconIndex >= legacyIconCount)
+                    if (entry.HasMember("icon"))
+                    {
+                        const int legacyIconIndex = entry["icon"].GetInt();
+                        
+                        if (legacyIconIndex >= 0 && legacyIconIndex < legacyIconCount)
+                        {
+                            return iconIndexToKey[legacyIconIndex];
+                        }
+                        else
+                        {
+                            return "default";
+                        }
+                    }
+                    else
                     {
                         return "my_pins";
                     }
-                    return iconIndexToKey[legacyIconIndex];
                 }
                 
             }
@@ -108,8 +120,7 @@ namespace ExampleApp
                     }
                     else
                     {
-                        const int sdkMapPinIconIndex = entry["icon"].GetInt();
-                        return Legacy::PinIconKeyFromLegacyIconIndex(sdkMapPinIconIndex);
+                        return Legacy::PinIconKeyFromLegacyIconIndex(entry);
                     }
                 }
             }
