@@ -2,12 +2,11 @@
 
 #include "Search.h"
 #include "ICallback.h"
-#include "IdentitySearchCallbackData.h"
 #include "SearchResultModel.h"
 #include "YelpSearchQueryFactory.h"
 #include "YelpSearchQuery.h"
-#include "YelpBusinessQuery.h"
 #include "YelpSearchConstants.h"
+
 
 namespace ExampleApp
 {
@@ -64,21 +63,7 @@ namespace ExampleApp
                         yelpCategory);
                 }
 
-                SdkModel::IYelpSearchQuery* YelpSearchQueryFactory::CreateYelpSearchForSpecificLocation(
-                    const Search::SdkModel::SearchResultModel& outdatedSearchResult,
-                    Eegeo::Helpers::ICallback1<const Search::SdkModel::IdentitySearchCallbackData&>& callback)
-                {
-                    return nullptr;
-                    
-                    /*return Eegeo_NEW(YelpBusinessQuery)(
-                        m_yelpConsumerKey,
-                        m_yelpConsumerSecret,
-                        m_yelpOAuthToken,
-                        m_yelpOAuthTokenSecret,
-                        query,
-                        completionCallback,
-                        m_webRequestFactory);*/
-                }
+
             }
         }
     }

@@ -52,8 +52,9 @@ namespace ExampleApp
                 private:
                     const float MaxRadiusMetres;
 
-                    const Search::SdkModel::SearchQuery& m_searchQuery;
+                    const Search::SdkModel::SearchQuery m_searchQuery;
                     std::string m_categoryOverride;
+
                     Eegeo::Helpers::ICallback0& m_completionCallback;
                     std::string m_responseString;
                     bool m_cancelled;
@@ -66,10 +67,10 @@ namespace ExampleApp
 
                     Eegeo::Web::IWebLoadRequestFactory& m_webRequestFactory;
 
-                    const std::string& m_yelpConsumerKey;
-                    const std::string& m_yelpConsumerSecret;
-                    const std::string& m_yelpOAuthToken;
-                    const std::string& m_yelpOAuthTokenSecret;
+                    const std::string m_yelpConsumerKey;
+                    const std::string m_yelpConsumerSecret;
+                    const std::string m_yelpOAuthToken;
+                    const std::string m_yelpOAuthTokenSecret;
 
                     OAuth::Consumer m_consumer;
                     OAuth::Client m_client;
