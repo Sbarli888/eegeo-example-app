@@ -20,7 +20,7 @@ namespace ExampleApp
         namespace SdkModel
         {
             SearchResultPinBoundObject* SearchResultPinBoundObject::FromSerializedData(MyPinModel::TPinIdType pinId,
-                                                                                       const std::string& serializedData,
+                                                                                       const std::string& pinMetadataJson,
                                                                                        const std::string& pinIconKey,
                                                                                        MyPinsFileIO& myPinsFileIO,
                                                                                        Search::SdkModel::MyPins::IMyPinsSearchResultRefreshService& myPinsSearchResultRefreshService,
@@ -32,15 +32,14 @@ namespace ExampleApp
 
                 Search::SdkModel::SearchResultModel searchResultModel;
                 
-                if(!Search::SdkModel::TryDeserializeFromJson(serializedData, searchResultModel))
+                if(!Search::SdkModel::TryDeserializeFromJson(pinMetadataJson, searchResultModel))
                 {
                     return NULL;
                 }
 
-                Eegeo_ASSERT(pinIconKey == searchResultModel.GetCategory());
-
                 return Eegeo_NEW(SearchResultPinBoundObject)(pinId,
                                                              searchResultModel,
+                                                             pinIconKey,
                                                              myPinsFileIO,
                                                              myPinsSearchResultRefreshService,
                                                              messageBus,
@@ -50,13 +49,14 @@ namespace ExampleApp
             
             SearchResultPinBoundObject::SearchResultPinBoundObject(MyPinModel::TPinIdType pinId,
                                                                    const Search::SdkModel::SearchResultModel& searchResult,
+                                                                   const std::string& pinIconKey,
                                                                    MyPinsFileIO& myPinsFileIO,
                                                                    Search::SdkModel::MyPins::IMyPinsSearchResultRefreshService& myPinsSearchResultRefreshService,
                                                                    ExampleAppMessaging::TMessageBus& messageBus,
                                                                    ExampleAppMessaging::TSdkModelDomainEventBus& sdkModelDomainEventBus,
                                                                    ExampleApp::MyPins::SdkModel::IMyPinsService& myPinsService)
             : m_searchResult(searchResult)
-            , m_serialized(Search::SdkModel::SerializeToJson(m_searchResult))
+            , m_pinIconKey(pinIconKey)
             , m_myPinsFileIO(myPinsFileIO)
             , m_myPinsSearchResultRefreshService(myPinsSearchResultRefreshService)
             , m_messageBus(messageBus)
@@ -131,12 +131,12 @@ namespace ExampleApp
             
             std::string SearchResultPinBoundObject::GetIconForPin() const
             {
-                return m_searchResult.GetCategory();
+                return m_pinIconKey;
             }
             
-            const std::string& SearchResultPinBoundObject::GetSerialized() const
+            std::string SearchResultPinBoundObject::GetSerialized() const
             {
-                return m_serialized;
+                return Search::SdkModel::SerializeToJson(m_searchResult);
             }
             
             void SearchResultPinBoundObject::SubmitPinToWebService(const MyPinModel& pinModel)
@@ -153,7 +153,6 @@ namespace ExampleApp
                 if(success)
                 {
                     m_searchResult = result;
-                    m_serialized = Search::SdkModel::SerializeToJson(m_searchResult);
                     
                     m_myPinsService.UpdatePinWithResult(pinId, result);
                 }

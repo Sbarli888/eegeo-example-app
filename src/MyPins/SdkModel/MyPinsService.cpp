@@ -222,6 +222,7 @@ namespace ExampleApp
                 IMyPinBoundObject& boundObject = *m_myPinBoundObjectFactory.CreateSearchResultPinBoundObject(m_myPinsFileIO,
                                                                                                              idForThisPin,
                                                                                                              searchResult,
+                                                                                                             pinIconKey,
                                                                                                              *this);
                 m_myPinBoundObjectRepository.AddBoundItemForPin(idForThisPin, boundObject);
                 

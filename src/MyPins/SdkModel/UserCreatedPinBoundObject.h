@@ -74,7 +74,7 @@ namespace ExampleApp
                 
                 std::string GetIconForPin() const;
                 
-                const std::string& GetSerialized() const;
+                std::string GetSerialized() const;
             };
         }
     }

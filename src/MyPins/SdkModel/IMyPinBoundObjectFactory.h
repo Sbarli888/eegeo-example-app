@@ -30,12 +30,13 @@ namespace ExampleApp
                 virtual IMyPinBoundObject* CreateSearchResultPinBoundObject(MyPinsFileIO& myPinsFileIO,
                                                                             MyPinModel::TPinIdType pinId,
                                                                             const Search::SdkModel::SearchResultModel& searchResult,
+                                                                            const std::string& pinIconKey,
                                                                             ExampleApp::MyPins::SdkModel::IMyPinsService& myPinsService) = 0;
                 
                 virtual IMyPinBoundObject* CreatePinBoundObjectFromSerialized(MyPinsFileIO& myPinsFileIO,
                                                                               MyPinModel::TPinIdType pinId,
                                                                               const MyPinsSemanticPinType& semanticPinType,
-                                                                              const std::string& serializedData,
+                                                                              const std::string& pinMetadataJson,
                                                                               const std::string& pinIconKey,
                                                                               ExampleApp::MyPins::SdkModel::IMyPinsService& myPinsService) = 0;
             };

@@ -330,7 +330,7 @@ namespace ExampleApp
                         double latitude = entry["latitude"].GetDouble();
                         double longitude = entry["longitude"].GetDouble();
                         MyPinsSemanticPinType semanticPinType = static_cast<MyPinsSemanticPinType>(entry["type"].GetInt());
-                        std::string pinTypeMetadata = entry["metadata"].GetString();
+                        std::string pinMetadataJson = entry["metadata"].GetString();
                         
                         std::string ratingsImage = "";
                         int reviewCount = 0;
@@ -382,7 +382,7 @@ namespace ExampleApp
                         IMyPinBoundObject* pPinBoundObject(m_myPinBoundObjectFactory.CreatePinBoundObjectFromSerialized(*this,
                                                                                                                         pinId,
                                                                                                                         semanticPinType,
-                                                                                                                        pinTypeMetadata,
+                                                                                                                        pinMetadataJson,
                                                                                                                         pinIconKey,
                                                                                                                         myPinService));
                         

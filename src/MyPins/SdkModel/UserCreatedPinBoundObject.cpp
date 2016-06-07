@@ -12,13 +12,14 @@ namespace ExampleApp
         namespace SdkModel
         {
             UserCreatedPinBoundObject* UserCreatedPinBoundObject::FromSerializedData(MyPinModel::TPinIdType pinId,
-                                                                                     const std::string& serializedData,
+                                                                                     const std::string& pinMetadataJson,
                                                                                      const std::string& pinIconKey,
                                                                                      MyPinsFileIO& myPinsFileIO,
                                                                                      ExampleAppMessaging::TMessageBus& messageBus,
                                                                                      MyPins::SdkModel::MyPinsWebService& webService)
             {
-                return Eegeo_NEW(UserCreatedPinBoundObject)(pinId, serializedData, pinIconKey, myPinsFileIO, messageBus, webService);
+                const std::string& imagePath = pinMetadataJson;
+                return Eegeo_NEW(UserCreatedPinBoundObject)(pinId, imagePath, pinIconKey, myPinsFileIO, messageBus, webService);
             }
             
             UserCreatedPinBoundObject::UserCreatedPinBoundObject(MyPinModel::TPinIdType pinId,
@@ -127,7 +128,7 @@ namespace ExampleApp
                 return m_pinIconKey;
             }
             
-            const std::string& UserCreatedPinBoundObject::GetSerialized() const
+            std::string UserCreatedPinBoundObject::GetSerialized() const
             {
                 return m_imagePath;
             }

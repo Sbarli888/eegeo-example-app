@@ -48,10 +48,12 @@ namespace ExampleApp
             IMyPinBoundObject* MyPinBoundObjectFactory::CreateSearchResultPinBoundObject(MyPinsFileIO& myPinsFileIO,
                                                                                          MyPinModel::TPinIdType pinId,
                                                                                          const Search::SdkModel::SearchResultModel& searchResult,
+                                                                                         const std::string& pinIconKey,
                                                                                          ExampleApp::MyPins::SdkModel::IMyPinsService& myPinsService)
             {
                 return Eegeo_NEW(SearchResultPinBoundObject)(pinId,
                                                              searchResult,
+                                                             pinIconKey,
                                                              myPinsFileIO,
                                                              m_myPinsSearchResultRefreshService,
                                                              m_messageBus,
@@ -62,7 +64,7 @@ namespace ExampleApp
             IMyPinBoundObject* MyPinBoundObjectFactory::CreatePinBoundObjectFromSerialized(MyPinsFileIO& myPinsFileIO,
                                                                                            MyPinModel::TPinIdType pinId,
                                                                                            const MyPinsSemanticPinType& semanticPinType,
-                                                                                           const std::string& serializedData,
+                                                                                           const std::string& pinMetadataJson,
                                                                                            const std::string& pinIconKey,
                                                                                            ExampleApp::MyPins::SdkModel::IMyPinsService& myPinsService)
             {
@@ -71,7 +73,7 @@ namespace ExampleApp
                     case UserCreatedPoi:
                     {
                         return UserCreatedPinBoundObject::FromSerializedData(pinId,
-                                                                             serializedData,
+                                                                             pinMetadataJson,
                            													 pinIconKey,
                                                                              myPinsFileIO,
                                                                              m_messageBus,
@@ -81,7 +83,7 @@ namespace ExampleApp
                     case SearchResultPoi:
                     {
                         return SearchResultPinBoundObject::FromSerializedData(pinId,
-                                                                              serializedData,
+                                                                              pinMetadataJson,
                                                                               pinIconKey,
                                                                               myPinsFileIO,
                                                                               m_myPinsSearchResultRefreshService,

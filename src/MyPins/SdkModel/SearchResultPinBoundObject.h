@@ -23,7 +23,7 @@ namespace ExampleApp
             class SearchResultPinBoundObject : public IMyPinBoundObject, private Eegeo::NonCopyable
             {
                 Search::SdkModel::SearchResultModel m_searchResult;
-                std::string m_serialized;
+                std::string m_pinIconKey;
                 MyPinsFileIO& m_myPinsFileIO;
                 Search::SdkModel::MyPins::IMyPinsSearchResultRefreshService& m_myPinsSearchResultRefreshService;
                 ExampleAppMessaging::TMessageBus& m_messageBus;
@@ -46,6 +46,7 @@ namespace ExampleApp
                 
                 SearchResultPinBoundObject(MyPinModel::TPinIdType pinId,
                                            const Search::SdkModel::SearchResultModel& searchResult,
+                                           const std::string& pinIconKey,
                                            MyPinsFileIO& myPinsFileIO,
                                            Search::SdkModel::MyPins::IMyPinsSearchResultRefreshService& myPinsSearchResultRefreshService,
                                            ExampleAppMessaging::TMessageBus& messageBus,
@@ -72,7 +73,7 @@ namespace ExampleApp
                 
                 std::string GetIconForPin() const;
                 
-                const std::string& GetSerialized() const;
+                std::string GetSerialized() const;
                 
                 void FinishRefreshingSearchResult(bool success,
                                                   const ExampleApp::MyPins::SdkModel::MyPinModel::TPinIdType pinId,
