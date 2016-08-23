@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include "SearchResultModel.h"
 
 namespace ExampleApp
 {
@@ -11,12 +12,12 @@ namespace ExampleApp
     {
         namespace SdkModel
         {
-            class ICategoryIconMapper
+            class ITagIconMapper
             {
             public:
-                virtual ~ICategoryIconMapper() { }
+                virtual ~ITagIconMapper() { }
                 
-                virtual std::string GetIconForCategories(const std::vector<std::string>& tags) const = 0;
+                virtual ExampleApp::Search::SdkModel::TagIconKey GetIconKeyForTags(const std::vector<std::string>& tags) const = 0;
             };
         }
     }

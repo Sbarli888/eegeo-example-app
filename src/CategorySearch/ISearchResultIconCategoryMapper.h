@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Search.h"
+#include "SearchResultModel.h"
 
 namespace ExampleApp
 {
@@ -13,7 +14,7 @@ namespace ExampleApp
         public:
             virtual ~ISearchResultIconCategoryMapper() { }
             
-            virtual std::string GetIconKeyFromSearchResult(const Search::SdkModel::SearchResultModel& searchResultModel) const = 0;
+            virtual ExampleApp::Search::SdkModel::TagIconKey GetIconKeyFromSearchResult(const Search::SdkModel::SearchResultModel& searchResultModel) const = 0;
         };
     }
 }

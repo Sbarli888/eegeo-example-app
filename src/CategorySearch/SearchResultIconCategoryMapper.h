@@ -6,6 +6,7 @@
 #include <map>
 #include "Search.h"
 #include "ISearchResultIconCategoryMapper.h"
+#include "SearchResultModel.h"
 #include "Types.h"
 
 namespace ExampleApp
@@ -16,8 +17,9 @@ namespace ExampleApp
         {
         public:
             ~SearchResultIconCategoryMapper();
-            
-            std::string GetIconKeyFromSearchResult(const Search::SdkModel::SearchResultModel& searchResultModel) const;
+
+            ExampleApp::Search::SdkModel::TagIconKey GetIconKeyFromSearchResult(
+                    const Search::SdkModel::SearchResultModel& searchResultModel) const;
        };
     }
 }

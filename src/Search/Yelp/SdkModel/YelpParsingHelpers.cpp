@@ -127,6 +127,8 @@ namespace ExampleApp
                         rapidjson::StringBuffer strbuf;
                         rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
                         json.Accept(writer);
+
+                        ExampleApp::Search::SdkModel::TagIconKey tagIconKey = entry.category;
                         
                         return ExampleApp::Search::SdkModel::SearchResultModel(ExampleApp::Search::SdkModel::SearchResultModel::CurrentVersion,
                                                                                entry.uniqueId,
@@ -137,8 +139,9 @@ namespace ExampleApp
                                                                                interior,
                                                                                building,
                                                                                floor,
-                                                                               entry.category,
+                                                                               allCategories,
                                                                                humanCategories,
+                                                                               tagIconKey,
                                                                                ExampleApp::Search::YelpVendorName,
                                                                                strbuf.GetString(),
                                                                                Eegeo::Helpers::Time::MillisecondsSinceEpoch());

@@ -30,6 +30,14 @@ namespace ExampleApp
                 
                 Search::SdkModel::SearchResultModel GeoNamesSearchResultDto::ToSearchResultModel() const
                 {
+                    // TODO tags: would be nice to have a mechanism to resolve unknown categories/tags for icons
+                    // downstream for non-eegeo types?
+                    // also: would be cool to do something to use a more specific icon for countries/regions/lakes/hamlets etc.
+                    std::vector<std::string> tags;
+                    tags.push_back("misc");
+
+                    Search::SdkModel::TagIconKey tagIconKey = "misc";
+
                     Search::SdkModel::SearchResultModel model(Search::SdkModel::SearchResultModel::CurrentVersion,
                                                               m_id,
                                                               m_name,
@@ -39,9 +47,10 @@ namespace ExampleApp
                                                               0,
                                                               false,
                                                               Eegeo::Resources::Interiors::InteriorId(""),
-                                                              0,
-                                                              "misc",
+                                                              0,                                                              
+                                                              tags,
                                                               std::vector<std::string>(),
+                                                              tagIconKey,
                                                               Search::GeoNamesVendorName,
                                                               "",
                                                               Eegeo::Helpers::Time::MillisecondsSinceEpoch());

@@ -13,6 +13,8 @@ namespace ExampleApp
             {
                 EegeoReadableTagMapper::EegeoReadableTagMapper()
                 {
+                    // TODO tags: this should ideally come from the eegeo search service; if we don't do this,
+                    // we'll not be able to update the POIs & app in-step until a new app release?
                     m_tagsToReadableNamesMap.insert(std::make_pair("accommodation","Accommodation"));
                     m_tagsToReadableNamesMap.insert(std::make_pair("art_museums","Art & Museum"));
                     m_tagsToReadableNamesMap.insert(std::make_pair("business","Business"));

@@ -25,8 +25,8 @@ namespace ExampleApp
             , m_interior(false)
             , m_building("")
             , m_floor(0)
-            , m_applicationCategory("")
-            , m_humanReadableCategories()
+            , m_iconKey("")
+            , m_humanReadableTags()
             , m_vendor("")
             , m_jsonData("")
             , m_searchResultCreationTimeStamp(-1)
@@ -35,19 +35,20 @@ namespace ExampleApp
             }
             
             SearchResultModel::SearchResultModel(int version,
-                                                         const std::string& identifier,
-                                                         const std::string& title,
-                                                         const std::string& subtitle,
-                                                         const Eegeo::Space::LatLong& location,
-                                                         float heightAboveTerrainMetres,
-                                                         bool interior,
-                                                         const Eegeo::Resources::Interiors::InteriorId& building,
-                                                         int floor,
-                                                         const std::string& applicationCategory,
-                                                         const std::vector<std::string>& humanReadableCategories,
-                                                         const std::string& vendor,
-                                                         const std::string& jsonData,
-                                                         int64_t searchResultCreationTimeStamp)
+                                                 const std::string& identifier,
+                                                 const std::string& title,
+                                                 const std::string& subtitle,
+                                                 const Eegeo::Space::LatLong& location,
+                                                 float heightAboveTerrainMetres,
+                                                 bool interior,
+                                                 const Eegeo::Resources::Interiors::InteriorId& building,
+                                                 int floor,
+                                                 const std::vector<std::string>& tags,
+                                                 const std::vector<std::string>& humanReadableTags,
+                                                 const TagIconKey& iconKey,
+                                                 const std::string& vendor,
+                                                 const std::string& jsonData,
+                                                 int64_t searchResultCreationTimeStamp)
             : m_version(version)
             , m_identifier(identifier)
             , m_title(title)
@@ -57,15 +58,15 @@ namespace ExampleApp
             , m_interior(interior)
             , m_building(building)
             , m_floor(floor)
-            , m_applicationCategory(applicationCategory)
-            , m_humanReadableCategories(humanReadableCategories)
+            , m_tags(tags)
+            , m_humanReadableTags(humanReadableTags)
+            , m_iconKey(iconKey)
             , m_vendor(vendor)
             , m_jsonData(jsonData)
             , m_searchResultCreationTimeStamp(searchResultCreationTimeStamp)
             {                
                 Eegeo_ASSERT(!identifier.empty(), "identifier must not be empty");
                 Eegeo_ASSERT(!title.empty(), "name must not be empty");
-                Eegeo_ASSERT(!applicationCategory.empty(), "applicationCategory must not be empty");
                 Eegeo_ASSERT(!vendor.empty(), "vendor must not be empty");
             }
             
@@ -124,14 +125,9 @@ namespace ExampleApp
                 return m_jsonData;
             }
             
-            const std::string& SearchResultModel::GetCategory() const
+            const std::vector<std::string>& SearchResultModel::GetHumanReadableTags() const
             {
-                return m_applicationCategory;
-            }
-            
-            const std::vector<std::string>& SearchResultModel::GetHumanReadableCategories() const
-            {
-                return m_humanReadableCategories;
+                return m_humanReadableTags;
             }
             
             const std::string& SearchResultModel::GetVendor() const
@@ -143,7 +139,22 @@ namespace ExampleApp
             {
                 return m_searchResultCreationTimeStamp;
             }
-            
+
+            const TagIconKey& SearchResultModel::GetIconKey() const
+            {
+                return m_iconKey;
+            }
+
+            const std::vector<std::string>& SearchResultModel::GetTags() const
+            {
+                return m_tags;
+            }
+
+            const std::string& SearchResultModel::GetPrimaryTag() const
+            {
+                return m_tags.empty() ? "" : m_tags.front();
+            }
+
             const bool operator< (const SearchResultModel& a, const SearchResultModel& b)
             {
                 if(a.GetTitle() < b.GetTitle())

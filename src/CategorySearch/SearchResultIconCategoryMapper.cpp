@@ -1,7 +1,6 @@
 // Copyright eeGeo Ltd (2012-2015), All Rights Reserved
 
 #include "SearchResultIconCategoryMapper.h"
-#include "SearchResultModel.h"
 #include "IWorldPinIconMapping.h"
 
 namespace ExampleApp
@@ -14,9 +13,10 @@ namespace ExampleApp
             
         }
         
-        std::string SearchResultIconCategoryMapper::GetIconKeyFromSearchResult(const Search::SdkModel::SearchResultModel& searchResultModel) const
+        ExampleApp::Search::SdkModel::TagIconKey SearchResultIconCategoryMapper::GetIconKeyFromSearchResult(
+                const Search::SdkModel::SearchResultModel& searchResultModel) const
         {
-            return searchResultModel.GetCategory();
+            return searchResultModel.GetIconKey();
         }
     }
 }

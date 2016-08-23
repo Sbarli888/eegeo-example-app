@@ -382,7 +382,7 @@ const int DeletePinAlertViewTag = 2;
         currentLabelY += labelYSpacing + self.pAddressContent.frame.size.height;
     }
     
-    if(!m_model.GetHumanReadableCategories().empty())
+    if(!m_model.GetHumanReadableTags().empty())
     {
         self.pCategoriesHeaderContainer.frame = CGRectMake(0.f, currentLabelY, m_labelsSectionWidth, headerLabelHeight + 2 * headerTextPadding);
         self.pCategoriesHeaderContainer.hidden = false;
@@ -399,7 +399,7 @@ const int DeletePinAlertViewTag = 2;
         self.pCategoriesContent.lineBreakMode = NSLineBreakByTruncatingTail;
         
         std::string categoriesText;
-        const std::vector<std::string>& categoriesList(m_model.GetHumanReadableCategories());
+        const std::vector<std::string>& categoriesList(m_model.GetHumanReadableTags());
         for(size_t i = 0; i < categoriesList.size()-1; ++i)
         {
             categoriesText += categoriesList[i] + "\n";
@@ -430,7 +430,7 @@ const int DeletePinAlertViewTag = 2;
     self.pTitleLabel.text = [NSString stringWithUTF8String:pModel->GetTitle().c_str()];
     
     [self.pCategoryIconContainer.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
-    std::string categoryIcon = ExampleApp::Helpers::IconResources::GetSmallIconForCategory(pModel->GetCategory());
+    std::string categoryIcon = ExampleApp::Helpers::IconResources::GetSmallIconForCategory(pModel->GetIconKey());
     ExampleApp::Helpers::ImageHelpers::AddPngImageToParentView(self.pCategoryIconContainer, categoryIcon, ExampleApp::Helpers::ImageHelpers::Centre);
     
     self.pAddressHeaderContainer.hidden = true;

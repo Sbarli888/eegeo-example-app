@@ -61,12 +61,14 @@ namespace ExampleApp
             }
             std::string SerializeToJson(const SearchResultModel& searchResult)
             {
+                Eegeo_ASSERT(false, "TODO: tags. Not supported. Todo: deprecate nicely");
+
                 rapidjson::Document jsonDoc;
                 rapidjson::Document::AllocatorType& allocator = jsonDoc.GetAllocator();
                 rapidjson::Value valueObject(rapidjson::kObjectType);
                 
                 rapidjson::Value categoriesJson(rapidjson::kArrayType);
-                const std::vector<std::string>& categories(searchResult.GetHumanReadableCategories());
+                const std::vector<std::string>& categories(searchResult.GetHumanReadableTags());
                 for(std::vector<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++ it)
                 {
                     categoriesJson.PushBack(rapidjson::Value(it->c_str(), allocator).Move(), allocator);
@@ -79,7 +81,9 @@ namespace ExampleApp
                 valueObject.AddMember("interior", searchResult.IsInterior(), allocator);
                 valueObject.AddMember("building", rapidjson::Value(searchResult.GetBuildingId().Value().c_str(), allocator).Move(), allocator);
                 valueObject.AddMember("floor", searchResult.GetFloor(), allocator);
-                valueObject.AddMember("category", rapidjson::Value(searchResult.GetCategory().c_str(), allocator).Move(), allocator);
+
+                // TODO tags: figure out what to do with this
+                //valueObject.AddMember("category", rapidjson::Value(searchResult.GetCategory().c_str(), allocator).Move(), allocator);
                 valueObject.AddMember("humanReadableCategories", categoriesJson, allocator);
                 valueObject.AddMember("vendor", rapidjson::Value(searchResult.GetVendor().c_str(), allocator).Move(), allocator);
                 valueObject.AddMember("latitude", searchResult.GetLocation().GetLatitudeInDegrees(), allocator);
@@ -97,6 +101,8 @@ namespace ExampleApp
             
             bool TryDeserializeFromJson(const std::string& searchResultJson, SearchResultModel& out_resultModel)
             {
+                Eegeo_ASSERT(false, "TODO: tags. Not supported. Deprecate nicely");
+
                 rapidjson::Document document;
                 
                 const bool successfullyParsed = !(document.Parse<0>(searchResultJson.c_str()).HasParseError());
@@ -164,7 +170,11 @@ namespace ExampleApp
                 {
                     heightAboveTerrainMetres = static_cast<float>(document["heightAboveTerrain"].GetDouble());
                 }
-                
+
+                // TODO: tags ...
+                Search::SdkModel::TagIconKey tagIconKey = document["category"].GetString();
+                std::vector<std::string> tags;
+
                 out_resultModel = SearchResultModel(version,
                                                     document["id"].GetString(),
                                                     document["title"].GetString(),
@@ -174,9 +184,10 @@ namespace ExampleApp
                                                     heightAboveTerrainMetres,
                                                     interior,
                                                     building,
-                                                    floor,
-                                                    document["category"].GetString(),
+                                                    floor,                                                    
                                                     categories,
+                                                    tags,
+                                                    tagIconKey,
                                                     document["vendor"].GetString(),
                                                     jsonData,
                                                     document["createTimestamp"].GetInt64());
